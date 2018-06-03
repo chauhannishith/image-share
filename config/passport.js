@@ -1,12 +1,17 @@
 var LocalStrategy = require('passport-local').Strategy;
-var User = require('../models/users');
+var User = require('../models/user');
 var config = require('./database');
 var bcrypt = require('bcryptjs');
 
 module.exports = function(passport){
 	//local strategy
-	passport.use(new LocalStrategy(function(username,password, done){
+	passport.use(new LocalStrategy({
+		usernameField: 'email',
+		passwordField: 'password',
+		session: true
+	},function(username,password, done){
 		//check email
+		console.log("passportjs "+username+password)
 		var query = {username:username};
 		User.findOne(query, function(err, user){
 			if(err)
