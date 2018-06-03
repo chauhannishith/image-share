@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const logger = require('morgan');
 const port = process.env.PORT || 3001;
 const users = require('./routes/users');
+const config =require('./config/database');
 
 const app = express();
 
@@ -10,8 +11,9 @@ app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const mongodb_uri = "mongodb://nishith:qwerty123@ds245210.mlab.com:45210/imagetask";
-const promise = mongoose.connect(process.env.MONGODB_URI || mongodb_uri);
+const mongodb_uri = process.env.MONGODB_URI || config.localdb || config.database;
+mongoose.connect(mongodb_uri);
+mongoose.Promise = global.Promise;
 
 app.use('/api/users', users);
 

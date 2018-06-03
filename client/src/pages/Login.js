@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
+import loginUser from '../helpers/loginUser'
+import { getFromStorage, setInStorage } from '../utils/storage'
+import Loading from './Loading'
 
 class Home extends Component{
+
+	constructor() {
+		super()
+		this.state ={
+			isLoading: false
+		}
+	}
 
 	onSubmit(e) {
 		const user = {
@@ -12,7 +22,11 @@ class Home extends Component{
 	}
 
 	submitUser(user) {
+		//this.setState({isLoading: true})
 		//make call to backend
+		loginUser(user)
+		.then(response => console.log(response))
+		.catch(error => console.log(error))
 	}
 
 	render() {
@@ -20,11 +34,9 @@ class Home extends Component{
 			<div>
 				<h1>Please login to continue</h1>
 				<form onSubmit={this.onSubmit.bind(this)}>
-					<label>Email</label>
-					<input type="text" ref="email" required/>
+					<input type="text" ref="email" placeholder="Email" required/>
 					<br />
-					<label>Password</label>
-					<input type="password" ref="password" required/>
+					<input type="password" ref="password" placeholder="Password" required/>
 					<br />
 					<input type="submit" value="Signin" />
 					<br />

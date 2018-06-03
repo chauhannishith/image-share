@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import signUpUser from '../helpers/signUpUser'
 
 class SignUp extends Component {
 	onSubmit(e) {
@@ -20,7 +21,9 @@ class SignUp extends Component {
 
 	createUser(user){
 		//make remote call
-		alert("hello " + user.email)
+		signUpUser(user)
+		.then(response => console.log(response))
+		.catch(error => console.log(error))
 	}
 
 	render() {
@@ -28,20 +31,15 @@ class SignUp extends Component {
 			<div>
 				<h1>SignUp to join others</h1>
 				<form onSubmit={this.onSubmit.bind(this)}>
-					<label>Email</label>
-					<input type="email" ref="email" required/>
+					<input type="email" ref="email" placeholder="Email" required/>
 					<br />
-					<label>First name</label>
-					<input type="text" ref="fname" required/>
+					<input type="text" ref="fname" placeholder="First Name" required/>
 					<br />
-					<label>Last name</label>
-					<input type="text" ref="lname" required/>
+					<input type="text" ref="lname" placeholder="Last Name" required/>
 					<br />
-					<label>Password</label>
-					<input type="password" ref="password" required/>
+					<input type="password" ref="password" placeholder="Password" required/>
 					<br />
-					<label>Confirm Password</label>
-					<input type="password" ref="cpassword" required/>
+					<input type="password" ref="cpassword" placeholder="Confirm Password" required/>
 					<br />
 					<input type="submit" value="SignUp" />
 				</form>
