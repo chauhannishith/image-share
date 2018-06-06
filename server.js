@@ -3,12 +3,16 @@ const cors = require('cors');
 const express =require('express');
 const mongoose = require('mongoose');
 const nev = require('email-verification')(mongoose);
+const node_env = process.env.NODE_ENV || 'development';
 const logger = require('morgan');
 const passport = require('passport');
 const port = process.env.PORT || 3001;
 const User = require('./models/user');
 const users = require('./routes/users');
+const index = require('./routes/index');
 
+var mongodb_uri;
+var verificationUrl;
 
 const app = express();
 
@@ -32,13 +36,22 @@ app.use(cors()); // for development allow everyone
 // }
 //  cors(corsOptions) add in any route needed
 
-const mongodb_uri = process.env.MONGODB_URI || config.database || config.localdb;//custom || mlab || local
+
+if(node_env === 'production'){
+	mongodb_uri = process.env.MONGODB_URI;//custom mlab uri
+}
+else if(node_env === 'localdev'){
+	mongodb_uri = config.localdb;//local
+}
+else{
+	mongodb_uri = config.database;//specified mlab
+}
 
 mongoose.connect(mongodb_uri);
 mongoose.Promise = global.Promise;
 
 nev.configure({
-    verificationURL: 'http://myawesomewebsite.com/email-verification/${URL}',
+    verificationURL: process.env.BACKEND_URL + '/email-verification/${URL}',
     persistentUserModel: User,
     tempUserCollection: 'myawesomewebsite_tempusers',
  
@@ -59,9 +72,6 @@ nev.configure({
 });
 
 app.use('/api/users', users);
-
-app.get('/test', (req,res) => {
-	res.json({first:"nishith", last: "chauhan"});
-});
+app.use('/', index);
 
 app.listen(port, () => console.log("Server started, listening on port", port));

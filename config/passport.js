@@ -9,25 +9,33 @@ module.exports = function(passport){
 		usernameField: 'email',
 		passwordField: 'password',
 		session: true
-	},function(username,password, done){
+	},function(email,password, done){
 		//check email
-		console.log("passportjs "+username+password)
-		var query = {username:username};
+		console.log("passportjs "+email+password)
+		var query = {email:email};
 		User.findOne(query, function(err, user){
-			if(err)
+			if(err){
+				console.log(err)
 				throw err;
-			if(!user)
+			}
+			if(!user){
+				// console.log("this 1")
 				return done(null,false, {message:'No user found'});
+			}
 
 			//match password
 			bcrypt.compare(password, user.password, function(err, isMatch){
-				if(err)
+				if(err){
+					console.log(err)
 					throw err;
+				}
 
 				if(isMatch){
+					// console.log("this 2")
 					return done(null, user);
 				}
 				else{
+					// console.log("this 3")
 					return done(null, false, {message: 'wrong password'});
 				}
 			});

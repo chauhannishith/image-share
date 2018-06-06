@@ -16,3 +16,12 @@
 .App-intro {
   font-size: large;
 }
+
+ul li{
+	list-style-type: none;
+}
+
+.file-drop .file-drop-target{
+	padding: 100px;
+	background-color: rgb(230, 230, 230);
+ }

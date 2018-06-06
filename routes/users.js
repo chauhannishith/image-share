@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user');
-var bcrypt = require('bcryptjs');
-var passport = require('passport');
+const express = require('express');
+const router = express.Router();
+const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 var count = 0;
 
@@ -13,14 +13,21 @@ router.get('/counters', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-	console.log(req.body)
-  	passport.authenticate('local',{ failureRedirect: '/login' })(req, res, next);
-
-    //res.send("logged in successfully");
+  	passport.authenticate('local',(err, user, info) => {
+  		if(err)
+  			return next(err);
+  		if(!user)
+  			return res.json("user not found");
+  		req.logIn(user, function(err) {
+  			if(err)
+  				return next(err);
+  			return res.send({message:"successfully logged in ",user: user});
+  		})
+  	})(req, res, next);
 });
 
 router.post('/signup', (req, res, next) => {
-	console.log(req.body)
+	// console.log(req.body)
 	var email = req.body.email;
 	var fname = req.body.firstname;
 	var lname = req.body.lastname;
@@ -53,6 +60,11 @@ router.post('/signup', (req, res, next) => {
 	});
 
     res.send("signed up successfully");
+});
+
+router.get('/logout', function(req, res, next) {
+	req.logout();
+	res.json("successfully logged out");
 });
 
 module.exports = router;
