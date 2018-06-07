@@ -22,7 +22,11 @@ class SignUp extends Component {
 	createUser(user){
 		//make remote call
 		signUpUser(user)
-		.then(response => console.log(response))
+		.then(response => {
+			console.log(response.data)
+			if(response.data.success)
+				this.props.history.push('/verify')
+		})
 		.catch(error => console.log(error))
 	}
 

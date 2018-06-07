@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const UserSession = require('../models/session');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 
 var count = 0;
-
 
 router.get('/counters', (req, res, next) => {
     count++;
@@ -17,18 +17,25 @@ router.post('/login', (req, res, next) => {
   		if(err)
   			return next(err);
   		if(!user)
-  			return res.json("user not found");
+  			return res.send({
+  				message:"no user found ",
+  				success: false
+  			});
   		req.logIn(user, function(err) {
   			if(err)
   				return next(err);
-  			return res.send({message:"successfully logged in ",user: user});
+  			return res.send({
+  				message:"successfully logged in ",
+  				success: true, user: user
+  			});
   		})
   	})(req, res, next);
 });
 
 router.post('/signup', (req, res, next) => {
 	// console.log(req.body)
-	var email = req.body.email;
+	var email = req.body.email.toLowerCase();
+	email = email.trim();
 	var fname = req.body.firstname;
 	var lname = req.body.lastname;
 	var password = req.body.password;
@@ -54,12 +61,15 @@ router.post('/signup', (req, res, next) => {
 				}
 				else{
 					console.log("success adding user")
+					res.send({
+						message: "signed up successfully",
+						success: true
+					});
 				}
 			});
 		});
 	});
 
-    res.send("signed up successfully");
 });
 
 router.get('/logout', function(req, res, next) {

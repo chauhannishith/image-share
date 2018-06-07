@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var SessionSchema = mongoose.Schema({
+var UserSessionSchema = mongoose.Schema({
 	userId:{
 		type: String,
 		default: ''
@@ -9,9 +9,9 @@ var SessionSchema = mongoose.Schema({
 		default: Date.now()
 	},
 	isDeleted:{
-		type: Boolenan,
+		type: Boolean,
 		deafult: false
 	}
 });
 
-module.exports = mongoose.model('Session',SessionSchema);
+module.exports = mongoose.model('UserSession',UserSessionSchema);

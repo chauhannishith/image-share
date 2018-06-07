@@ -6,7 +6,8 @@ class DragnDrop extends Component {
 	constructor() {
 		super()
 		this.state = {
-			attachments: []
+			attachments: [],
+			bool: true
 		}
 	}
 
@@ -19,7 +20,10 @@ class DragnDrop extends Component {
 
 	handleDrop(files, event) {
 		// console.log(files);
-		this.setState({ attachments: [...this.state.attachments, ...files]},() => console.log(this.state.attachments))
+		this.setState({ attachments: [...this.state.attachments, ...files]},() => {
+			console.log(this.state.attachments)
+			this.setState({bool: false})
+		})
 		
 	}
 
@@ -45,6 +49,7 @@ class DragnDrop extends Component {
 				<ul>
 					{eachFile}
 				</ul>
+				<button id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
 			</div>
 			);
 	}

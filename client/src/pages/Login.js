@@ -18,7 +18,6 @@ class Home extends Component{
 			password: this.refs.password.value
 		}
 		this.submitUser(user)
-		document.getElementById('submit').setAttribute('disabled',true)
 		e.preventDefault();
 	}
 
@@ -27,11 +26,16 @@ class Home extends Component{
 		//make call to backend
 		loginUser(user)
 		.then(response => {
-			console.log(response)
-			this.props.history.push('/home')
+			console.log(response.data)
+			if(response.data.success)
+				this.props.history.push('/home')
+			else
+				console.log(response.data.message)
 		})
-		.catch(error => console.log(error))
-		document.getElementById('submit').setAttribute('disabled',true)
+		.catch(error => {
+			console.log(error)
+		})
+		
 	}
 
 	render() {
