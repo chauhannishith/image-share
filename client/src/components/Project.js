@@ -6,7 +6,7 @@ class Project extends Component{
 		super(props)
 		this.state ={
 			images: [],
-			displayDrop: false
+			displayDrop: true
 		}
 	}
 

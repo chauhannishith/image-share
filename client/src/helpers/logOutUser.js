@@ -1,12 +1,12 @@
 import axios from 'axios'
+import { getFromStorage } from '../utils/storage'
 import { BACKEND } from '../utils/config'
 
-const loginUser = (user) => {
+const loginUser = () => {
 	return new Promise((resolve, reject) => {
 		axios.request({
-			method: 'post',
+			method: 'get',
 			url: BACKEND + '/api/users/logout',
-			data: user
 			}).then(response => {
 	        	resolve(response)
 			})

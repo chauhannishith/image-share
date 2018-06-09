@@ -1,16 +1,43 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer')
+const Project = require('../models/project');
 const User = require('../models/user');
 const UserSession = require('../models/session');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const path = require('path');
 
 var count = 0;
+
+const storage = multer.diskStorage({
+	destination: './public/uploads',
+	filename: function(req, file, cb){	
+		cb(null, file.fieldname+path.extname(file.originalname))
+	}
+})
+
+const upload = multer({
+	storage: storage
+}).any()
 
 router.get('/counters', (req, res, next) => {
     count++;
     res.json(count);
 });
+
+router.post('/upload', (req, res, next) => {
+	upload(req, res, (err) => {
+		if(err)
+			console.log(err)
+		else{
+			console.log(req.files)
+			res.send('test')
+		}
+	})
+	console.log(req.body)
+	res.status(200)
+})
 
 router.post('/login', (req, res, next) => {
   	passport.authenticate('local',(err, user, info) => {
@@ -26,7 +53,9 @@ router.post('/login', (req, res, next) => {
   				return next(err);
   			return res.send({
   				message:"successfully logged in ",
-  				success: true, user: user
+  				success: true, 
+  				sessionID: req.sessionID,
+  				session: req.session
   			});
   		})
   	})(req, res, next);
@@ -72,7 +101,49 @@ router.post('/signup', (req, res, next) => {
 
 });
 
-router.get('/logout', function(req, res, next) {
+router.post('/create', (req,res) => {
+	var projectTitle = req.body.title;
+	var userID = req.body.userID;
+	var newProject = new Project({
+		title: projectTitle,
+		createdby: userID
+	})
+	newProject.save(function(err){
+		if(err){
+			console.log("some error");
+			return;
+		}
+		else{
+			console.log("success adding project")
+			res.send({
+				message: "project added successfully",
+				success: true
+			});
+		}
+	})
+});
+
+router.post('/projects', (req,res) => {
+	var userID = req.body.userID;
+	// console.log(req.body)
+	Project.find({createdby: userID}, (err, projects) => {
+		if(err){
+			console.log("some error");
+			return;
+		}
+		else{
+			console.log("success finding projects")
+			res.send({
+				message: "project added successfully",
+				success: true,
+				projects: projects
+			});
+		}
+	})
+});
+
+router.get('/logout', (req, res, next) => {
+	console.log(req)
 	req.logout();
 	res.json("successfully logged out");
 });

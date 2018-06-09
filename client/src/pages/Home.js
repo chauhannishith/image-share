@@ -1,4 +1,6 @@
 import React, { Component } from'react'
+import createProject from '../helpers/createProject'
+import fetchUserProjects from '../helpers/fetchUserProjects'
 import logOutUser from '../helpers/logOutUser'
 import Project from '../components/Project'
 
@@ -13,8 +15,15 @@ class Home extends Component{
 	}
 	createComponent(e) {
 		e.preventDefault()
-		this.setState({projects: [...this.state.projects, {title: this.refs.projectTitle.value}]},
-		 () => this.displayForm())
+		createProject(this.refs.projectTitle.value)
+		.then(response => {
+			console.log(response)
+			this.setState({
+				projects: [...this.state.projects, this.refs.projectTitle.value]
+				}, () => this.displayForm()
+			)			
+		}).catch(error => console.log(error))
+
 	}
 
 	displayForm() {
@@ -34,17 +43,14 @@ class Home extends Component{
 			)
 	}
 
-	// componentDidMount() {
-	//	fetchUserProjects(userId)
-	// 	.then(response => {
-	// //	 	this.setState({projects: response.data})			
-	// 	}).catch(error => console.log(error))
+	componentDidMount() {
+		fetchUserProjects()
+		.then(response => {
+			// console.log(response.data.projects)
+		 	this.setState({projects: response.data.projects})			
+		}).catch(error => console.log(error))
 
-	// }
-
-	// fetchUserProjects(userId) {
-
-	// }
+	}
 
 	logout(){
 		logOutUser()
@@ -64,6 +70,7 @@ class Home extends Component{
 				<br />
 				{eachProject}
 				<br />
+				
 				{this.state.createForm && this.renderForm()}
 				{!this.state.createForm && <button onClick={this.displayForm.bind(this)} >Create New Project</button>}
 			</div>

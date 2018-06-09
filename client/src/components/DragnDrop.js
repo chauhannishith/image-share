@@ -1,12 +1,14 @@
 import React, { Component} from 'react'
+import axios from 'axios'
 import FileDrop from 'react-file-drop'
+import { BACKEND } from '../utils/config'
 
 class DragnDrop extends Component {
 
 	constructor() {
 		super()
 		this.state = {
-			attachments: [],
+			attachments: null,//[],
 			bool: true
 		}
 	}
@@ -19,23 +21,30 @@ class DragnDrop extends Component {
 	}
 
 	handleDrop(files, event) {
-		// console.log(files);
-		this.setState({ attachments: [...this.state.attachments, ...files]},() => {
-			console.log(this.state.attachments)
-			this.setState({bool: false})
+		this.setState({attachments: files}, () => this.setState({bool: false}))
+	}
+
+	fileHandler(e) {
+		console.log("ok", e.target.files)
+		this.setState({attachments: e.target.files}, () => this.setState({bool: false}))
+	}
+
+	uploadHandler() {
+		const fd = new FormData()
+		for(let i = 0; i < this.state.attachments.length; i++ )
+			fd.append('image', this.state.attachments[i], this.state.attachments[i].name)
+		console.log(fd.get('image'))
+		axios.post(BACKEND + '/api/users/upload', fd, {
+			onUploadProgress: progressEvent => {
+				console.log('Upload Progress' + Math.round((progressEvent.loaded / progressEvent.total) * 100) + '%')
+			}
 		})
-		
+		.then(response => console.log(response))
+		.catch(error => console.log(error))
+
 	}
 
 	render() {
-		const eachFile = this.state.attachments.map((file, i) => {
-			return (
-				<li key={i} index={i}>
-					{file.name}
-					<button onClick={this.deleteFile.bind(this, i)}>Delete</button>
-				</li>
-				)
-		})
 
 		return (
 			<div>
@@ -45,11 +54,10 @@ class DragnDrop extends Component {
 					<FileDrop onDrop={this.handleDrop.bind(this)}>
 						Drop some files here!
 					</FileDrop>
+					<h1> OR </h1>
+					<input type="file" onChange={this.fileHandler.bind(this)} multiple name="files"/>
 				</div>
-				<ul>
-					{eachFile}
-				</ul>
-				<button id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
+				<button onClick={this.uploadHandler.bind(this)} id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
 			</div>
 			);
 	}

@@ -27,8 +27,10 @@ class Home extends Component{
 		loginUser(user)
 		.then(response => {
 			console.log(response.data)
-			if(response.data.success)
+			if(response.data.success){
+				setInStorage('imageshare', response.data.session)
 				this.props.history.push('/home')
+			}
 			else
 				console.log(response.data.message)
 		})
