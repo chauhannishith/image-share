@@ -7,6 +7,7 @@ const loginUser = () => {
 		axios.request({
 			method: 'get',
 			url: BACKEND + '/api/users/logout',
+			credentials: 'include',
 			}).then(response => {
 	        	resolve(response)
 			})

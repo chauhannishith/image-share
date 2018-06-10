@@ -6,12 +6,16 @@ class Project extends Component{
 		super(props)
 		this.state ={
 			images: [],
-			displayDrop: true
+			displayDrop: false
 		}
 	}
 
 	toggleState() {
 		let temp = !this.state.displayDrop
+		if(temp === true)
+			document.getElementById('display').innerText = 'Hide'
+		else
+			document.getElementById('display').innerText = 'View'
 		this.setState({displayDrop: temp})
 	}
 
@@ -19,7 +23,7 @@ class Project extends Component{
 		return (
 			<div>
 				<h1>{this.props.title}</h1>
-				<button onClick={this.toggleState.bind(this)}>Add files</button>	
+				<button id="display" onClick={this.toggleState.bind(this)}>View</button>	
 				{this.state.displayDrop && <DragnDrop />}
 			</div>
 			)

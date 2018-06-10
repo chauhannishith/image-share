@@ -6,7 +6,8 @@ const signUpUser = (user) => {
 		axios.request({
 			method: 'post',
 			url: BACKEND + '/api/users/signup',
-			data: user
+			data: user,
+			credentials: 'include',
 			}).then(response => {
 	        	resolve(response)
 			})

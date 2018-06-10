@@ -17,11 +17,9 @@ class Home extends Component{
 		e.preventDefault()
 		createProject(this.refs.projectTitle.value)
 		.then(response => {
-			console.log(response)
-			this.setState({
-				projects: [...this.state.projects, this.refs.projectTitle.value]
-				}, () => this.displayForm()
-			)			
+			// console.log(response)
+			if(response.data.success)
+				this.componentDidMount()
 		}).catch(error => console.log(error))
 
 	}

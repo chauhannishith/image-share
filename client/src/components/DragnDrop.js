@@ -1,7 +1,6 @@
 import React, { Component} from 'react'
-import axios from 'axios'
 import FileDrop from 'react-file-drop'
-import { BACKEND } from '../utils/config'
+import uploadFiles from '../helpers/uploadFiles'
 
 class DragnDrop extends Component {
 
@@ -21,7 +20,9 @@ class DragnDrop extends Component {
 	}
 
 	handleDrop(files, event) {
-		this.setState({attachments: files}, () => this.setState({bool: false}))
+		this.setState({attachments: files},() =>
+			this.uploadHandler()
+		)
 	}
 
 	fileHandler(e) {
@@ -34,14 +35,16 @@ class DragnDrop extends Component {
 		for(let i = 0; i < this.state.attachments.length; i++ )
 			fd.append('image', this.state.attachments[i], this.state.attachments[i].name)
 		console.log(fd.get('image'))
-		axios.post(BACKEND + '/api/users/upload', fd, {
-			onUploadProgress: progressEvent => {
-				console.log('Upload Progress' + Math.round((progressEvent.loaded / progressEvent.total) * 100) + '%')
+		uploadFiles(fd)
+		.then(response => {console.log(response.data)
+			if(response.data.success){
+				console.log(response.data.message)
 			}
-		})
-		.then(response => console.log(response))
+			else{
+				console.log(response.data.message)	
+			}
+			this.setState({bool: true}, () => this.setState.attachments: null)})
 		.catch(error => console.log(error))
-
 	}
 
 	render() {
@@ -56,8 +59,10 @@ class DragnDrop extends Component {
 					</FileDrop>
 					<h1> OR </h1>
 					<input type="file" onChange={this.fileHandler.bind(this)} multiple name="files"/>
+					<br />
+					<button onClick={this.uploadHandler.bind(this)} id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
 				</div>
-				<button onClick={this.uploadHandler.bind(this)} id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
+				
 			</div>
 			);
 	}

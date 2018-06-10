@@ -6,7 +6,8 @@ const loginUser = (user) => {
 		axios.request({
 			method: 'post',
 			url: BACKEND + '/api/users/login',
-			data: user
+			data: user,
+			credentials: 'include'
 			}).then(response => {
 	        	resolve(response)
 			})

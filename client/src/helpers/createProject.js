@@ -4,7 +4,7 @@ import { getFromStorage } from '../utils/storage'
 
 const createProject = (title) => {
 	let session = getFromStorage('imageshare')
-	console.log(session)
+	// console.log(session)
 	return new Promise((resolve, reject) => {
 		axios.request({
 			method: 'post',
@@ -12,7 +12,8 @@ const createProject = (title) => {
 			data: {
 				userID: session.passport.user,
 				title: title
-			}
+			},
+			credentials: 'include'
 			}).then(response => {
 	        	resolve(response)
 			})

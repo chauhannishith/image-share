@@ -18,8 +18,26 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({
-	storage: storage
+	storage: storage,
+	limits: {fileSize: 4 * 1024 * 1024}, //1mb 
+	fileFilter: function(req, file, cb){
+		checkFileType(file, cb);
+	}
 }).any()
+
+function checkFileType(file, cb){
+	//Allowed
+	const fileTypes = /jpeg|jpg|gif|png/;
+	const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+	const mimetype = fileTypes.test(file.mimetype);
+
+	if(mimetype && extname){
+		return cb(null, true)
+	}
+	else{
+		cb('Error: images only')
+	}
+}
 
 router.get('/counters', (req, res, next) => {
     count++;
@@ -28,15 +46,28 @@ router.get('/counters', (req, res, next) => {
 
 router.post('/upload', (req, res, next) => {
 	upload(req, res, (err) => {
-		if(err)
-			console.log(err)
+		if(err){
+			if(err.code === 'LIMIT_FILE_SIZE'){
+				console.log("Error: File size too large");
+				res.status(200).send({message:"File size too large", success: false})	
+			}
+			else{
+				console.log("error"+err);
+				res.status(200).send({message:err, success: false})
+			}
+		}
 		else{
-			console.log(req.files)
-			res.send('test')
+			if(req.files == undefined){
+				console.log("undefined")
+				res.status(200).send({message:"No files selected", success: false})
+			}
+			else{
+				console.log("files uploaded")	
+				console.log(req.files)
+				res.status(200).send({message:"uploaded successfully", success: true})
+			}
 		}
 	})
-	console.log(req.body)
-	res.status(200)
 })
 
 router.post('/login', (req, res, next) => {

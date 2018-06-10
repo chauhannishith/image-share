@@ -40,7 +40,10 @@ app.use(session({
 app.use(logger('dev'));	//dev gives proper coloured log
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors()); // for development allow everyone
+app.use(cors({
+	credentials: true,
+	origin: 'http://localhost:3000'
+})); // for development allow everyone
 // var whitelist = ['http://example1.com', 'http://example2.com'] //allow only these
 // var corsOptions = {
 //   origin: function (origin, callback) {

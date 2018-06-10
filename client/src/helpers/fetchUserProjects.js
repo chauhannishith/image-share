@@ -9,6 +9,7 @@ const fetchUserProjects = (title) => {
 		axios.request({
 			method: 'post',
 			url: BACKEND + '/api/users/projects',
+			credentials: 'include',
 			data: {
 				userID: session.passport.user
 			}
