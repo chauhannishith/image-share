@@ -34,18 +34,38 @@ class SignUp extends Component {
 		return (
 			<div>
 				<h1>SignUp to join others</h1>
-				<form onSubmit={this.onSubmit.bind(this)}>
-					<input type="email" ref="email" placeholder="Email" required/>
-					<br />
-					<input type="text" ref="fname" placeholder="First Name" required/>
-					<br />
-					<input type="text" ref="lname" placeholder="Last Name" required/>
-					<br />
-					<input type="password" ref="password" placeholder="Password" required/>
-					<br />
-					<input type="password" ref="cpassword" placeholder="Confirm Password" required/>
-					<br />
-					<input type="submit" value="SignUp" />
+				<form onSubmit={this.onSubmit.bind(this)} className="col s12">
+					<div className="row">
+				        <div className="input-field col s3">
+				          <input id="first_name" type="text" ref="fname"  className="validate"  required/>
+				          <label htmlFor="first_name">First Name</label>
+				        </div>
+				        <div className="input-field col s3">
+				          <input id="last_name" type="text" ref="lname"  className="validate"  required/>
+				          <label htmlFor="last_name">Last Name</label>
+				        </div>
+				    </div>
+					<div className="row">
+				        <div className="input-field col s6">
+				          <input id="email" type="email" className="validate"  ref="email" required/>
+				          <label htmlFor="email">Email</label>
+				        </div>
+				    </div>
+				    <div className="row">
+				        <div className="input-field col s6">
+				          <input id="password" type="password" className="validate" ref="password" required/>
+				          <label htmlFor="password">Password</label>
+			        	</div>
+			        </div>
+			        <div className="row">
+				        <div className="input-field col s6">
+				          <input id="cpassword" type="password" ref="cpassword"  className="validate" required/>
+				          <label htmlFor="password">Confirm Password</label>
+			        	</div>
+			        </div>
+			        <div className="row">
+			        	<button className="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+			        </div>
 				</form>
 			</div>
 		);

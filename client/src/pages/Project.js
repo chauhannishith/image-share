@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import DragnDrop from './DragnDrop'
+import DragnDrop from '../components/DragnDrop'
 
 class Project extends Component{
 	constructor(props) {
@@ -17,14 +17,22 @@ class Project extends Component{
 		else
 			document.getElementById('display').innerText = 'View'
 		this.setState({displayDrop: temp})
+		console.log(this.props.location.state.projectid)
 	}
 
 	render() {
+
+		const eachImage = this.state.images.map((image, i) => {
+			return <img src="" alt="noimage.jpg" />
+		})
+
 		return (
 			<div>
-				<h1>{this.props.title}</h1>
+				<h1>{this.props.location.state.projectTitle}</h1>
+				<h4>{this.props.location.state.projectId}</h4>
+				{eachImage.length ? eachImage : <p>You have not added any images yet</p>}
 				<button id="display" onClick={this.toggleState.bind(this)}>View</button>	
-				{this.state.displayDrop && <DragnDrop projectid={this.props.projectid} />}
+				{this.state.displayDrop && <DragnDrop projectid={this.props.location.state.projectId} />}
 			</div>
 			)
 	}

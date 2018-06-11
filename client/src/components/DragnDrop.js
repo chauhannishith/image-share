@@ -26,16 +26,19 @@ class DragnDrop extends Component {
 	}
 
 	fileHandler(e) {
-		console.log("ok", e.target.files)
+		// console.log("ok", e.target.files)
+		// console.log(this.props.projectid)
 		this.setState({attachments: e.target.files}, () => this.setState({bool: false}))
 	}
 
 	uploadHandler() {
 		const fd = new FormData()
+		fd.append('projectId', this.props.projectid)
+		console.log(this.props.projectid)
 		for(let i = 0; i < this.state.attachments.length; i++ )
 			fd.append('image', this.state.attachments[i], this.state.attachments[i].name)
 		console.log(fd.get('image'))
-		uploadFiles(fd)
+		uploadFiles(fd, this.props.projectid)
 		.then(response => {console.log(response.data)
 			if(response.data.success){
 				console.log(response.data.message)

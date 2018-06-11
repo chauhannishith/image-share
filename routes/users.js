@@ -1,30 +1,83 @@
+const config =require('../config/database');
 const express = require('express');
 const router = express.Router();
-const multer = require('multer')
+const multer = require('multer');
+const mongoose = require('mongoose');
+const crypto = require('crypto');
+const methodOverride= require('method-override');
+const GridFsStorage = require('multer-gridfs-storage');
+const Grid = require('gridfs-stream');
 const Project = require('../models/project');
 const User = require('../models/user');
+const Images = require('../models/images');
 const UserSession = require('../models/session');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const path = require('path');
+const node_env = process.env.NODE_ENV || 'development';
 
 var count = 0;
 
-const storage = multer.diskStorage({
-	destination: './public/uploads',
-	filename: function(req, file, cb){	
-		cb(null, file.fieldname+path.extname(file.originalname))
-	}
-})
+Grid.mongo = mongoose.mongo;
+var gfs = Grid(mongoose.connection);
+gfs.collection('images');
 
+//local storage
+// const storage = multer.diskStorage({
+// 	destination: './public/uploads',
+// 	filename: function(req, file, cb){	
+// 		cb(null, file.fieldname+path.extname(file.originalname))
+// 	}
+// })
+//for local storage
+// const upload = multer({
+// 	storage: storage,
+// 	limits: {fileSize: 10 * 1024 * 1024}, //1mb 
+// 	fileFilter: function(req, file, cb){
+// 		// console.log(req.files,"****************************")
+// 		checkFileType(file, cb);
+// 	}
+// }).array('image')
+
+//for db storage
+var mongodb_uri;
+if(node_env === 'production'){
+	mongodb_uri = process.env.MONGODB_URI;//custom mlab uri
+}
+else if(node_env === 'localdev'){
+	mongodb_uri = config.localdb;//local
+}
+else{
+	mongodb_uri = config.database;//specified mlab
+}
+
+const storage = new GridFsStorage({
+  url: mongodb_uri,
+  file: (req, file) => {
+  	console.log("3",req.body)
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        }
+        const filename = buf.toString('hex') + path.extname(file.originalname);
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'images',
+          metadata: {
+          	projectId: req.body.projectId
+          }
+        };
+        resolve(fileInfo);
+      });
+    });
+  }
+});
 const upload = multer({
-	storage: storage,
-	limits: {fileSize: 4 * 1024 * 1024}, //1mb 
-	fileFilter: function(req, file, cb){
-		checkFileType(file, cb);
-	}
-}).any()
+	storage: storage
+}).array('image');
 
+//check file extension
 function checkFileType(file, cb){
 	//Allowed
 	const fileTypes = /jpeg|jpg|gif|png/;
@@ -45,7 +98,9 @@ router.get('/counters', (req, res, next) => {
 });
 
 router.post('/upload', (req, res, next) => {
+	console.log("2",req.body)
 	upload(req, res, (err) => {
+		console.log("1",req.body)
 		if(err){
 			if(err.code === 'LIMIT_FILE_SIZE'){
 				console.log("Error: File size too large");
@@ -63,7 +118,7 @@ router.post('/upload', (req, res, next) => {
 			}
 			else{
 				console.log("files uploaded")	
-				console.log(req.files)
+				// console.log(req.files)
 				res.status(200).send({message:"uploaded successfully", success: true})
 			}
 		}
@@ -72,16 +127,21 @@ router.post('/upload', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
   	passport.authenticate('local',(err, user, info) => {
-  		if(err)
+  		if(err){
+  			console.log(err)
   			return next(err);
-  		if(!user)
+  		}
+  		if(!user){
+  			// console.log('No user found')
   			return res.send({
-  				message:"no user found ",
+  				message:"Email and passwords do not match",
   				success: false
   			});
+  		}
   		req.logIn(user, function(err) {
-  			if(err)
+  			if(err){
   				return next(err);
+  			}
   			return res.send({
   				message:"successfully logged in ",
   				success: true, 

@@ -8,7 +8,8 @@ class Home extends Component{
 	constructor() {
 		super()
 		this.state ={
-			isLoading: false
+			isLoading: false,
+			signinerror: ''
 		}
 	}
 
@@ -31,8 +32,10 @@ class Home extends Component{
 				setInStorage('imageshare', response.data.session)
 				this.props.history.push('/home')
 			}
-			else
+			else{
 				console.log(response.data.message)
+				this.setState({signinerror: response.data.message})
+			}
 		})
 		.catch(error => {
 			console.log(error)
@@ -44,13 +47,23 @@ class Home extends Component{
 		return(
 			<div>
 				<h1>Please login to continue</h1>
-				<form onSubmit={this.onSubmit.bind(this)}>
-					<input type="text" ref="email" placeholder="Email" required />
-					<br />
-					<input type="password" ref="password" placeholder="Password" required />
-					<br />
-					<input type="submit" id="submit" value="Signin" />
-					<br />
+				{this.state.signinerror}
+				<form onSubmit={this.onSubmit.bind(this)} className="col s12">
+					<div className="row">
+				        <div className="input-field col s6">
+				          <input id="email" type="email" className="validate"  ref="email" required/>
+				          <label htmlFor="email">Email</label>
+				        </div>
+				    </div>
+				    <div className="row">
+				        <div className="input-field col s6">
+				          <input id="password" type="password" className="validate" ref="password" required/>
+				          <label htmlFor="password">Password</label>
+			        	</div>
+			        </div>
+			        <div className="row">
+			        	<button className="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+			        </div>
 					<label>New user? <a href="/signup">Signup</a> instead</label>
 				</form>
 			</div>

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { getFromStorage } from '../utils/storage'
 import { BACKEND } from '../utils/config'
 
 const loginUser = () => {

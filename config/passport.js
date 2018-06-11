@@ -11,7 +11,7 @@ module.exports = function(passport){
 		session: true
 	},function(email,password, done){
 		//check email
-		console.log("passportjs "+email+password)
+		// console.log("passportjs "+email+password)
 		var query = {email:email};
 		User.findOne(query, function(err, user){
 			if(err){

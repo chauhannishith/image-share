@@ -1,8 +1,8 @@
 import React, { Component } from'react'
+import {Link} from 'react-router-dom'
 import createProject from '../helpers/createProject'
 import fetchUserProjects from '../helpers/fetchUserProjects'
 import logOutUser from '../helpers/logOutUser'
-import Project from '../components/Project'
 
 class Home extends Component{
 
@@ -45,7 +45,7 @@ class Home extends Component{
 		fetchUserProjects()
 		.then(response => {
 			// console.log(response.data.projects)
-		 	this.setState({projects: response.data.projects})			
+		 	this.setState({projects: response.data.projects})
 		}).catch(error => console.log(error))
 
 	}
@@ -59,14 +59,22 @@ class Home extends Component{
 
 	render() {
 		const eachProject = this.state.projects.map((project, i) => {
-			return <Project key={i} title={project.title} />
+			return(
+				<li key={i} className="collection-item" >
+					<Link to={{ pathname: '/projects', state: {projectId: project._id, projectTitle: project.title} }}>
+						{project.title}
+					</Link>
+				</li>
+				)
 		})
 		return (
 			<div>
 				<h1>HOME</h1>
 				<a onClick={this.logout.bind(this)}>LogOut</a>
-				<br />
-				{eachProject}
+				
+				<ul className="collection">
+					{eachProject}
+				</ul>
 				<br />
 				
 				{this.state.createForm && this.renderForm()}
