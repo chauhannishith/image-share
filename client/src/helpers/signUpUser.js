@@ -7,7 +7,6 @@ const signUpUser = (user) => {
 			method: 'post',
 			url: BACKEND + '/api/users/signup',
 			data: user,
-			credentials: 'include',
 			}).then(response => {
 	        	resolve(response)
 			})

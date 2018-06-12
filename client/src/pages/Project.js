@@ -17,7 +17,6 @@ class Project extends Component{
 		else
 			document.getElementById('display').innerText = 'View'
 		this.setState({displayDrop: temp})
-		console.log(this.props.location.state.projectid)
 	}
 
 	render() {

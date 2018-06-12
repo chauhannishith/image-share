@@ -1,8 +1,9 @@
 import React, { Component } from'react'
 import {Link} from 'react-router-dom'
+import Loading from './Loading'
 import createProject from '../helpers/createProject'
 import fetchUserProjects from '../helpers/fetchUserProjects'
-import logOutUser from '../helpers/logOutUser'
+import { getFromStorage, removeFromStorage } from '../utils/storage'
 
 class Home extends Component{
 
@@ -10,7 +11,8 @@ class Home extends Component{
 		super(props)
 		this.state ={
 			projects: [],
-			createForm: false
+			createForm: false,
+			isLoading: true
 		}
 	}
 	createComponent(e) {
@@ -29,6 +31,26 @@ class Home extends Component{
 		this.setState({createForm: value})
 	}
 
+	componentDidMount() {
+		let token = getFromStorage('imageshare');
+		if(token !== null){
+			fetchUserProjects()
+			.then(response => {
+				if(response.data.redirect)
+					this.props.history.push('/')
+				else
+			 		this.setState({projects: response.data.projects}, () => this.setState({isLoading: false}))
+			}).catch(error => console.log(error))
+		}else{
+			this.props.history.push('/')
+		}
+	}
+
+	logout(){
+		removeFromStorage('imageshare')
+		this.props.history.push('/')
+	}
+
 	renderForm() {
 		return (
 			<div>
@@ -41,22 +63,6 @@ class Home extends Component{
 			)
 	}
 
-	componentDidMount() {
-		fetchUserProjects()
-		.then(response => {
-			// console.log(response.data.projects)
-		 	this.setState({projects: response.data.projects})
-		}).catch(error => console.log(error))
-
-	}
-
-	logout(){
-		logOutUser()
-		.then(response => {
-			console.log(response)
-		}).catch(err => console.log(err))
-	}
-
 	render() {
 		const eachProject = this.state.projects.map((project, i) => {
 			return(
@@ -67,13 +73,17 @@ class Home extends Component{
 				</li>
 				)
 		})
+
+		if(this.state.isLoading)
+			return <Loading />
+
 		return (
 			<div>
 				<h1>HOME</h1>
 				<a onClick={this.logout.bind(this)}>LogOut</a>
 				
 				<ul className="collection">
-					{eachProject}
+					{eachProject.length ? eachProject : <p>You haven't created any project yet</p>}
 				</ul>
 				<br />
 				

@@ -1,6 +1,7 @@
 import React, { Component} from 'react'
 import FileDrop from 'react-file-drop'
 import uploadFiles from '../helpers/uploadFiles'
+import { getFromStorage } from '../utils/storage'
 
 class DragnDrop extends Component {
 
@@ -32,14 +33,19 @@ class DragnDrop extends Component {
 	}
 
 	uploadHandler() {
+		let session = getFromStorage('imageshare')
+		let userId = session.passport.user;
+		console.log(userId)
 		const fd = new FormData()
 		fd.append('projectId', this.props.projectid)
-		console.log(this.props.projectid)
+		fd.append('userId', userId)
+		// console.log(this.props.projectid)
 		for(let i = 0; i < this.state.attachments.length; i++ )
 			fd.append('image', this.state.attachments[i], this.state.attachments[i].name)
 		console.log(fd.get('image'))
 		uploadFiles(fd, this.props.projectid)
-		.then(response => {console.log(response.data)
+		.then(response => {
+			console.log(response.data)
 			if(response.data.success){
 				console.log(response.data.message)
 			}

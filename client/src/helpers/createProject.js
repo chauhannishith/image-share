@@ -3,14 +3,16 @@ import { BACKEND } from '../utils/config'
 import { getFromStorage } from '../utils/storage'
 
 const createProject = (title) => {
-	let session = getFromStorage('imageshare')
+	let token = getFromStorage('imageshare')
 	// console.log(session)
 	return new Promise((resolve, reject) => {
 		axios.request({
 			method: 'post',
 			url: BACKEND + '/api/users/create',
+			headers: {
+				Authorization: 'Bearer ' + token
+			},
 			data: {
-				userID: session.passport.user,
 				title: title
 			},
 			credentials: 'include'

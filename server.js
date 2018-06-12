@@ -8,8 +8,8 @@ const nodemailer = require('nodemailer');
 const logger = require('morgan');
 const passport = require('passport');
 const port = process.env.PORT || 3001;
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+// const session = require('express-session');
+// const MongoStore = require('connect-mongo')(session);
 const User = require('./models/user');
 const users = require('./routes/users');
 const index = require('./routes/index');
@@ -25,17 +25,17 @@ app.use(passport.session());
 
 
 app.set('trust proxy', 1)
-app.use(session({
-	secret: 'mysecret',
-	resave: false,
-	saveUninitialized: false,
-	store: new MongoStore({ mongooseConnection: mongoose.connection }),
-	cookie: { 
-		maxAge: 1 * 20 * 60 * 1000, /*hours minutes seconds milli*/
-		httpOnly: false,
-		domain: 'http://localhost:3000'
-	}
-}));
+// app.use(session({
+// 	secret: 'mysecret',
+// 	resave: false,
+// 	saveUninitialized: false,
+// 	store: new MongoStore({ mongooseConnection: mongoose.connection }),
+// 	cookie: { 
+// 		maxAge: 1 * 20 * 60 * 1000, /*hours minutes seconds milli*/
+// 		httpOnly: false,
+// 		domain: 'http://localhost:3000'
+// 	}
+// }));
 
 
 app.use(logger('dev'));	//dev gives proper coloured log
@@ -104,13 +104,13 @@ mongoose.Promise = global.Promise;
 // }, function(error, options){
 // });
 
-app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Credentials', true);
-	res.header('Access-Control-Allow-Origin', req.headers.origin);
-	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-	res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-	next();
-}); 
+// app.use((req, res, next) => {
+// 	res.header('Access-Control-Allow-Credentials', true);
+// 	res.header('Access-Control-Allow-Origin', req.headers.origin);
+// 	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+// 	res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+// 	next();
+// }); 
 
 app.use('/api/users', users);
 app.use('/', index);

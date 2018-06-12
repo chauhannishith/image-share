@@ -3,15 +3,14 @@ import { BACKEND } from '../utils/config'
 import { getFromStorage } from '../utils/storage'
 
 const fetchUserProjects = (title) => {
-	let session = getFromStorage('imageshare')
+	let token = getFromStorage('imageshare')
 	// console.log(session)
 	return new Promise((resolve, reject) => {
 		axios.request({
 			method: 'post',
 			url: BACKEND + '/api/users/projects',
-			credentials: 'include',
-			data: {
-				userID: session.passport.user
+			headers: {
+				Authorization: 'Bearer ' + token
 			}
 			}).then(response => {
 	        	resolve(response)

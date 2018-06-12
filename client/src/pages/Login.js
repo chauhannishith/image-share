@@ -13,6 +13,15 @@ class Home extends Component{
 		}
 	}
 
+	componentDidMount() {
+		let token = getFromStorage('imageshare')
+		if(token)
+			this.props.history.push('/home')
+		else{
+			this.setState({isLoading:false})
+		}
+	}
+
 	onSubmit(e) {
 		const user = {
 			email: this.refs.email.value,
@@ -23,13 +32,13 @@ class Home extends Component{
 	}
 
 	submitUser(user) {
-		//this.setState({isLoading: true})
+		this.setState({isLoading: true})
 		//make call to backend
 		loginUser(user)
 		.then(response => {
-			console.log(response.data)
+			// console.log(response.data)
 			if(response.data.success){
-				setInStorage('imageshare', response.data.session)
+				setInStorage('imageshare', response.data.token)
 				this.props.history.push('/home')
 			}
 			else{
@@ -40,10 +49,14 @@ class Home extends Component{
 		.catch(error => {
 			console.log(error)
 		})
-		
+		this.setState({isLoading: false})
 	}
 
 	render() {
+
+		if(this.state.isLoading)
+			return <Loading />
+
 		return(
 			<div>
 				<h1>Please login to continue</h1>

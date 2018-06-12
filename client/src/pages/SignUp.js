@@ -1,7 +1,17 @@
 import React, { Component } from 'react'
 import signUpUser from '../helpers/signUpUser'
+import { getFromStorage } from '../utils/storage'
 
 class SignUp extends Component {
+
+	componentDidMount() {
+		let token = getFromStorage('imageshare');
+		if(token !== null){
+			console.log("home")
+			this.props.history.push('/home')
+		}
+	}
+
 	onSubmit(e) {
 		e.preventDefault();
 		if(this.refs.password.value === this.refs.cpassword.value){

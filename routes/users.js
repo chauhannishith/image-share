@@ -4,6 +4,7 @@ const router = express.Router();
 const multer = require('multer');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const methodOverride= require('method-override');
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
@@ -14,6 +15,7 @@ const UserSession = require('../models/session');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const path = require('path');
+var jwtSecret = 'supersecretkey';
 const node_env = process.env.NODE_ENV || 'development';
 
 var count = 0;
@@ -54,7 +56,7 @@ else{
 const storage = new GridFsStorage({
   url: mongodb_uri,
   file: (req, file) => {
-  	console.log("3",req.body)
+  	// console.log("3",req.body)
     return new Promise((resolve, reject) => {
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
@@ -65,7 +67,8 @@ const storage = new GridFsStorage({
           filename: filename,
           bucketName: 'images',
           metadata: {
-          	projectId: req.body.projectId
+          	projectId: req.body.projectId,
+          	userId: req.body.userId
           }
         };
         resolve(fileInfo);
@@ -74,7 +77,11 @@ const storage = new GridFsStorage({
   }
 });
 const upload = multer({
-	storage: storage
+	storage: storage,
+	fileFilter: function(req, file, cb){
+		// console.log(req.files,"****************************")
+		checkFileType(file, cb);
+	}
 }).array('image');
 
 //check file extension
@@ -92,29 +99,55 @@ function checkFileType(file, cb){
 	}
 }
 
-router.get('/counters', (req, res, next) => {
-    count++;
-    res.json(count);
+
+router.get('/images/:filename', (req, res, next) => {
+	gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+		// check file
+		if(!file || file.length === 0){
+			return res.status(404).send({message:'No file exists', success: false})
+		}
+
+		if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
+			var readStream = gfs.createReadStream(file.filename)
+			readStream.pipe(res)
+		}
+		else{
+			res.status(200).send({message:'no file', success: false})
+		}
+	});
+});
+
+router.get('/counters', verifyToken, (req, res, next) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) => {
+		if(err){
+			console.log(err)
+		}
+		else{
+			count++;
+    		res.json(count);
+		}
+	});
+    
 });
 
 router.post('/upload', (req, res, next) => {
-	console.log("2",req.body)
+	// console.log("2",req.body)
 	upload(req, res, (err) => {
-		console.log("1",req.body)
+		// console.log("1",req.body)
 		if(err){
 			if(err.code === 'LIMIT_FILE_SIZE'){
 				console.log("Error: File size too large");
-				res.status(200).send({message:"File size too large", success: false})	
+				res.status(404).send({message:"File size too large", success: false})	
 			}
 			else{
 				console.log("error"+err);
-				res.status(200).send({message:err, success: false})
+				res.status(404).send({message:err, success: false})
 			}
 		}
 		else{
 			if(req.files == undefined){
 				console.log("undefined")
-				res.status(200).send({message:"No files selected", success: false})
+				res.status(404).send({message:"No files selected", success: false})
 			}
 			else{
 				console.log("files uploaded")	
@@ -124,6 +157,28 @@ router.post('/upload', (req, res, next) => {
 		}
 	})
 })
+
+router.get('/files', (req, res, next) => {
+	gfs.files.find().toArray((err, files) => {
+		// check files
+		if(!files || files.length === 0){
+			return res.status(404).send({message:'There are no files', success: false})
+		}
+		// else{
+		// 	files.map((file) =>{
+		// 		if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
+		// 			file.isImage = true;
+		// 		}
+		// 		else{
+		// 			file.isImage = false;
+		// 		}	
+		// 	})	
+		// 		res.status(200).send({files: files})
+		// }
+		console.log(files)
+		return res.json(files);
+	});
+});
 
 router.post('/login', (req, res, next) => {
   	passport.authenticate('local',(err, user, info) => {
@@ -142,12 +197,20 @@ router.post('/login', (req, res, next) => {
   			if(err){
   				return next(err);
   			}
-  			return res.send({
-  				message:"successfully logged in ",
-  				success: true, 
-  				sessionID: req.sessionID,
-  				session: req.session
-  			});
+  			else{
+  				jwt.sign({user: user}, jwtSecret, { expiresIn: '1d' }, (err, token) => {
+  					res.status(200).send({message: 'successfully logged in', success: true, token: token})	
+  				})
+  				
+  			}
+  			//
+  			// return res.send({
+  			// 	message:"successfully logged in ",
+  			// 	success: true, 
+  			// 	sessionID: req.sessionID,
+  			// 	session: req.session
+  			// });
+  			//
   		})
   	})(req, res, next);
 });
@@ -192,51 +255,92 @@ router.post('/signup', (req, res, next) => {
 
 });
 
-router.post('/create', (req,res) => {
-	var projectTitle = req.body.title;
-	var userID = req.body.userID;
-	var newProject = new Project({
-		title: projectTitle,
-		createdby: userID
-	})
-	newProject.save(function(err){
+router.post('/create', verifyToken, (req,res) => {
+
+	//
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
-			console.log("some error");
-			return;
+			console.log(err)
+			res.status(200).send('error')
 		}
 		else{
-			console.log("success adding project")
-			res.send({
-				message: "project added successfully",
-				success: true
-			});
+			var projectTitle = req.body.title;
+			var userID = authData.user._id;
+			var newProject = new Project({
+				title: projectTitle,
+				createdby: userID
+			})
+			newProject.save(function(err){
+				if(err){
+					console.log("some error");
+					return;
+				}
+				else{
+					console.log("success adding project")
+					res.send({
+						message: "project added successfully",
+						success: true
+					});
+				}
+			})
 		}
-	})
+	});
+		//
 });
 
-router.post('/projects', (req,res) => {
-	var userID = req.body.userID;
-	// console.log(req.body)
-	Project.find({createdby: userID}, (err, projects) => {
+router.post('/projects', verifyToken, (req,res) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
-			console.log("some error");
-			return;
+			console.log(err)
+			res.status(200).send({redirect:true})
 		}
 		else{
-			console.log("success finding projects")
-			res.send({
-				message: "project added successfully",
-				success: true,
-				projects: projects
-			});
+			// console.log(authData)
+			var userID = authData.user._id;
+			// console.log(req.body)
+			Project.find({createdby: userID}, (err, projects) => {
+				if(err){
+					console.log("some error");
+					return;
+				}
+				else{
+					console.log("success finding projects")
+					res.send({
+						message: "project added successfully",
+						success: true,
+						projects: projects
+					});
+				}
+			})
+			//
 		}
-	})
+	});
+
 });
 
-router.get('/logout', (req, res, next) => {
-	console.log(req)
-	req.logout();
-	res.json("successfully logged out");
-});
+// router.get('/logout', (req, res, next) => {
+// 	console.log(req)
+// 	req.logout();
+// 	res.json("successfully logged out");
+// });
 
 module.exports = router;
+
+function verifyToken(req, res, next){
+	//get header value
+	// console.log(req.headers)
+	const bearerHeader = req.headers['authorization'];
+	//we will pass as bearer token
+	if( typeof bearerHeader !== undefined) {
+		//splitting space
+		var bearer = bearerHeader.split(' ')
+		//token
+		var bearerToken = bearer[1];
+		req.token = bearerToken;
+		next();
+	}
+	else{
+		res.status(404).send({redirect: true})
+	}
+	
+}

@@ -7,7 +7,6 @@ const loginUser = (user) => {
 			method: 'post',
 			url: BACKEND + '/api/users/login',
 			data: user,
-			credentials: 'include'
 			}).then(response => {
 	        	resolve(response)
 			})
