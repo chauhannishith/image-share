@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import DragnDrop from '../components/DragnDrop'
+import fetchUploadedFiles from '../helpers/fetchUploadedFiles'
 
 class Project extends Component{
 	constructor(props) {
@@ -8,6 +9,26 @@ class Project extends Component{
 			images: [],
 			displayDrop: false
 		}
+	}
+
+	componentDidMount() {
+		this.fetchFiles()
+	}
+
+	fetchFiles() {
+		fetchUploadedFiles(this.props.location.state.projectId)
+		.then(response => {
+			console.log(response.data)
+			if(response.data){
+				var reader = new FileReader();
+				reader.onLoadend = () =>{
+					this.setState({images: reader.result})
+				}
+				reader.readAsDataURL(response.data)
+			}
+			// this.setState({images: response.data})
+		})
+		.catch(error => console.log(error))
 	}
 
 	toggleState() {
@@ -22,7 +43,7 @@ class Project extends Component{
 	render() {
 
 		const eachImage = this.state.images.map((image, i) => {
-			return <img src="" alt="noimage.jpg" />
+			return <img src="{image}" alt="noimage.jpg" />
 		})
 
 		return (

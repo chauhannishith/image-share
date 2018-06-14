@@ -1,7 +1,7 @@
 import React, { Component} from 'react'
 import FileDrop from 'react-file-drop'
 import uploadFiles from '../helpers/uploadFiles'
-import { getFromStorage } from '../utils/storage'
+// import { getFromStorage } from '../utils/storage'
 
 class DragnDrop extends Component {
 
@@ -9,7 +9,8 @@ class DragnDrop extends Component {
 		super()
 		this.state = {
 			attachments: null,//[],
-			bool: true
+			bool: true,
+			uploading: false
 		}
 	}
 
@@ -21,9 +22,11 @@ class DragnDrop extends Component {
 	}
 
 	handleDrop(files, event) {
-		this.setState({attachments: files},() =>
-			this.uploadHandler()
-		)
+		this.setState({attachments: files},() =>{
+			this.setState({uploading: true}, () => {
+				this.uploadHandler()
+			})
+		})
 	}
 
 	fileHandler(e) {
@@ -33,12 +36,12 @@ class DragnDrop extends Component {
 	}
 
 	uploadHandler() {
-		let session = getFromStorage('imageshare')
-		let userId = session.passport.user;
-		console.log(userId)
+		// let session = getFromStorage('imageshare')
+		// let userId = session.passport.user;
+		// console.log(userId)
 		const fd = new FormData()
 		fd.append('projectId', this.props.projectid)
-		fd.append('userId', userId)
+		// fd.append('userId', userId)
 		// console.log(this.props.projectid)
 		for(let i = 0; i < this.state.attachments.length; i++ )
 			fd.append('image', this.state.attachments[i], this.state.attachments[i].name)
@@ -60,6 +63,10 @@ class DragnDrop extends Component {
 
 		return (
 			<div>
+				{this.state.uploading? <div className="progress">
+				    <div className="indeterminate"></div>
+				</div>:<p>hi</p>}
+
 				<div
 				 id="file-drop"
 				 style={{ border: '1px solid black', width: 600, margin: 'auto', color: 'black', padding: 20 }}>
@@ -71,7 +78,6 @@ class DragnDrop extends Component {
 					<br />
 					<button onClick={this.uploadHandler.bind(this)} id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
 				</div>
-				
 			</div>
 			);
 	}

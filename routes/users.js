@@ -20,9 +20,6 @@ const node_env = process.env.NODE_ENV || 'development';
 
 var count = 0;
 
-Grid.mongo = mongoose.mongo;
-var gfs = Grid(mongoose.connection);
-gfs.collection('images');
 
 //local storage
 // const storage = multer.diskStorage({
@@ -53,6 +50,17 @@ else{
 	mongodb_uri = config.database;//specified mlab
 }
 
+Grid.mongo = mongoose.mongo;
+var conn = mongoose.connection;
+var gfs;
+conn.once('open', () => {
+	gfs = Grid(conn.db, mongoose.mongo);
+	gfs.collection('images')
+})
+// var gfs = Grid(mongoose.connection);
+// gfs.collection('images');
+
+
 const storage = new GridFsStorage({
   url: mongodb_uri,
   file: (req, file) => {
@@ -68,7 +76,7 @@ const storage = new GridFsStorage({
           bucketName: 'images',
           metadata: {
           	projectId: req.body.projectId,
-          	userId: req.body.userId
+          	uploadedby: req.authData.user._id,
           }
         };
         resolve(fileInfo);
@@ -99,24 +107,6 @@ function checkFileType(file, cb){
 	}
 }
 
-
-router.get('/images/:filename', (req, res, next) => {
-	gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
-		// check file
-		if(!file || file.length === 0){
-			return res.status(404).send({message:'No file exists', success: false})
-		}
-
-		if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
-			var readStream = gfs.createReadStream(file.filename)
-			readStream.pipe(res)
-		}
-		else{
-			res.status(200).send({message:'no file', success: false})
-		}
-	});
-});
-
 router.get('/counters', verifyToken, (req, res, next) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) => {
 		if(err){
@@ -130,32 +120,37 @@ router.get('/counters', verifyToken, (req, res, next) => {
     
 });
 
-router.post('/upload', (req, res, next) => {
-	// console.log("2",req.body)
-	upload(req, res, (err) => {
-		// console.log("1",req.body)
-		if(err){
-			if(err.code === 'LIMIT_FILE_SIZE'){
-				console.log("Error: File size too large");
-				res.status(404).send({message:"File size too large", success: false})	
+router.post('/upload', verifyToken, (req, res, next) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
+		// console.log(authData)
+		req.authData = authData
+		upload(req, res, (err) => {
+		// console.log("1",req.authData)
+			if(err){
+				if(err.code === 'LIMIT_FILE_SIZE'){
+					console.log("Error: File size too large");
+					res.status(404).send({message:"File size too large", success: false})	
+				}
+				else{
+					console.log("error"+err);
+					res.status(404).send({message:err, success: false})
+				}
 			}
 			else{
-				console.log("error"+err);
-				res.status(404).send({message:err, success: false})
+				if(req.files == undefined){
+					console.log("undefined")
+					res.status(404).send({message:"No files selected", success: false})
+				}
+				else{
+					console.log("files uploaded")	
+					// console.log(req.files)
+					res.status(200).send({message:"uploaded successfully", success: true})
+				}
 			}
-		}
-		else{
-			if(req.files == undefined){
-				console.log("undefined")
-				res.status(404).send({message:"No files selected", success: false})
-			}
-			else{
-				console.log("files uploaded")	
-				// console.log(req.files)
-				res.status(200).send({message:"uploaded successfully", success: true})
-			}
-		}
+		})
 	})
+	// console.log("2",req.body)
+	
 })
 
 router.get('/files', (req, res, next) => {
@@ -164,19 +159,39 @@ router.get('/files', (req, res, next) => {
 		if(!files || files.length === 0){
 			return res.status(404).send({message:'There are no files', success: false})
 		}
-		// else{
-		// 	files.map((file) =>{
-		// 		if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
-		// 			file.isImage = true;
-		// 		}
-		// 		else{
-		// 			file.isImage = false;
-		// 		}	
-		// 	})	
-		// 		res.status(200).send({files: files})
-		// }
-		console.log(files)
-		return res.json(files);
+		else{
+			files.map((file) =>{
+				if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
+					file.isImage = true;
+				}
+				else{
+					file.isImage = false;
+				}	
+			})	
+				res.status(200).send({files: files})
+		}
+		// console.log(files)
+		// return res.json(files);
+	});
+});
+
+router.get('/images/:id', (req, res, next) => {
+	 console.log(req.params.id)
+	gfs.files.findOne({ "metadata.projectId": req.params.id }, (err, file) => {
+		// check file
+		// console.log(file)
+		if(!file || file.length === 0){
+			return res.status(404).send({message:'No file exists', success: false})
+		}
+
+		if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
+			var readStream = gfs.createReadStream({filename: file.filename})
+			readStream.pipe(res)
+			// res.status(200).send('file found')
+		}
+		else{
+			res.status(200).send({message:'no file', success: false})
+		}
 	});
 });
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import DragnDrop from './DragnDrop'
 
+
 class Project extends Component{
 	constructor(props) {
 		super(props)
@@ -22,8 +23,8 @@ class Project extends Component{
 	render() {
 		return (
 			<div>
-				<h1>{this.props.title}</h1>
-				<button id="display" onClick={this.toggleState.bind(this)}>View</button>	
+				<h1>{this.props.projectTitle}</h1>
+				<button id="display" onClick={this.toggleState.bind(this)}>View</button>
 				{this.state.displayDrop && <DragnDrop projectid={this.props.projectid} />}
 			</div>
 			)
