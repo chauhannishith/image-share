@@ -1,4 +1,5 @@
 const config =require('./config/database');
+require('dotenv').config()
 const cors = require('cors');
 const express =require('express');
 const mongoose = require('mongoose');
@@ -24,7 +25,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-app.set('trust proxy', 1)
+// app.set('trust proxy', 1)
 // app.use(session({
 // 	secret: 'mysecret',
 // 	resave: false,

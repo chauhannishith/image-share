@@ -8,7 +8,7 @@ const fetchUploadedFiles = (projectID) => {
 	return new Promise((resolve, reject) => {
 		axios.request({
 			method: 'get',
-			url: BACKEND + '/api/users/images/' + projectID,
+			url: BACKEND + '/api/users/files/' + projectID,
 			headers: {
 				Authorization: 'Bearer ' + token
 			}

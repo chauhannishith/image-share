@@ -46,3 +46,8 @@ ul li{
 	padding: 100px;
 	background-color: rgb(230, 230, 230);
  }
+.thumb{
+  max-height: 200px;
+  max-width: 200px;
+  padding: 10px;
+}

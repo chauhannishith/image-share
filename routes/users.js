@@ -1,4 +1,5 @@
 const config =require('../config/database');
+var frontend;
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -6,17 +7,52 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const methodOverride= require('method-override');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const Project = require('../models/project');
 const User = require('../models/user');
+const ThirdPartyUser = require('../models/thirdpartyuser');
 const Images = require('../models/images');
-const UserSession = require('../models/session');
+// const UserSession = require('../models/session');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const path = require('path');
 var jwtSecret = 'supersecretkey';
 const node_env = process.env.NODE_ENV || 'development';
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: process.env.BACKEND_URL + '/api/users/auth/google/callback'
+  },
+  (token, tokenSecret, profile, done) => {
+  	// console.log("reached here")
+      ThirdPartyUser.findOne({ "profile.id": profile.id }, function (err, user) {
+  		if(err){
+  			console.log(err)
+  			return next(err);
+  		}
+  		if(!user){
+  			console.log('No user found')
+  			var user = new ThirdPartyUser({
+  				profile//googleId: profile.id
+  			})
+  			user.save(err=> {
+  				if(err)
+  					console.log(error)
+  				return done(err, user)
+  			})
+
+  		}
+  		else{
+  			// console.log(user)
+        return done(err, user);
+  		}
+
+      });
+  }
+));
 
 var count = 0;
 
@@ -42,12 +78,15 @@ var count = 0;
 var mongodb_uri;
 if(node_env === 'production'){
 	mongodb_uri = process.env.MONGODB_URI;//custom mlab uri
+	frontend = process.env.REACT_APP_URL
 }
 else if(node_env === 'localdev'){
 	mongodb_uri = config.localdb;//local
+	frontend = 'http://localhost:3000'
 }
 else{
 	mongodb_uri = config.database;//specified mlab
+	frontend = 'http://localhost:3000'
 }
 
 Grid.mongo = mongoose.mongo;
@@ -107,17 +146,9 @@ function checkFileType(file, cb){
 	}
 }
 
-router.get('/counters', verifyToken, (req, res, next) => {
-	jwt.verify(req.token, jwtSecret, (err, authData) => {
-		if(err){
-			console.log(err)
-		}
-		else{
+router.get('/counters', (req, res, next) => {
 			count++;
-    		res.json(count);
-		}
-	});
-    
+    		res.json(count);    
 });
 
 router.post('/upload', verifyToken, (req, res, next) => {
@@ -153,11 +184,11 @@ router.post('/upload', verifyToken, (req, res, next) => {
 	
 })
 
-router.get('/files', (req, res, next) => {
-	gfs.files.find().toArray((err, files) => {
+router.get('/files/:id', (req, res, next) => {
+	gfs.files.find({"metadata.projectId": req.params.id}).toArray((err, files) => {
 		// check files
 		if(!files || files.length === 0){
-			return res.status(404).send({message:'There are no files', success: false})
+			return res.status(200).send({message:'There are no files', success: false})
 		}
 		else{
 			files.map((file) =>{
@@ -168,7 +199,7 @@ router.get('/files', (req, res, next) => {
 					file.isImage = false;
 				}	
 			})	
-				res.status(200).send({files: files})
+				res.status(200).send({files: files, success: true})
 		}
 		// console.log(files)
 		// return res.json(files);
@@ -177,7 +208,7 @@ router.get('/files', (req, res, next) => {
 
 router.get('/images/:id', (req, res, next) => {
 	 console.log(req.params.id)
-	gfs.files.findOne({ "metadata.projectId": req.params.id }, (err, file) => {
+	gfs.files.findOne({ filename: req.params.id }, (err, file) => {
 		// check file
 		// console.log(file)
 		if(!file || file.length === 0){
@@ -193,6 +224,17 @@ router.get('/images/:id', (req, res, next) => {
 			res.status(200).send({message:'no file', success: false})
 		}
 	});
+});
+
+router.get('/auth/google',
+  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+
+router.get('/auth/google/callback', 
+  passport.authenticate('google'),
+  (req, res) => {
+  	// console.log("reached here2")
+  	// console.log(req)
+    res.redirect(frontend+'/home')
 });
 
 router.post('/login', (req, res, next) => {
@@ -276,7 +318,7 @@ router.post('/create', verifyToken, (req,res) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
 			console.log(err)
-			res.status(200).send('error')
+			res.status(200).send({message: 'Please login again', success: false})
 		}
 		else{
 			var projectTitle = req.body.title;

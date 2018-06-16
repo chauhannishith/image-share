@@ -36,8 +36,10 @@ class Home extends Component{
 		if(token !== null){
 			fetchUserProjects()
 			.then(response => {
-				if(response.data.redirect)
+				if(response.data.redirect){
+					removeFromStorage('imageshare')
 					this.props.history.push('/')
+				}
 				else
 			 		this.setState({projects: response.data.projects}, () => this.setState({isLoading: false}))
 			}).catch(error => console.log(error))

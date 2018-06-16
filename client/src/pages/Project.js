@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import DragnDrop from '../components/DragnDrop'
 import fetchUploadedFiles from '../helpers/fetchUploadedFiles'
+import { BACKEND } from '../utils/config'
 
 class Project extends Component{
 	constructor(props) {
@@ -12,21 +13,20 @@ class Project extends Component{
 	}
 
 	componentDidMount() {
-		this.fetchFiles()
+		setTimeout(() => this.fetchFiles(), 2000 )
+		
 	}
 
 	fetchFiles() {
 		fetchUploadedFiles(this.props.location.state.projectId)
 		.then(response => {
-			console.log(response.data)
-			if(response.data){
-				var reader = new FileReader();
-				reader.onLoadend = () =>{
-					this.setState({images: reader.result})
-				}
-				reader.readAsDataURL(response.data)
+			if(response.data.success){
+				console.log(response.data.files)
+				this.setState({images: [...this.state.images,...response.data.files]})
 			}
-			// this.setState({images: response.data})
+			else{
+				console.log(response.data.message)
+			}
 		})
 		.catch(error => console.log(error))
 	}
@@ -40,10 +40,11 @@ class Project extends Component{
 		this.setState({displayDrop: temp})
 	}
 
+// {eachImage.length ? eachImage : <p>You have not added any images yet</p>}
+// <div id="imgContainer">{this.state.images}</div>
 	render() {
-
 		const eachImage = this.state.images.map((image, i) => {
-			return <img src="{image}" alt="noimage.jpg" />
+			return <img key={i} src={`${BACKEND}` + '/api/users/images/' + `${image.filename}`} alt="noimage.jpg" className="thumb" />
 		})
 
 		return (
