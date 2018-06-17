@@ -116,6 +116,7 @@ const storage = new GridFsStorage({
           metadata: {
           	projectId: req.body.projectId,
           	uploadedby: req.authData.user._id,
+          	name: req.authData.user.firstname + ' ' + req.authData.user.lastname,
           }
         };
         resolve(fileInfo);
@@ -147,8 +148,8 @@ function checkFileType(file, cb){
 }
 
 router.get('/counters', (req, res, next) => {
-			count++;
-    		res.json(count);    
+	count++;
+	res.json(count);    
 });
 
 router.post('/upload', verifyToken, (req, res, next) => {
@@ -243,7 +244,7 @@ router.get('/auth/google/callback',
   	}
   	console.log(user)
     	jwt.sign({user: user}, jwtSecret, { expiresIn: '1d' }, (err, token) => {
-    		console.log(token)
+    		// console.log(token)
     		res.redirect(frontend+'/auth/'+token);
   		})
   	// res.redirect(frontend+'/home')
@@ -370,6 +371,37 @@ router.post('/projects', verifyToken, (req,res) => {
 						message: "project added successfully",
 						success: true,
 						projects: projects
+					});
+				}
+			})
+			//
+		}
+	});
+
+});
+
+//projects with user
+router.post('/sharedprojects', verifyToken, (req,res) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
+		if(err){
+			console.log(err)
+			res.status(200).send({redirect:true})
+		}
+		else{
+			// console.log(authData)
+			var userID = authData.user._id;
+			// console.log(req.body)
+			Project.find({"sharedwith.userId": userID}, (err, projects) => {
+				if(err){
+					console.log("some error");
+					return;
+				}
+				else{
+					console.log("success finding projects")
+					res.send({
+						message: "project added successfully",
+						success: true,
+						sharedProjects: projects
 					});
 				}
 			})

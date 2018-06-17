@@ -11,7 +11,11 @@ var ProjectSchema = mongoose.Schema({
 	timestamp:{
 		type: Date,
 		default: Date.now()
-	}
+	},
+	sharedwith:[{
+		userId: String,
+		name: String
+	}]
 });
 
 module.exports = mongoose.model('Project',ProjectSchema);
