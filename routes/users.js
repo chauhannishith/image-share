@@ -227,14 +227,26 @@ router.get('/images/:id', (req, res, next) => {
 });
 
 router.get('/auth/google',
-  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login',
+  	'https://www.googleapis.com/auth/plus.profile.emails.read'] }));
 
 router.get('/auth/google/callback', 
   passport.authenticate('google'),
   (req, res) => {
-  	// console.log("reached here2")
-  	// console.log(req)
-    res.redirect(frontend+'/home')
+  	// console.log(req.user)
+  	var tempUser = JSON.parse(JSON.stringify(req.user))
+  	var user = {
+  		_id: tempUser._id,
+  		email: tempUser.profile.emails[0].value,
+  		firstname: tempUser.profile.name.givenName,
+  		lastname: tempUser.profile.name.familyName
+  	}
+  	console.log(user)
+    	jwt.sign({user: user}, jwtSecret, { expiresIn: '1d' }, (err, token) => {
+    		console.log(token)
+    		res.redirect(frontend+'/auth/'+token);
+  		})
+  	// res.redirect(frontend+'/home')
 });
 
 router.post('/login', (req, res, next) => {
@@ -260,14 +272,6 @@ router.post('/login', (req, res, next) => {
   				})
   				
   			}
-  			//
-  			// return res.send({
-  			// 	message:"successfully logged in ",
-  			// 	success: true, 
-  			// 	sessionID: req.sessionID,
-  			// 	session: req.session
-  			// });
-  			//
   		})
   	})(req, res, next);
 });

@@ -3,7 +3,7 @@ import loginUser from '../helpers/loginUser'
 import { getFromStorage, setInStorage } from '../utils/storage'
 import Loading from './Loading'
 
-class Home extends Component{
+class Login extends Component{
 
 	constructor() {
 		super()
@@ -85,4 +85,4 @@ class Home extends Component{
 	}
 }
 
-export default Home
+export default Login

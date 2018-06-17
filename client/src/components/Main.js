@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import Auth from '../pages/Auth'
 import Login from '../pages/Login'
 import Home from '../pages/Home'
 import SignUp from '../pages/SignUp'
@@ -13,6 +14,7 @@ class Main extends Component{
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/" component={Login} />
+					<Route path="/auth/:id" component={Auth} />
 					<Route path="/signup" component={SignUp} />
 					<Route path="/home" component={Home} />
 					<Route path="/projects" component={Project}/>
