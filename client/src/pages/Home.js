@@ -22,8 +22,11 @@ class Home extends Component{
 		createProject(this.refs.projectTitle.value)
 		.then(response => {
 			// console.log(response)
-			if(response.data.success)
-				this.componentDidMount()
+			if(response.data.success){
+				this.setState({createForm: false}, () => {
+					this.componentDidMount()
+				})
+			}
 		}).catch(error => console.log(error))
 
 	}
@@ -47,6 +50,7 @@ class Home extends Component{
 				}
 			 	fetchSharedProjects()
 			 	.then(response => {
+			 		console.log(response.data)
 			 		this.setState({sharedProjects: response.data.sharedProjects})
 			 	})
 			 	.catch(err => console.log(err))
@@ -105,14 +109,14 @@ class Home extends Component{
 				<ul className="collection">
 					{eachProject.length ? eachProject : <p>You haven't created any project yet</p>}
 				</ul>
+				{!this.state.createForm && <button onClick={this.displayForm.bind(this)} >Create New Project</button>}
 				{this.state.createForm && this.renderForm()}
 				<br />
 				<h1>Projects shared with you</h1>
 				<ul className="collection">
-					{eachSharedProject.length ? eachSharedProject : <p>You haven't created any project yet</p>}
+					{eachSharedProject.length ? eachSharedProject : <p>You don't have any shared project yet</p>}
 				</ul>
-				
-				{!this.state.createForm && <button onClick={this.displayForm.bind(this)} >Create New Project</button>}
+
 			</div>
 			);
 	}

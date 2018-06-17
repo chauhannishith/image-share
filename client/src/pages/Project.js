@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import DragnDrop from '../components/DragnDrop'
 import fetchUploadedFiles from '../helpers/fetchUploadedFiles'
+import shareProject from '../helpers/shareProject'
 import { BACKEND } from '../utils/config'
 
 class Project extends Component{
@@ -13,6 +14,20 @@ class Project extends Component{
 		}
 	}
 
+	addMember(e) {
+		shareProject(this.refs.email.value, this.props.location.state.projectId)
+		.then(response => {
+			if(response.data.success){
+				console.log(response.data.message)
+			}
+			else{
+				console.log(response.data.message)
+			}
+		})
+		.catch(error => console.log(error))
+		e.preventDefault()
+	}
+
 	componentDidMount() {
 		setTimeout(() => this.fetchFiles(), 2000 )
 		
@@ -22,7 +37,7 @@ class Project extends Component{
 		fetchUploadedFiles(this.props.location.state.projectId)
 		.then(response => {
 			if(response.data.success){
-				console.log(response.data.files)
+				// console.log(response.data.files)
 				this.setState({images: [...this.state.images,...response.data.files]})
 			}
 			else{
@@ -32,16 +47,12 @@ class Project extends Component{
 		.catch(error => console.log(error))
 	}
 
-	share() {
-
-	}
-
 	toggleShareForm() {
 		let temp = !this.state.displayForm
 		if(temp === true)
-			document.getElementById('display').innerText = 'Hide'
+			document.getElementById('share').innerText = 'Cancel'
 		else
-			document.getElementById('display').innerText = 'View'
+			document.getElementById('share').innerText = 'Share'
 		this.setState({displayForm: temp})
 		
 	}
@@ -49,9 +60,9 @@ class Project extends Component{
 	toggleState() {
 		let temp = !this.state.displayDrop
 		if(temp === true)
-			document.getElementById('share').innerText = 'Cancel'
+			document.getElementById('display').innerText = 'Hide'
 		else
-			document.getElementById('share').innerText = 'Share'
+			document.getElementById('display').innerText = 'View'
 		this.setState({displayDrop: temp})
 	}
 
@@ -66,11 +77,12 @@ class Project extends Component{
 			<div>
 				<h1>{this.props.location.state.projectTitle}</h1>
 				{this.state.displayForm && 
-					<form>
+					<form onSubmit={this.addMember.bind(this)}>
 						<input type="email" ref="email" placeholder="email" />
 						<input type="submit" value="Add" />
-					</form>}
-				<button id = "share" onClick={this.toggleShareForm.bind(this)}>Share</button>
+					</form>
+				}
+				<button id="share" onClick={this.toggleShareForm.bind(this)}>Share</button>
 				<br />
 				{eachImage.length ? eachImage : <p>You have not added any images yet</p>}
 				<br />

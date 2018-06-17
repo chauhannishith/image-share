@@ -14,7 +14,9 @@ var ProjectSchema = mongoose.Schema({
 	},
 	sharedwith:[{
 		userId: String,
-		name: String
+		firstname: String,
+		lastname: String,
+		email: String
 	}]
 });
 

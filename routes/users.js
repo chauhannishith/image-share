@@ -380,7 +380,7 @@ router.post('/projects', verifyToken, (req,res) => {
 
 });
 
-//projects with user
+//projects with user by other persons
 router.post('/sharedprojects', verifyToken, (req,res) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
@@ -390,22 +390,69 @@ router.post('/sharedprojects', verifyToken, (req,res) => {
 		else{
 			// console.log(authData)
 			var userID = authData.user._id;
-			// console.log(req.body)
-			Project.find({"sharedwith.userId": userID}, (err, projects) => {
+			console.log(userID)
+			Project.find({sharedwith: {$elemMatch: {_id: userID}}}, (err, projects) => {
 				if(err){
 					console.log("some error");
 					return;
 				}
 				else{
+					// console.log(projects)
 					console.log("success finding projects")
 					res.send({
-						message: "project added successfully",
+						message: "shared project fetched successfully",
 						success: true,
 						sharedProjects: projects
 					});
 				}
 			})
 			//
+		}
+	});
+
+});
+
+//share project with other users by their registered email
+router.post('/share', verifyToken, (req,res) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
+		if(err){
+			console.log(err)
+			res.status(200).send({redirect:true})
+		}
+		else{
+			// console.log(authData)
+			var email = req.body.email;
+			User.findOne({email: email}, (error, user) => {
+				// console.log(user)
+				if(error){
+					console.log(error)
+				}
+				if(!user){
+					// console.log("this 1")
+					res.status(200).send({message: "user does not exist", success: false})
+				}
+
+				var newuser = {
+					userId: user._id,
+					firstname: user.firstname,
+					lastname: user.lastname,
+					email: user.email
+				}	
+				Project.findOneAndUpdate({_id: req.body.projectId},
+					{$push: {sharedwith: user}},
+					(err, project) => {
+						console.log(project)
+						if(err){
+							console.log(err)
+							res.status(200).send({message: "share with user failed", success: false})
+						}
+						else{
+							res.status(200).send({message: "shared with user", success: true})
+						}
+				})
+			
+			})
+
 		}
 	});
 

@@ -13,7 +13,7 @@ class Auth extends Component{
 
 	componentDidMount() {
 		let token = this.props.match.params.id
-		console.log(token)
+		// console.log(token)
 		setInStorage('imageshare', token)
 		this.props.history.push('/home')
 	}
