@@ -2,7 +2,7 @@ import axios from 'axios'
 import { BACKEND } from '../utils/config'
 import { getFromStorage } from '../utils/storage'
 
-const uploadFiles = (fd, projectId) => {
+const uploadFiles = (fd) => {
 	let token = getFromStorage('imageshare')
 	return new Promise((resolve, reject) => {
 		axios.request({

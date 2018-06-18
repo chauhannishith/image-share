@@ -12,6 +12,11 @@ var ProjectSchema = mongoose.Schema({
 		type: Date,
 		default: Date.now()
 	},
+	subgroups: [{
+		groupTitle: String,
+		createdby: String,
+		timestamp: Date
+	}],
 	sharedwith:[{
 		userId: String,
 		firstname: String,

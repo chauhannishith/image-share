@@ -50,7 +50,7 @@ class Home extends Component{
 				}
 			 	fetchSharedProjects()
 			 	.then(response => {
-			 		console.log(response.data)
+			 		// console.log(response.data)
 			 		this.setState({sharedProjects: response.data.sharedProjects})
 			 	})
 			 	.catch(err => console.log(err))
@@ -81,7 +81,7 @@ class Home extends Component{
 		const eachProject = this.state.projects.map((project, i) => {
 			return(
 				<li key={i} className="collection-item" >
-					<Link to={{ pathname: '/projects', state: {projectId: project._id, projectTitle: project.title} }}>
+					<Link to={{ pathname: '/projects', state: {projectId: project._id, projectTitle: project.title, groups: project.subgroups} }}>
 						{project.title}
 					</Link>
 				</li>

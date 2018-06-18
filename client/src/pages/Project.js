@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import DragnDrop from '../components/DragnDrop'
+import Images from '../components/Images'
+import createSubGroup from '../helpers/createSubGroup'
 import fetchUploadedFiles from '../helpers/fetchUploadedFiles'
+import Loading from './Loading'
 import shareProject from '../helpers/shareProject'
 import { BACKEND } from '../utils/config'
 
@@ -9,8 +12,11 @@ class Project extends Component{
 		super(props)
 		this.state ={
 			images: [],
+			subgroups: [],
 			displayDrop: false,
-			displayForm: false
+			displayShareForm: false,
+			displayGroupForm: false,
+			isLoading: true
 		}
 	}
 
@@ -33,61 +39,119 @@ class Project extends Component{
 		
 	}
 
-	fetchFiles() {
-		fetchUploadedFiles(this.props.location.state.projectId)
+	createGroup(e) {
+		console.log('create group', this.refs.groupname.value)
+		createSubGroup(this.props.location.state.projectId, this.refs.groupname.value)
 		.then(response => {
 			if(response.data.success){
-				// console.log(response.data.files)
-				this.setState({images: [...this.state.images,...response.data.files]})
+				 console.log(response.data.message)
+				 this.props.history.push('/home')
 			}
 			else{
 				console.log(response.data.message)
 			}
 		})
 		.catch(error => console.log(error))
+		e.preventDefault()
+	}
+
+	fetchFiles() {
+		fetchUploadedFiles(this.props.location.state.projectId)
+		.then(response => {
+			if(response.data.success){
+				// console.log(response.data.files)
+				this.setState({images: [...this.state.images,...response.data.files]}, () => {
+					this.setState({subgroups: [...this.props.location.state.groups]},()=> {
+							this.setState({isLoading: false})
+						})
+				})
+			}
+			else{
+				console.log(response.data.message)
+				this.setState({isLoading: false})
+			}
+		})
+		.catch(error => console.log(error))
+	}
+
+	goBack() {
+		this.props.history.goBack()
+	}
+
+	toggleCreateGroup() {
+		let temp = !this.state.displayGroupForm
+		if(temp === true)
+			document.getElementById('group').innerText = 'Cancel'
+		else
+			document.getElementById('group').innerText = 'Create'
+		this.setState({displayGroupForm: temp})
+		
 	}
 
 	toggleShareForm() {
-		let temp = !this.state.displayForm
+		let temp = !this.state.displayShareForm
 		if(temp === true)
 			document.getElementById('share').innerText = 'Cancel'
 		else
 			document.getElementById('share').innerText = 'Share'
-		this.setState({displayForm: temp})
+		this.setState({displayShareForm: temp})
 		
 	}
 
-	toggleState() {
-		let temp = !this.state.displayDrop
-		if(temp === true)
-			document.getElementById('display').innerText = 'Hide'
-		else
-			document.getElementById('display').innerText = 'View'
-		this.setState({displayDrop: temp})
-	}
-
-// {eachImage.length ? eachImage : <p>You have not added any images yet</p>}
-// <div id="imgContainer">{this.state.images}</div>
+	// toggleState() {
+	// 	let temp = !this.state.displayDrop
+	// 	if(temp === true)
+	// 		document.getElementById('display').innerText = 'Hide'
+	// 	else
+	// 		document.getElementById('display').innerText = 'View'
+	// 	this.setState({displayDrop: temp})
+	// }
+	// 			<button id="display" onClick={this.toggleState.bind(this)}>View</button>	
+	// 			{this.state.displayDrop && <DragnDrop projectid={this.props.location.state.projectId} />}
 	render() {
 		const eachImage = this.state.images.map((image, i) => {
 			return <img key={i} src={`${BACKEND}` + '/api/users/images/' + `${image.filename}`} alt="noimage.jpg" className="thumb" />
 		})
 
+		const eachGroup = this.state.subgroups.map((group, i) => {
+			return (
+				<li key={i}>
+					{group.groupTitle}
+					<Images projectId={this.props.location.state.projectId} groupTitle={group.groupTitle} />
+				</li>
+			)
+		})
+
 		return (
 			<div>
+			<button onClick={this.goBack.bind(this)} >GoBack</button>
 				<h1>{this.props.location.state.projectTitle}</h1>
-				{this.state.displayForm && 
+				{this.state.displayShareForm && 
 					<form onSubmit={this.addMember.bind(this)}>
-						<input type="email" ref="email" placeholder="email" />
+						<input type="email" ref="email" placeholder="email" required />
 						<input type="submit" value="Add" />
 					</form>
 				}
 				<button id="share" onClick={this.toggleShareForm.bind(this)}>Share</button>
+				<hr />
 				<br />
-				{eachImage.length ? eachImage : <p>You have not added any images yet</p>}
+				{this.state.displayGroupForm && 
+					<form onSubmit={this.createGroup.bind(this)}>
+						<input type="text" ref="groupname" placeholder="Group title" required />
+						<input type="submit" value="Create" />
+					</form>
+				}
+				<button id="group" onClick={this.toggleCreateGroup.bind(this)}>Create subgroup</button>
 				<br />
-				<button id="display" onClick={this.toggleState.bind(this)}>View</button>	
-				{this.state.displayDrop && <DragnDrop projectid={this.props.location.state.projectId} />}
+				<ul>
+					{eachGroup}
+				</ul>
+				<hr />
+				{this.state.isLoading ? <Loading /> : 
+					(eachImage.length ? eachImage : <p>You have not added any images yet</p>)
+				}
+				<br />
+				<DragnDrop projectid={this.props.location.state.projectId} />
 			</div>
 			)
 	}

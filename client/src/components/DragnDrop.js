@@ -1,16 +1,16 @@
 import React, { Component} from 'react'
 import FileDrop from 'react-file-drop'
 import uploadFiles from '../helpers/uploadFiles'
-// import { getFromStorage } from '../utils/storage'
 
 class DragnDrop extends Component {
 
 	constructor() {
 		super()
 		this.state = {
-			attachments: null,//[],
-			bool: true,
-			uploading: false
+			attachments: null,
+			bool: true,// to disable the upload button
+			uploading: false,// to display status of files uploaded
+			displayDrop: false,
 		}
 	}
 
@@ -35,18 +35,26 @@ class DragnDrop extends Component {
 		this.setState({attachments: e.target.files}, () => this.setState({bool: false}))
 	}
 
+	toggleState() {
+		let temp = !this.state.displayDrop
+		if(temp === true)
+			document.getElementById('display').innerText = 'Hide'
+		else
+			document.getElementById('display').innerText = 'View'
+		this.setState({displayDrop: temp})
+	}
+
 	uploadHandler() {
-		// let session = getFromStorage('imageshare')
-		// let userId = session.passport.user;
-		// console.log(userId)
 		const fd = new FormData()
 		fd.append('projectId', this.props.projectid)
+		var subgroup = this.props.subgroup || null
+		fd.append('subgroup', subgroup)
 		// fd.append('userId', userId)
 		// console.log(this.props.projectid)
 		for(let i = 0; i < this.state.attachments.length; i++ )
 			fd.append('image', this.state.attachments[i], this.state.attachments[i].name)
 		console.log(fd.get('image'))
-		uploadFiles(fd, this.props.projectid)
+		uploadFiles(fd)
 		.then(response => {
 			console.log(response.data)
 			if(response.data.success){
@@ -63,21 +71,26 @@ class DragnDrop extends Component {
 
 		return (
 			<div>
-				{this.state.uploading? <div className="progress">
-				    <div className="indeterminate"></div>
-				</div>:<p>hi</p>}
+				<button id="display" onClick={this.toggleState.bind(this)}>View</button>
+				{this.state.displayDrop &&
+				<div>
+					{this.state.uploading? <div className="progress">
+					    <div className="indeterminate"></div>
+					</div>:<p>hi</p>}
 
-				<div
-				 id="file-drop"
-				 style={{ border: '1px solid black', width: 600, margin: 'auto', color: 'black', padding: 20 }}>
-					<FileDrop onDrop={this.handleDrop.bind(this)}>
-						Drop some files here!
-					</FileDrop>
-					<h1> OR </h1>
-					<input type="file" onChange={this.fileHandler.bind(this)} multiple name="files"/>
-					<br />
-					<button onClick={this.uploadHandler.bind(this)} id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
+					<div
+					 id="file-drop"
+					 style={{ border: '1px solid black', width: 600, margin: 'auto', color: 'black', padding: 20 }}>
+						<FileDrop onDrop={this.handleDrop.bind(this)}>
+							Drop some files here!
+						</FileDrop>
+						<h1> OR </h1>
+						<input type="file" onChange={this.fileHandler.bind(this)} multiple name="files"/>
+						<br />
+						<button onClick={this.uploadHandler.bind(this)} id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
+					</div>
 				</div>
+				}
 			</div>
 			);
 	}

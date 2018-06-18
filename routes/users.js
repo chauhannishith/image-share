@@ -13,8 +13,6 @@ const Grid = require('gridfs-stream');
 const Project = require('../models/project');
 const User = require('../models/user');
 const ThirdPartyUser = require('../models/thirdpartyuser');
-const Images = require('../models/images');
-// const UserSession = require('../models/session');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const path = require('path');
@@ -117,6 +115,7 @@ const storage = new GridFsStorage({
           	projectId: req.body.projectId,
           	uploadedby: req.authData.user._id,
           	name: req.authData.user.firstname + ' ' + req.authData.user.lastname,
+          	subgroup: req.body.subgroup
           }
         };
         resolve(fileInfo);
@@ -208,7 +207,7 @@ router.get('/files/:id', (req, res, next) => {
 });
 
 router.get('/images/:id', (req, res, next) => {
-	 console.log(req.params.id)
+	 // console.log(req.params.id)
 	gfs.files.findOne({ filename: req.params.id }, (err, file) => {
 		// check file
 		// console.log(file)
@@ -317,6 +316,7 @@ router.post('/signup', (req, res, next) => {
 
 });
 
+//create new project
 router.post('/create', verifyToken, (req,res) => {
 
 	//
@@ -350,6 +350,38 @@ router.post('/create', verifyToken, (req,res) => {
 		//
 });
 
+//create new subgroups
+router.post('/createsubgroup', verifyToken, (req,res) => {
+	//
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
+		if(err){
+			console.log(err)
+			res.status(200).send({message: 'Please login again', success: false})
+		}
+		else{
+			var group = {
+				groupTitle: req.body.title,
+				createdby: authData.user._id,
+				timestamp: Date.now()
+			}
+			Project.findOneAndUpdate({_id: req.body.projectId},
+				{$push: {subgroups: group}},
+				(err, project) => {
+					// console.log(project)
+					if(err){
+						console.log(err)
+						res.status(200).send({message: "Failed to create subgroup", success: false})
+					}
+					else{
+						res.status(200).send({message: "group created", success: true})
+					}
+			})
+		}
+	});
+		//
+});
+
+//fetch projects
 router.post('/projects', verifyToken, (req,res) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
@@ -429,7 +461,37 @@ router.post('/share', verifyToken, (req,res) => {
 				}
 				if(!user){
 					// console.log("this 1")
-					res.status(200).send({message: "user does not exist", success: false})
+					      ThirdPartyUser.findOne({ "profile.emails[0].value": email }, function (err, tuser) {
+					  		if(err){
+					  			console.log(err)
+					  			// return next(err);
+					  		}
+					  		if(!tuser){
+					  			res.status(200).send({message: "user does not exist", success: false})
+					  		}
+					  		else{
+					  			// console.log(tuser)
+								var newuser = {
+									userId: tuser._id,
+									firstname: tuser.profile.givenName,
+									lastname: tuser.profile.name.familyName,
+									email: tuser.profile.emails[0]
+								}	
+								Project.findOneAndUpdate({_id: req.body.projectId},
+									{$push: {sharedwith: user}},
+									(err, project) => {
+										console.log(project)
+										if(err){
+											console.log(err)
+											res.status(200).send({message: "share with user failed", success: false})
+										}
+										else{
+											res.status(200).send({message: "shared with user", success: true})
+										}
+								})
+					  		}
+					      });
+					// res.status(200).send({message: "user does not exist", success: false})
 				}
 
 				var newuser = {
@@ -450,19 +512,11 @@ router.post('/share', verifyToken, (req,res) => {
 							res.status(200).send({message: "shared with user", success: true})
 						}
 				})
-			
 			})
-
 		}
 	});
-
 });
 
-// router.get('/logout', (req, res, next) => {
-// 	console.log(req)
-// 	req.logout();
-// 	res.json("successfully logged out");
-// });
 
 module.exports = router;
 
