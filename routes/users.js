@@ -1,23 +1,23 @@
+const bcrypt = require('bcryptjs');
 const config =require('../config/database');
-var frontend;
-const express = require('express');
-const router = express.Router();
-const multer = require('multer');
-const mongoose = require('mongoose');
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const methodOverride= require('method-override');
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const express = require('express');
+var frontend;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
-const Project = require('../models/project');
-const User = require('../models/user');
-const ThirdPartyUser = require('../models/thirdpartyuser');
-const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+var jwtSecret = 'supersecretkey';
+const multer = require('multer');
+const mongoose = require('mongoose');
+const node_env = process.env.NODE_ENV || 'development';
 const passport = require('passport');
 const path = require('path');
-var jwtSecret = 'supersecretkey';
-const node_env = process.env.NODE_ENV || 'development';
+const Project = require('../models/project');
+const router = express.Router();
+const Tag = require('../models/tag')
+const ThirdPartyUser = require('../models/thirdpartyuser');
+const User = require('../models/user');
 
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
@@ -184,6 +184,120 @@ router.post('/upload', verifyToken, (req, res, next) => {
 	
 })
 
+router.get('/fetchtags', verifyToken, (req, res, next) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
+		if(err){
+			console.log(err)
+			res.status(200).send({message: 'Please login again', success: false})
+		}
+		else{
+			Tag.findOne({userId: authData.user._id}, (err, usertags) => {
+			if(err){
+				console.log(err)
+			}
+			// console.log('this is tag')
+			// console.log(usertags)
+			res.status(200).send({message: 'sending tags', success: true, tags: usertags})
+			})
+		}
+	});
+	//
+});
+
+//add tag
+router.post('/addtag', verifyToken, (req,res) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
+		if(err){
+			console.log(err)
+			res.status(200).send({message: 'Please login again', success: false})
+		}
+		else{
+			//find if user exists in tag collection, if not then add user
+			Tag.findOne({userId: authData.user._id},				
+				(err, tag) => {
+					// console.log(project)
+					if(err){
+						console.log(err)
+						res.status(200).send({message: "Failed to add tag", success: false})
+					}
+					if(!tag){
+						console.log('no tag')
+						var newTag = new Tag({
+							userId: authData.user._id,
+							tag: [{
+								tagname: req.body.tagname,
+								images: [req.body.filename]
+							}]
+						})
+
+						newTag.save(err => {
+							if(err){
+								console.log("error adding new tag")
+							}
+							// else{
+							// 	res.status(200).send({message: "tag added", success: true})
+							// }
+						})
+					}
+					else{
+						Tag.findOneAndUpdate({_id: tag._id, "tag.tagname": req.body.tagname },
+							{$push: {"tag.$.images": req.body.filename}},
+							(err, tagg) => {
+								// console.log(project)
+								if(err){
+									console.log(err)
+									res.status(200).send({message: "Failed to add to existing subgroup", success: false})
+								}
+								if(!tagg){
+									console.log('tag not with user')
+									var newTag = {
+										tagname: req.body.tagname,
+										images: [req.body.filename]
+									}
+									Tag.findOneAndUpdate({_id: tag._id},
+										{$push: {tag: newTag}},
+										(err, addedtag) => {
+											if(err){
+												console.log(err)
+											}
+											if(!addedtag){
+												console.log("please try again")
+												res.status(200).send({success: false, message:'please check'})
+											}
+											// else{
+											// 	res.status(200).send({message: "new tag and image added", success: true})		
+											// }
+										})
+									// res.status(200).send({message: "image added to new tag", success: true})
+								}
+								// else{
+								// 	// console.log(tagg.tag)
+								// 	// console.log('tag with user')
+								// 	res.status(200).send({message: "image added to existing tag", success: true})
+								// }
+						})
+						// console.log(tag)
+						// res.status(200).send({message: "tag found, exists", success: true})
+					}
+			})
+			gfs.files.findOneAndUpdate(
+		      { filename: req.body.filename },
+		      { $push: {"metadata.tags": req.body.tagname} },
+		      (err, update) => {
+		      	if(err)
+		      		console.log(err)
+		      	else{
+		      		console.log('something happened')
+		      		res.status(200).send({message: 'success adding tag to image', success: true})
+		      	}
+		      } 
+	    )
+		}
+	});
+});
+
+
+//fetch all files in project by id
 router.get('/files/:id', (req, res, next) => {
 	gfs.files.find({"metadata.projectId": req.params.id}).toArray((err, files) => {
 		// check files
@@ -206,6 +320,8 @@ router.get('/files/:id', (req, res, next) => {
 	});
 });
 
+
+//fetch image
 router.get('/images/:id', (req, res, next) => {
 	 // console.log(req.params.id)
 	gfs.files.findOne({ filename: req.params.id }, (err, file) => {

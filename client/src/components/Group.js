@@ -1,8 +1,9 @@
 import React, { Component} from 'react'
 import DragnDrop from './DragnDrop'
-import { BACKEND } from '../utils/config'
+import Image from './Image'
+// import { BACKEND } from '../utils/config'
 
-class Images extends Component {
+class Group extends Component {
 
 	constructor(props) {
 		super(props)
@@ -25,9 +26,10 @@ class Images extends Component {
 		
 	}
 //				<h4>{this.props.projectId} {this.props.groupTitle}</h4>
+//<img key={i} src={`${BACKEND}` + '/api/users/images/' + `${image.filename}`} alt="noimage.jpg" className="thumb" />
 	render() {
 		const eachGroupImage = this.state.groupimages.map((image, i) => {
-			return <img key={i} src={`${BACKEND}` + '/api/users/images/' + `${image.filename}`} alt="noimage.jpg" className="thumb" />
+			return <Image key={i} source={image} />
 		})
 
 		return (
@@ -41,4 +43,4 @@ class Images extends Component {
 
 }
 
-export default Images
+export default Group

@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import Loading from './Loading'
 import createProject from '../helpers/createProject'
 import fetchUserProjects from '../helpers/fetchUserProjects'
+import fetchUserTags from '../helpers/fetchUserTags'
 import fetchSharedProjects from '../helpers/fetchSharedProjects'
 import { getFromStorage, removeFromStorage } from '../utils/storage'
 
@@ -12,6 +13,7 @@ class Home extends Component{
 		super(props)
 		this.state ={
 			projects: [],
+			tags: [],
 			sharedProjects: [],
 			createForm: false,
 			isLoading: true
@@ -54,6 +56,14 @@ class Home extends Component{
 			 		this.setState({sharedProjects: response.data.sharedProjects})
 			 	})
 			 	.catch(err => console.log(err))
+			 	fetchUserTags()
+			 	.then(response => {
+			 		if(response.data.success){
+			 			this.setState({tags: response.data.tags.tag})
+			 		}
+			 		// console.log("Tags" + JSON.stringify(response.data))
+			 	})
+			 	.catch(error => console.log(error))
 			}).catch(error => console.log(error))
 		}else{
 			this.props.history.push('/')
@@ -69,7 +79,10 @@ class Home extends Component{
 		return (
 			<div>
 				<form onSubmit={this.createComponent.bind(this)}>
-					<input type="text" ref="projectTitle" placeholder="Title" />
+					<input
+					 type="text"
+					 ref="projectTitle" 
+					 placeholder="Title" />
 					<input type="submit" value="Create" />
 				</form>
 				<button onClick={this.displayForm.bind(this)}>Cancel</button>
@@ -81,7 +94,10 @@ class Home extends Component{
 		const eachProject = this.state.projects.map((project, i) => {
 			return(
 				<li key={i} className="collection-item" >
-					<Link to={{ pathname: '/projects', state: {projectId: project._id, projectTitle: project.title, groups: project.subgroups} }}>
+					<Link
+					 to={{ pathname: '/projects',
+					  state: {projectId: project._id, projectTitle: project.title, groups: project.subgroups} 
+					}}>
 						{project.title}
 					</Link>
 				</li>
@@ -98,6 +114,14 @@ class Home extends Component{
 				)
 		})
 
+		const allTags  = this.state.tags.map((tag, i) => { 
+			return (
+				<li key={i}>
+					{tag.tagname}
+				</li>
+				)
+		})
+
 		if(this.state.isLoading)
 			return <Loading />
 
@@ -105,6 +129,10 @@ class Home extends Component{
 			<div>
 				<h1>HOME</h1>
 				<a onClick={this.logout.bind(this)}>LogOut</a>
+				<h1>Your tags</h1>
+				<ul>
+					{allTags}
+				</ul>
 				<h1>Your Projects</h1>
 				<ul className="collection">
 					{eachProject.length ? eachProject : <p>You haven't created any project yet</p>}

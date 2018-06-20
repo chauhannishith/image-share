@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import DragnDrop from '../components/DragnDrop'
-import Images from '../components/Images'
+import Group from '../components/Group'
+import Image from '../components/Image'
 import createSubGroup from '../helpers/createSubGroup'
 import fetchUploadedFiles from '../helpers/fetchUploadedFiles'
 import Loading from './Loading'
 import shareProject from '../helpers/shareProject'
-import { BACKEND } from '../utils/config'
+// import { BACKEND } from '../utils/config'
 
 class Project extends Component{
 	constructor(props) {
@@ -101,7 +102,9 @@ class Project extends Component{
 	render() {
 		const eachImage = this.state.images.map((image, i) => {
 			if(!image.metadata.subgroup){
-				return <img key={i} src={`${BACKEND}` + '/api/users/images/' + `${image.filename}`} alt="noimage.jpg" className="thumb" />
+				return (
+					<Image key={i} source={image} />
+					)
 			}
 			else{
 				return null
@@ -114,7 +117,7 @@ class Project extends Component{
 					<h3>
 						{group.groupTitle}
 					</h3>
-					<Images projectId={this.props.location.state.projectId} groupTitle={group.groupTitle}
+					<Group projectId={this.props.location.state.projectId} groupTitle={group.groupTitle}
 						images={this.state.images} />
 				</li>
 			)
