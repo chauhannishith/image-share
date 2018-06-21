@@ -51,7 +51,7 @@ class Login extends Component{
 		})
 		this.setState({isLoading: false})
 	}
-
+//http://localhost:3001
 	render() {
 
 		if(this.state.isLoading)
@@ -77,7 +77,7 @@ class Login extends Component{
 			        <div className="row">
 			        	<button className="btn waves-effect waves-light" type="submit" name="action">Submit</button>
 			        </div>
-			        <a href="http://localhost:3001/api/users/auth/google">Signin with google</a>
+			        <a href="https://groupphotos.herokuapp.com/api/users/auth/google">Signin with google</a>
 					<label>New user? <a href="/signup">Signup</a> instead</label>
 				</form>
 			</div>
