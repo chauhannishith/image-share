@@ -623,7 +623,7 @@ router.post('/share', verifyToken, (req,res) => {
 									email: tuser.profile.emails[0]
 								}	
 								Project.findOneAndUpdate({_id: req.body.projectId},
-									{$push: {sharedwith: user}},
+									{$push: {sharedwith: newuser}},
 									(err, project) => {
 										console.log(project)
 										if(err){
@@ -646,7 +646,7 @@ router.post('/share', verifyToken, (req,res) => {
 					email: user.email
 				}	
 				Project.findOneAndUpdate({_id: req.body.projectId},
-					{$push: {sharedwith: user}},
+					{$push: {sharedwith: newuser}},
 					(err, project) => {
 						console.log(project)
 						if(err){
