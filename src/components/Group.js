@@ -34,7 +34,7 @@ class Group extends Component {
 
 		return (
 			<div>
-				<h6>Display image</h6>
+				<h6>{this.props.groupTitle}</h6>
 				{eachGroupImage}
 				<DragnDrop projectid={this.props.projectId} subgroup={this.props.groupTitle}/>
 			</div>

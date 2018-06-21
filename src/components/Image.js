@@ -5,7 +5,7 @@ import { BACKEND } from '../utils/config'
 class Image extends Component {
 
 	addTag(){
-		console.log(this.refs.tagname.value)
+		// console.log(this.refs.tagname.value)
 		addTag(this.refs.tagname.value, this.props.source.filename)
 		.then(response => {
 			console.log(response.data)

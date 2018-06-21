@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react'//not used
 import DragnDrop from './DragnDrop'
 
 

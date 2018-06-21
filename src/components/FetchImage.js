@@ -17,7 +17,12 @@ class FetchImage extends Component {
 		fetchFileTagBased(this.props.filename)
 			.then(response => {
 				// console.log(response.data)
-				this.setState({file: response.data.file}, ()=> this.setState({fetched: true}))
+				if(response.data.success){
+					this.setState({file: response.data.file}, ()=> this.setState({fetched: true}))
+				}
+				else{
+					console.log(response.data.message)
+				}
 			})
 			.catch(error => console.log(error))
 	}

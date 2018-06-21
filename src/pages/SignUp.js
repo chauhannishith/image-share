@@ -34,8 +34,12 @@ class SignUp extends Component {
 		signUpUser(user)
 		.then(response => {
 			console.log(response.data)
-			if(response.data.success)
-				this.props.history.push('/verify')
+			if(response.data.success){
+				this.props.history.push('/verified')
+			}
+			else{
+				console.log(response.data.message)
+			}
 		})
 		.catch(error => console.log(error))
 	}

@@ -28,6 +28,8 @@ class Home extends Component{
 				this.setState({createForm: false}, () => {
 					this.componentDidMount()
 				})
+			}else{
+				console.log(response.data.message)
 			}
 		}).catch(error => console.log(error))
 
@@ -53,13 +55,21 @@ class Home extends Component{
 			 	fetchSharedProjects()
 			 	.then(response => {
 			 		// console.log(response.data)
-			 		this.setState({sharedProjects: response.data.sharedProjects})
+			 		if(response.data.success){
+			 			this.setState({sharedProjects: response.data.sharedProjects})
+			 		}
+			 		else{
+			 			console.log(response.data.message)
+			 		}
 			 	})
 			 	.catch(err => console.log(err))
 			 	fetchUserTags()
 			 	.then(response => {
 			 		if(response.data.success){
 			 			this.setState({tags: response.data.tags.tag})
+			 		}
+			 		else{
+			 			console.log(response.data.message)
 			 		}
 			 		// console.log("Tags" + JSON.stringify(response.data))
 			 	})
