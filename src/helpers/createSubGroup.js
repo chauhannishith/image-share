@@ -14,8 +14,7 @@ const createSubGroup = (projectId, title) => {
 			data: {
 				title: title,
 				projectId: projectId
-			},
-			credentials: 'include'
+			}
 			}).then(response => {
 	        	resolve(response)
 			})

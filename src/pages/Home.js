@@ -144,7 +144,7 @@ class Home extends Component{
 				<a onClick={this.logout.bind(this)}>LogOut</a>
 				<h1>Your tags</h1>
 				<ul>
-					{allTags}
+					{this.state.tags.length ? allTags : <p>You have no tags</p>}
 				</ul>
 				<h1>Your Projects</h1>
 				<ul className="collection">

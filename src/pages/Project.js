@@ -17,7 +17,8 @@ class Project extends Component{
 			displayDrop: false,
 			displayShareForm: false,
 			displayGroupForm: false,
-			isLoading: true
+			isLoading: true,
+			shareError: ''
 		}
 	}
 
@@ -29,6 +30,7 @@ class Project extends Component{
 			}
 			else{
 				console.log(response.data.message)
+				this.setState({shareError: response.data.message})
 			}
 		})
 		.catch(error => console.log(error))
@@ -127,6 +129,7 @@ class Project extends Component{
 			<div>
 			<button onClick={this.goBack.bind(this)} >GoBack</button>
 				<h1>{this.props.location.state.projectTitle}</h1>
+				{this.state.shareError}
 				{this.state.displayShareForm && 
 					<form onSubmit={this.addMember.bind(this)}>
 						<input type="email" ref="email" placeholder="email" required />

@@ -14,8 +14,7 @@ const createProject = (title) => {
 			},
 			data: {
 				title: title
-			},
-			credentials: 'include'
+			}
 			}).then(response => {
 	        	resolve(response)
 			})
