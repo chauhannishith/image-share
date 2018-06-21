@@ -194,6 +194,7 @@ router.get('/fetchtags', verifyToken, (req, res, next) => {
 			Tag.findOne({userId: authData.user._id}, (err, usertags) => {
 			if(err){
 				console.log(err)
+				res.status(200).send({message: 'error occured', success: false, error: err})
 			}
 			// console.log('this is tag')
 			// console.log(usertags)
@@ -233,6 +234,7 @@ router.post('/addtag', verifyToken, (req,res) => {
 						newTag.save(err => {
 							if(err){
 								console.log("error adding new tag")
+								res.status(404).send({message: 'error occured', success: false, error: err})
 							}
 							// else{
 							// 	res.status(200).send({message: "tag added", success: true})
@@ -259,6 +261,7 @@ router.post('/addtag', verifyToken, (req,res) => {
 										(err, addedtag) => {
 											if(err){
 												console.log(err)
+												res.status(200).send({message: 'error occured', success: false, error: err})
 											}
 											if(!addedtag){
 												console.log("please try again")
@@ -285,8 +288,10 @@ router.post('/addtag', verifyToken, (req,res) => {
 		      { filename: req.body.filename },
 		      { $push: {"metadata.tags": req.body.tagname} },
 		      (err, update) => {
-		      	if(err)
+		      	if(err){
 		      		console.log(err)
+		      		res.status(200).send({message: 'error occured', success: false, error: err})
+		      	}
 		      	else{
 		      		console.log('something happened')
 		      		res.status(200).send({message: 'success adding tag to image', success: true})
@@ -378,6 +383,10 @@ router.get('/auth/google/callback',
   	console.log(user)
     	jwt.sign({user: user}, jwtSecret, { expiresIn: '1d' }, (err, token) => {
     		// console.log(token)
+    		if(err){
+    			console.log(err)
+    			res.status(200).send({message: 'error occured', success: false, error: err})
+    		}
     		res.redirect(frontend+'/auth/'+token);
   		})
   	// res.redirect(frontend+'/home')
@@ -430,11 +439,12 @@ router.post('/signup', (req, res, next) => {
 		bcrypt.hash(newUser.password, salt, function(err, hash){
 			if(err){
 				console.log("user error");
+				res.status(200).send({message: 'error occured', success: false, error: err})
 			}
 			newUser.password = hash;
 			newUser.save(function(err){
 				if(err){
-					console.log("some error:u"+ uname + ", e:"+ email +", p:" + password);
+					console.log("some error:"+ fname + ", e:"+ email +", p:" + password);
 					return;
 				}
 				else{
@@ -452,7 +462,6 @@ router.post('/signup', (req, res, next) => {
 
 //create new project
 router.post('/create', verifyToken, (req,res) => {
-
 	//
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
@@ -592,12 +601,14 @@ router.post('/share', verifyToken, (req,res) => {
 				// console.log(user)
 				if(error){
 					console.log(error)
+					res.status(200).send({message: 'error occured', success: false, error: err})
 				}
 				if(!user){
 					// console.log("this 1")
 					      ThirdPartyUser.findOne({ "profile.emails[0].value": email }, function (err, tuser) {
 					  		if(err){
 					  			console.log(err)
+					  			res.status(200).send({message: 'error occured', success: false, error: err})
 					  			// return next(err);
 					  		}
 					  		if(!tuser){
