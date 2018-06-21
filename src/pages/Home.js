@@ -117,7 +117,8 @@ class Home extends Component{
 		const eachSharedProject = this.state.sharedProjects.map((sproject, i) => {
 			return(
 				<li key={i} className="collection-item" >
-					<Link to={{ pathname: '/projects', state: {projectId: sproject._id, projectTitle: sproject.title} }}>
+					<Link to={{ pathname: '/projects',
+					 state: {projectId: sproject._id, projectTitle: sproject.title, groups: sproject.subgroups} }}>
 						{sproject.title}
 					</Link>
 				</li>
