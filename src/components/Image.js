@@ -16,7 +16,7 @@ class Image extends Component {
 	render (){
 		return (
 			<div>
-				<img src={`${BACKEND}` + '/api/users/images/' + `${this.props.source.filename}`} className="thumb"/>
+				<img src={`${BACKEND}` + '/api/users/images/' + `${this.props.source.filename}`} alt="noimage.jpg" className="thumb"/>
 				<p>{this.props.source.metadata.tags}</p>
 				<input type="text" ref="tagname" />
 				<button onClick={this.addTag.bind(this)}>Add tag</button>
