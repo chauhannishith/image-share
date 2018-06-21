@@ -33,8 +33,9 @@ passport.use(new GoogleStrategy({
   		}
   		if(!user){
   			console.log('No user found')
+  			var tempUser = JSON.parse(JSON.stringify(profile))
   			var user = new ThirdPartyUser({
-  				profile//googleId: profile.id
+  				tempUser//profile
   			})
   			user.save(err=> {
   				if(err)
