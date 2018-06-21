@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
 	credentials: true,
-	origin: 'http://localhost:3000'
+	origin: 'https://imagesharre.herokuapp.com'
 })); // for development allow everyone
 // var whitelist = ['http://example1.com', 'http://example2.com'] //allow only these
 // var corsOptions = {
