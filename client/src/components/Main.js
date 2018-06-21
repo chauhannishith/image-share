@@ -5,6 +5,7 @@ import Login from '../pages/Login'
 import Home from '../pages/Home'
 import SignUp from '../pages/SignUp'
 import Project from '../pages/Project'
+import Tag from '../pages/Tag'
 import Verify from '../pages/Verify'
 import Verified from '../pages/Verified'
 
@@ -18,6 +19,7 @@ class Main extends Component{
 					<Route path="/signup" component={SignUp} />
 					<Route path="/home" component={Home} />
 					<Route path="/projects" component={Project}/>
+					<Route path="/tag" component={Tag}/>
 					<Route path="/verify" component={Verify} />
 					<Route path="/verified" component={Verified} />
 				</Switch>

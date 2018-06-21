@@ -280,6 +280,7 @@ router.post('/addtag', verifyToken, (req,res) => {
 						// res.status(200).send({message: "tag found, exists", success: true})
 					}
 			})
+			//update file metadata
 			gfs.files.findOneAndUpdate(
 		      { filename: req.body.filename },
 		      { $push: {"metadata.tags": req.body.tagname} },
@@ -320,6 +321,23 @@ router.get('/files/:id', (req, res, next) => {
 	});
 });
 
+//fetch all files by tag
+router.get('/tagfiles/:id', (req, res, next) => {
+	gfs.files.findOne({filename: req.params.id}, (err, file) => {
+		// check files
+		if(!file || file.length === 0){
+			return res.status(404).send({message:'No file exists', success: false})
+		}
+
+		if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
+			file.isImage = true;
+		}
+		else{
+			file.isImage = false;
+		}	
+		res.status(200).send({file: file, success: true})
+	});
+});
 
 //fetch image
 router.get('/images/:id', (req, res, next) => {

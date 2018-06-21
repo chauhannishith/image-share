@@ -115,9 +115,12 @@ class Home extends Component{
 		})
 
 		const allTags  = this.state.tags.map((tag, i) => { 
+			// console.log(tag)
 			return (
-				<li key={i}>
-					{tag.tagname}
+				<li key={i} className="collection-item" >
+					<Link to={{ pathname: '/tag', state: {tagdata: tag} }}>
+						{tag.tagname}
+					</Link>
 				</li>
 				)
 		})
