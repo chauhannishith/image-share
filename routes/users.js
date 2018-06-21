@@ -351,7 +351,7 @@ router.get('/images/:id', (req, res, next) => {
 		// check file
 		// console.log(file)
 		if(!file || file.length === 0){
-			return res.status(404).send({message:'No file exists', success: false})
+			return res.status(200).send({message:'No file exists', success: false})
 		}
 
 		if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
