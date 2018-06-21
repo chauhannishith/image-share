@@ -597,6 +597,7 @@ router.post('/share', verifyToken, (req,res) => {
 		else{
 			// console.log(authData)
 			var email = req.body.email;
+			var projectID = req.body.projectId;
 			User.findOne({email: email}, (error, user) => {
 				// console.log(user)
 				if(error){
@@ -605,58 +606,59 @@ router.post('/share', verifyToken, (req,res) => {
 				}
 				if(!user){
 					// console.log("this 1")
-					      ThirdPartyUser.findOne({ "profile.emails[0].value": email }, function (err, tuser) {
-					  		if(err){
-					  			console.log(err)
-					  			res.status(200).send({message: 'error occured', success: false, error: err})
-					  			// return next(err);
-					  		}
-					  		if(!tuser){
-					  			res.status(200).send({message: "user does not exist", success: false})
-					  		}
-					  		else{
-					  			// console.log(tuser)
-								var newuser = {
-									userId: tuser._id,
-									firstname: tuser.profile.givenName,
-									lastname: tuser.profile.name.familyName,
-									email: tuser.profile.emails[0]
-								}	
-								Project.findOneAndUpdate({_id: req.body.projectId},
-									{$push: {sharedwith: newuser}},
-									(err, project) => {
-										console.log(project)
-										if(err){
-											console.log(err)
-											res.status(200).send({message: "share with user failed", success: false})
-										}
-										else{
-											res.status(200).send({message: "shared with user", success: true})
-										}
-								})
-					  		}
-					      });
+			      ThirdPartyUser.findOne({ "profile.emails[0].value": email }, function (err, tuser) {
+			  		if(err){
+			  			console.log(err)
+			  			res.status(200).send({message: 'error occured', success: false, error: err})
+			  			// return next(err);
+			  		}
+			  		if(!tuser){
+			  			res.status(200).send({message: "user does not exist", success: false})
+			  		}
+			  		else{
+			  			// console.log(tuser)
+						var newuser = {
+							userId: tuser._id,
+							firstname: tuser.profile.givenName,
+							lastname: tuser.profile.name.familyName,
+							email: tuser.profile.emails[0]
+						}	
+						Project.findOneAndUpdate({_id: projectID},
+							{$push: {sharedwith: newuser}},
+							(err, project) => {
+								console.log(project)
+								if(err){
+									console.log(err)
+									res.status(200).send({message: "share with user failed", success: false})
+								}
+								else{
+									res.status(200).send({message: "shared with user", success: true})
+								}
+						})
+			  		}
+			      });
 					// res.status(200).send({message: "user does not exist", success: false})
 				}
-
-				var newuser = {
-					userId: user._id,
-					firstname: user.firstname,
-					lastname: user.lastname,
-					email: user.email
-				}	
-				Project.findOneAndUpdate({_id: req.body.projectId},
-					{$push: {sharedwith: newuser}},
-					(err, project) => {
-						console.log(project)
-						if(err){
-							console.log(err)
-							res.status(200).send({message: "share with user failed", success: false})
-						}
-						else{
-							res.status(200).send({message: "shared with user", success: true})
-						}
-				})
+				else{
+					var newuser = {
+						userId: user._id,
+						firstname: user.firstname,
+						lastname: user.lastname,
+						email: user.email
+					}	
+					Project.findOneAndUpdate({_id: req.body.projectId},
+						{$push: {sharedwith: newuser}},
+						(err, project) => {
+							console.log(project)
+							if(err){
+								console.log(err)
+								res.status(200).send({message: "share with user failed", success: false})
+							}
+							else{
+								res.status(200).send({message: "shared with user", success: true})
+							}
+					})
+				}
 			})
 		}
 	});
