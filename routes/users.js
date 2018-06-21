@@ -567,7 +567,7 @@ router.post('/sharedprojects', verifyToken, (req,res) => {
 			// console.log(authData)
 			var userID = authData.user._id;
 			console.log(userID)
-			Project.find({sharedwith: {$elemMatch: {_id: userID}}}, (err, projects) => {
+			Project.find({sharedwith: {$elemMatch: {userId: userID}}}, (err, projects) => {
 				if(err){
 					console.log("some error");
 					return;
