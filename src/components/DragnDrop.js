@@ -35,12 +35,12 @@ class DragnDrop extends Component {
 		this.setState({attachments: e.target.files}, () => this.setState({bool: false}))
 	}
 
-	toggleState() {
+	toggleState(e) {
 		let temp = !this.state.displayDrop
 		if(temp === true)
-			document.getElementById('display').innerText = 'Hide'
+			e.target.textContent="Hide"//document.getElementById('display').innerText = 'Hide'
 		else
-			document.getElementById('display').innerText = 'View'
+			e.target.textContent="Upload"// document.getElementById('display').innerText = 'Upload'
 		this.setState({displayDrop: temp})
 	}
 
@@ -71,12 +71,12 @@ class DragnDrop extends Component {
 
 		return (
 			<div>
-				<button id="display" onClick={this.toggleState.bind(this)}>View</button>
+				<button id="display" onClick={this.toggleState.bind(this)}>Upload</button>
 				{this.state.displayDrop &&
 				<div>
 					{this.state.uploading? <div className="progress">
 					    <div className="indeterminate"></div>
-					</div>:<p>hi</p>}
+					</div>:<p></p>}
 
 					<div
 					 id="file-drop"

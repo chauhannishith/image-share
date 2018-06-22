@@ -1,24 +1,51 @@
-.App {
-  text-align: center;
+:root{
+  --primary: #42b3f4;
+  --secondary: white;
+  --shadow: 0 1px 5px rgba(104, 104, 104, 0.8);
+
 }
 
-.App-header {
-  background-color: #222;
-  height: 50px;
-  padding: 20px;
-  color: white;
+.banner{
+  background-color: var(--primary);
+  margin: 0px;
+  padding: 30px 5px 5px 5px;
 }
 
-.App-title {
-  font-size: 1.5em;
+.btn{
+  padding: 5px;
+  border-radius: 3px;
+  background-color: var(--primary)
 }
 
-.App-intro {
-  font-size: large;
+.center{
+  align-content: center;
 }
 
-ul li{
-	list-style-type: none;
+.form{
+  margin :auto;
+  border: 1px solid black;
+  padding: 15px;
+}
+
+.home-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 4fr);
+  grid-gap: 2rem;
+}
+
+.image-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 3fr);
+  grid-gap: 1rem;
+}
+
+.image-card{
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 1rem;
+  margin: 1rem;
+  display: grid;
+  grid-template-rows: 4fr 1fr 1fr;
 }
 
 .file-drop-area{
@@ -45,9 +72,32 @@ ul li{
 .file-drop .file-drop-target{
 	padding: 100px;
 	background-color: rgb(230, 230, 230);
- }
+}
+
+.list-box{
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  margin: 1rem;
+}
+
+.row{
+  padding: 5px;
+  margin: 5px;
+}
+
 .thumb{
-  max-height: 200px;
-  max-width: 200px;
+  height: 200px;
+  width: 250px;
   padding: 10px;
+  justify-self: center;
+  align-self: center;
+}
+
+.wrapper{
+  margin: 2rem;
+}
+
+ul li{
+  list-style-type: none;
 }

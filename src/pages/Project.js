@@ -6,7 +6,7 @@ import createSubGroup from '../helpers/createSubGroup'
 import fetchUploadedFiles from '../helpers/fetchUploadedFiles'
 import Loading from './Loading'
 import shareProject from '../helpers/shareProject'
-// import { BACKEND } from '../utils/config'
+import { removeFromStorage } from '../utils/storage'
 
 class Project extends Component{
 	constructor(props) {
@@ -61,6 +61,10 @@ class Project extends Component{
 	fetchFiles() {
 		fetchUploadedFiles(this.props.location.state.projectId)
 		.then(response => {
+			if(response.data.redirect){
+					removeFromStorage('imageshare')
+					this.props.history.push('/')
+				}
 			if(response.data.success){
 				// console.log(response.data.files)
 				this.setState({images: [...this.state.images,...response.data.files]}, () => {
@@ -81,22 +85,22 @@ class Project extends Component{
 		this.props.history.goBack()
 	}
 
-	toggleCreateGroup() {
+	toggleCreateGroup(e) {
 		let temp = !this.state.displayGroupForm
 		if(temp === true)
-			document.getElementById('group').innerText = 'Cancel'
+			e.target.textContent = 'Cancel'// document.getElementById('group').innerText = 'Cancel'
 		else
-			document.getElementById('group').innerText = 'Create'
+			e.target.textContent = 'Create'// document.getElementById('group').innerText = 'Create'
 		this.setState({displayGroupForm: temp})
 		
 	}
 
-	toggleShareForm() {
+	toggleShareForm(e) {
 		let temp = !this.state.displayShareForm
 		if(temp === true)
-			document.getElementById('share').innerText = 'Cancel'
+			e.target.textContent = 'Cancel'// document.getElementById('share').innerText = 'Cancel'
 		else
-			document.getElementById('share').innerText = 'Share'
+			e.target.textContent = 'Share'// document.getElementById('share').innerText = 'Share'
 		this.setState({displayShareForm: temp})
 		
 	}
@@ -151,9 +155,11 @@ class Project extends Component{
 					{eachGroup}
 				</ul>
 				<hr />
+				<div className="image-grid">
 				{this.state.isLoading ? <Loading /> : 
 					(eachImage.length ? eachImage : <p>You have not added any images yet</p>)
 				}
+				</div>
 				<br />
 				<DragnDrop projectid={this.props.location.state.projectId} />
 			</div>

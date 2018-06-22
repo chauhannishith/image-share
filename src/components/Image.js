@@ -15,11 +15,13 @@ class Image extends Component {
 
 	render (){
 		return (
-			<div>
-				<img src={`${BACKEND}` + '/api/users/images/' + `${this.props.source.filename}`} alt="noimage.jpg" className="thumb"/>
+			<div className="image-card">
+				<img src={`${BACKEND}` + '/api/users/images/' + `${this.props.source.filename}`} alt="noimage.jpg" className="thumb center"/>
 				<p>{this.props.source.metadata.tags}</p>
-				<input type="text" ref="tagname" />
-				<button onClick={this.addTag.bind(this)}>Add tag</button>
+				<div>
+					<input type="text" ref="tagname" />
+					<button onClick={this.addTag.bind(this)}>Add tag</button>
+				</div>
 			</div>
 		)
 	}

@@ -27,6 +27,7 @@ class Group extends Component {
 	}
 //				<h4>{this.props.projectId} {this.props.groupTitle}</h4>
 //<img key={i} src={`${BACKEND}` + '/api/users/images/' + `${image.filename}`} alt="noimage.jpg" className="thumb" />
+// <h6>{this.props.groupTitle}</h6>
 	render() {
 		const eachGroupImage = this.state.groupimages.map((image, i) => {
 			return <Image key={i} source={image} />
@@ -34,8 +35,9 @@ class Group extends Component {
 
 		return (
 			<div>
-				<h6>{this.props.groupTitle}</h6>
-				{eachGroupImage}
+				<div className="image-grid">
+					{eachGroupImage.length ? eachGroupImage : <p>There are no images to display</p>}
+				</div>
 				<DragnDrop projectid={this.props.projectId} subgroup={this.props.groupTitle}/>
 			</div>
 			)

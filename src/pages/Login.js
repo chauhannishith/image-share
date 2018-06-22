@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 import loginUser from '../helpers/loginUser'
 import { getFromStorage, setInStorage } from '../utils/storage'
 import Loading from './Loading'
@@ -59,27 +61,31 @@ class Login extends Component{
 
 		return(
 			<div>
-				<h1>Please login to continue</h1>
-				{this.state.signinerror}
-				<form onSubmit={this.onSubmit.bind(this)} className="col s12">
-					<div className="row">
-				        <div className="input-field col s6">
-				          <input id="email" type="email" className="validate"  ref="email" required/>
-				          <label htmlFor="email">Email</label>
+			<Header />
+				<div className="form">
+					<h1>Please login to continue</h1>
+					{this.state.signinerror}
+					<form onSubmit={this.onSubmit.bind(this)} className="col s12">
+						<div className="row">
+					        <div className="input-field col s6">
+					          <input id="email" type="email" className="validate"  ref="email" required/>
+					          <label htmlFor="email">Email</label>
+					        </div>
+					    </div>
+					    <div className="row">
+					        <div className="input-field col s6">
+					          <input id="password" type="password" className="validate" ref="password" required/>
+					          <label htmlFor="password">Password</label>
+				        	</div>
 				        </div>
-				    </div>
-				    <div className="row">
-				        <div className="input-field col s6">
-				          <input id="password" type="password" className="validate" ref="password" required/>
-				          <label htmlFor="password">Password</label>
-			        	</div>
-			        </div>
-			        <div className="row">
-			        	<button className="btn waves-effect waves-light" type="submit" name="action">Submit</button>
-			        </div>
-			        <a href="https://groupphotos.herokuapp.com/api/users/auth/google">Signin with google</a>
-					<label>New user? <a href="/signup">Signup</a> instead</label>
-				</form>
+				        <div className="row">
+				        	<button className="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+				        </div>
+				        <a href="https://groupphotos.herokuapp.com/api/users/auth/google">Signin with google</a>
+						<label>New user? <a href="/signup">Signup</a> instead</label>
+					</form>
+				</div>
+				<Footer />
 			</div>
 		);
 	}

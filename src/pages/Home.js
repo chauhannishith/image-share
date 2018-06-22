@@ -124,7 +124,7 @@ class Home extends Component{
 				</li>
 				)
 		})
-
+		
 		const allTags  = this.state.tags.map((tag, i) => { 
 			// console.log(tag)
 			return (
@@ -135,30 +135,41 @@ class Home extends Component{
 				</li>
 				)
 		})
+		
 
 		if(this.state.isLoading)
 			return <Loading />
 
 		return (
 			<div>
-				<h1>HOME</h1>
-				<a onClick={this.logout.bind(this)}>LogOut</a>
-				<h1>Your tags</h1>
-				<ul>
-					{this.state.tags.length ? allTags : <p>You have no tags</p>}
-				</ul>
-				<h1>Your Projects</h1>
-				<ul className="collection">
-					{eachProject.length ? eachProject : <p>You haven't created any project yet</p>}
-				</ul>
-				{!this.state.createForm && <button onClick={this.displayForm.bind(this)} >Create New Project</button>}
-				{this.state.createForm && this.renderForm()}
-				<br />
-				<h1>Projects shared with you</h1>
-				<ul className="collection">
-					{eachSharedProject.length ? eachSharedProject : <p>You don't have any shared project yet</p>}
-				</ul>
-
+				<div className="banner">
+					<h1>Logo HOME</h1>
+				</div>
+				<div className="wrapper">
+					<a onClick={this.logout.bind(this)}>LogOut</a>
+					<div className="home-grid">
+						<div className="list-box">
+							<h1>Your tags</h1>
+							<ul>
+								{this.state.tags ? allTags : <p>You have no tags</p>}
+							</ul>
+						</div>
+						<div className="list-box">
+							<h1>Your Projects</h1>
+							<ul className="collection">
+								{eachProject.length ? eachProject : <p>You haven't created any project yet</p>}
+							</ul>
+							{!this.state.createForm && <button onClick={this.displayForm.bind(this)} >Create New Project</button>}
+							{this.state.createForm && this.renderForm()}
+						</div>
+						<div className="list-box">
+							<h1>Projects shared with you</h1>
+							<ul className="collection">
+								{eachSharedProject.length ? eachSharedProject : <p>You don't have any shared project yet</p>}
+							</ul>
+						</div>
+					</div>
+				</div>
 			</div>
 			);
 	}
