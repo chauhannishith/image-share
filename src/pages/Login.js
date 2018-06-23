@@ -70,14 +70,10 @@ class Login extends Component{
 					}
 					<form onSubmit={this.onSubmit.bind(this)}>
 						<div className="row">
-					        <div className="input-field col s6">
-					          <input id="email" placeholder="Email" type="email" className="validate"  ref="email" required/>
-					        </div>
+					        <input id="email" placeholder="Email" type="email" className="validate"  ref="email" required/>
 					    </div>
 					    <div className="row">
-					        <div className="input-field col s6">
-					          <input id="password" placeholder="Password" type="password" className="validate" ref="password" required/>
-				        	</div>
+					        <input id="password" placeholder="Password" type="password" className="validate" ref="password" required/>
 				        </div>
 				        <div className="row">
 				        	<button type="submit" className="btn" name="action">Submit</button>

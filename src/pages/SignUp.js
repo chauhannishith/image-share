@@ -4,6 +4,13 @@ import { getFromStorage } from '../utils/storage'
 
 class SignUp extends Component {
 
+	constructor(props){
+		super(props)
+		this.state ={
+			signUpErrors: ''
+		}
+	}
+
 	componentDidMount() {
 		let token = getFromStorage('imageshare');
 		if(token !== null){
@@ -24,7 +31,8 @@ class SignUp extends Component {
 			this.createUser(user)
 		}
 		else{
-			alert("Passwords do not match")
+			// alert("Passwords do not match")
+			this.setState({signUpErrors: 'Passwords do not match'})
 			window.document.getElementById('cpassword').focus();
 		}
 	}
@@ -46,41 +54,36 @@ class SignUp extends Component {
 
 	render() {
 		return (
-			<div>
-				<h1>SignUp to join others</h1>
-				<form onSubmit={this.onSubmit.bind(this)} className="col s12">
-					<div className="row">
-				        <div className="input-field col s3">
-				          <input id="first_name" type="text" ref="fname"  className="validate"  required/>
-				          <label htmlFor="first_name">First Name</label>
+			<div className="login-wrapper">
+				<div className="form">
+					{
+					this.state.signUpErrors && 
+						<div className="error-msg">
+							<p>{this.state.signUpErrors}</p>
+						</div>
+					}
+					<h1>SignUp to join others</h1>
+					<form onSubmit={this.onSubmit.bind(this)} className="col s12">
+						<div className="row">
+					        <input id="first_name" type="text" ref="fname" placeholder="First Name" className="validate"  required/>
+					    </div>
+					    <div className="row">
+					          <input id="last_name" type="text" ref="lname" placeholder="Last Name" className="validate"  required/>
+					    </div>
+						<div className="row">
+					          <input id="email" type="email" className="validate" placeholder="Email" ref="email" required/>
+					    </div>
+					    <div className="row">
+					          <input id="password" type="password" className="validate" placeholder="Password" ref="password" required/>
 				        </div>
-				        <div className="input-field col s3">
-				          <input id="last_name" type="text" ref="lname"  className="validate"  required/>
-				          <label htmlFor="last_name">Last Name</label>
+				        <div className="row">
+					          <input id="cpassword" type="password" ref="cpassword" placeholder="Confirm Password" className="validate" required/>
 				        </div>
-				    </div>
-					<div className="row">
-				        <div className="input-field col s6">
-				          <input id="email" type="email" className="validate"  ref="email" required/>
-				          <label htmlFor="email">Email</label>
+				        <div className="row">
+				        	<button className="btn" type="submit" name="action">Submit</button>
 				        </div>
-				    </div>
-				    <div className="row">
-				        <div className="input-field col s6">
-				          <input id="password" type="password" className="validate" ref="password" required/>
-				          <label htmlFor="password">Password</label>
-			        	</div>
-			        </div>
-			        <div className="row">
-				        <div className="input-field col s6">
-				          <input id="cpassword" type="password" ref="cpassword"  className="validate" required/>
-				          <label htmlFor="password">Confirm Password</label>
-			        	</div>
-			        </div>
-			        <div className="row">
-			        	<button className="btn waves-effect waves-light" type="submit" name="action">Submit</button>
-			        </div>
-				</form>
+					</form>
+				</div>
 			</div>
 		);
 	}
