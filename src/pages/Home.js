@@ -149,7 +149,7 @@ class Home extends Component{
 						<div className="list-box">
 							<h1>Your tags</h1>
 							<ul>
-								{this.state.tags ? allTags : <p>You have no tags</p>}
+								{this.state.tags ? allTags : <li>You have no tags</li>}
 							</ul>
 						</div>
 						<div className="list-box">
@@ -163,7 +163,7 @@ class Home extends Component{
 						<div className="list-box">
 							<h1>Projects shared with you</h1>
 							<ul className="collection">
-								{eachSharedProject.length ? eachSharedProject : <p>You don't have any shared project yet</p>}
+								{eachSharedProject.length ? eachSharedProject : <li>You don't have any shared project yet</li>}
 							</ul>
 						</div>
 					</div>

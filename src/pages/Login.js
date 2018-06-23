@@ -62,7 +62,12 @@ class Login extends Component{
 			
 				<div className="form">
 					<h1>Please login to continue</h1>
-					{this.state.signinerror}
+					{
+					this.state.signinerror && 
+						<div className="error-msg">
+							<p>{this.state.signinerror}</p>
+						</div>
+					}
 					<form onSubmit={this.onSubmit.bind(this)}>
 						<div className="row">
 					        <div className="input-field col s6">
@@ -77,7 +82,7 @@ class Login extends Component{
 				        <div className="row">
 				        	<button type="submit" className="btn" name="action">Submit</button>
 				        </div>
-				        <p>Signin with<a href="https://groupphotos.herokuapp.com/api/users/auth/google"><img alt="Google" className="google-btn" src="/google.png"/></a></p>
+				        <a href="https://groupphotos.herokuapp.com/api/users/auth/google"><img alt="Google" className="google-btn" src="/google.png"/></a>
 						<p>New user? <a href="/signup">Signup</a> instead</p>
 					</form>
 				</div>
