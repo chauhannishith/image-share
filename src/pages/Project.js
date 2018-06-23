@@ -130,7 +130,7 @@ class Project extends Component{
 		})
 
 		return (
-			<div>
+			<div className="wrapper">
 			<button onClick={this.goBack.bind(this)} >GoBack</button>
 				<h1>{this.props.location.state.projectTitle}</h1>
 				{this.state.shareError}

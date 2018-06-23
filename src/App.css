@@ -1,51 +1,41 @@
 :root{
-  --primary: #42b3f4;
-  --secondary: white;
-  --shadow: 0 1px 5px rgba(104, 104, 104, 0.8);
+  --primary: #2b2b2b;/*#202223;/*#42b3f4;*/
+  --secondary: #9c9d9e;
+  --light: #bbbdbf;
+  --background: #a3a5a8;/*#5e6568;/*#404547;#75ccff;*/
+  --fontcolor: #fff;
+  --shadow: 0 4px 5px rgba(104, 104, 104, 0.8);
 
+}
+
+body{
+  margin: 0px;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .banner{
   background-color: var(--primary);
   margin: 0px;
   padding: 30px 5px 5px 5px;
+  z-index: 1;
 }
 
 .btn{
   padding: 5px;
   border-radius: 3px;
-  background-color: var(--primary)
+  background-color: var(--secondary)
 }
 
 .center{
-  align-content: center;
+  text-align: center;
 }
 
-.form{
-  margin :auto;
-  border: 1px solid black;
-  padding: 15px;
-}
-
-.home-grid{
-  display: grid;
-  grid-template-columns: repeat(3, 4fr);
-  grid-gap: 2rem;
-}
-
-.image-grid{
-  display: grid;
-  grid-template-columns: repeat(4, 3fr);
-  grid-gap: 1rem;
-}
-
-.image-card{
-  border: 1px solid black;
-  border-radius: 3px;
-  padding: 1rem;
-  margin: 1rem;
-  display: grid;
-  grid-template-rows: 4fr 1fr 1fr;
+.container{
+  background-color: var(--background);
+  margin: 0px 20x;
+  color: var(--fontcolor);
+  min-height: 100vh;
 }
 
 .file-drop-area{
@@ -70,8 +60,65 @@
 }
 
 .file-drop .file-drop-target{
-	padding: 100px;
-	background-color: rgb(230, 230, 230);
+  padding: 100px;
+  background-color: rgb(230, 230, 230);
+}
+
+.form{
+  margin: auto;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 2rem;
+  width: 400px;
+  z-index: 0;
+  box-shadow: var(--shadow);
+  background-color: var(--light);
+}
+
+.form h1{
+  font-size: 2rem;
+  text-align: center;
+}
+
+.form input, a, p, button{
+  font-size: 1.2rem;
+  width: 100%;
+}
+
+.form input{
+  padding: 5px;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.form img{
+  display: inline-block;
+  margin: auto;
+}
+
+.google-btn{
+  max-width: 150px;
+}
+
+.home-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 4fr);
+  grid-gap: 2rem;
+}
+
+.image-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 3fr);
+  grid-gap: 1rem;
+}
+
+.image-card{
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 1rem;
+  margin: 1rem;
+  display: grid;
+  grid-template-rows: 4fr 1fr 1fr;
 }
 
 .list-box{
@@ -79,6 +126,20 @@
   border-radius: 10px;
   padding: 1rem 2rem;
   margin: 1rem;
+}
+
+.login-wrapper{
+  margin: 1rem;
+  min-height: 100vh;
+  align-items: center;
+  z-index: -1;
+  padding: 5rem;
+}
+
+.navbar{
+  margin: 1rem;
+  padding: 1rem;
+  float: right;
 }
 
 .row{

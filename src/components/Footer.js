@@ -2,8 +2,7 @@ import React from 'react'
 
 const Footer = () => (
 	<div>
-		<div>
-			<hr />
+		<div className="banner">
 			<h1>Footer &copy</h1>
 		</div>
 	</div>

@@ -58,29 +58,27 @@ class Login extends Component{
 			return <Loading />
 
 		return(
-			<div>
+			<div className="login-wrapper">
 			
 				<div className="form">
 					<h1>Please login to continue</h1>
 					{this.state.signinerror}
-					<form onSubmit={this.onSubmit.bind(this)} className="col s12">
+					<form onSubmit={this.onSubmit.bind(this)}>
 						<div className="row">
 					        <div className="input-field col s6">
-					          <input id="email" type="email" className="validate"  ref="email" required/>
-					          <label htmlFor="email">Email</label>
+					          <input id="email" placeholder="Email" type="email" className="validate"  ref="email" required/>
 					        </div>
 					    </div>
 					    <div className="row">
 					        <div className="input-field col s6">
-					          <input id="password" type="password" className="validate" ref="password" required/>
-					          <label htmlFor="password">Password</label>
+					          <input id="password" placeholder="Password" type="password" className="validate" ref="password" required/>
 				        	</div>
 				        </div>
 				        <div className="row">
-				        	<button className="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+				        	<button type="submit" className="btn" name="action">Submit</button>
 				        </div>
-				        <a href="https://groupphotos.herokuapp.com/api/users/auth/google">Signin with google</a>
-						<label>New user? <a href="/signup">Signup</a> instead</label>
+				        <p>Signin with<a href="https://groupphotos.herokuapp.com/api/users/auth/google"><img alt="Google" className="google-btn" src="/google.png"/></a></p>
+						<p>New user? <a href="/signup">Signup</a> instead</p>
 					</form>
 				</div>
 				

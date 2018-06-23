@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Header = () => (
-	<div className="banner">
+	<div className="banner center">
 		<div>
 			<h1>Header</h1>
 		</div>
