@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import loginUser from '../helpers/loginUser'
 import { getFromStorage, setInStorage } from '../utils/storage'
 import Loading from './Loading'
@@ -61,7 +59,7 @@ class Login extends Component{
 
 		return(
 			<div>
-			<Header />
+			
 				<div className="form">
 					<h1>Please login to continue</h1>
 					{this.state.signinerror}
@@ -85,7 +83,7 @@ class Login extends Component{
 						<label>New user? <a href="/signup">Signup</a> instead</label>
 					</form>
 				</div>
-				<Footer />
+				
 			</div>
 		);
 	}

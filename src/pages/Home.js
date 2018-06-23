@@ -142,9 +142,7 @@ class Home extends Component{
 
 		return (
 			<div>
-				<div className="banner">
-					<h1>Logo HOME</h1>
-				</div>
+
 				<div className="wrapper">
 					<a onClick={this.logout.bind(this)}>LogOut</a>
 					<div className="home-grid">
