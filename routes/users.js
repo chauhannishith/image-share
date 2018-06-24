@@ -33,9 +33,9 @@ passport.use(new GoogleStrategy({
   		}
   		if(!user){
   			console.log('No user found')
-  			var tempUser = JSON.parse(JSON.stringify(profile))
+  			// var tempUser = JSON.parse(JSON.stringify(profile))
   			var user = new ThirdPartyUser({
-  				tempUser//profile
+  				profile
   			})
   			user.save(err=> {
   				if(err)
@@ -154,32 +154,37 @@ router.get('/counters', (req, res, next) => {
 
 router.post('/upload', verifyToken, (req, res, next) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
-		// console.log(authData)
-		req.authData = authData
-		upload(req, res, (err) => {
-		// console.log("1",req.authData)
-			if(err){
-				if(err.code === 'LIMIT_FILE_SIZE'){
-					console.log("Error: File size too large");
-					res.status(404).send({message:"File size too large", success: false})	
+		if(err){
+			console.log(err)
+			res.status(200).send({message: 'Please login again', success: false})
+		}else{
+			// console.log(authData)
+			req.authData = authData
+			upload(req, res, (err) => {
+			// console.log("1",req.authData)
+				if(err){
+					if(err.code === 'LIMIT_FILE_SIZE'){
+						console.log("Error: File size too large");
+						res.status(404).send({message:"File size too large", success: false})	
+					}
+					else{
+						console.log("error"+err);
+						res.status(404).send({message:err, success: false})
+					}
 				}
 				else{
-					console.log("error"+err);
-					res.status(404).send({message:err, success: false})
+					if(req.files == undefined){
+						console.log("undefined")
+						res.status(404).send({message:"No files selected", success: false})
+					}
+					else{
+						console.log("files uploaded")	
+						// console.log(req.files)
+						res.status(200).send({message:"uploaded successfully", success: true})
+					}
 				}
-			}
-			else{
-				if(req.files == undefined){
-					console.log("undefined")
-					res.status(404).send({message:"No files selected", success: false})
-				}
-				else{
-					console.log("files uploaded")	
-					// console.log(req.files)
-					res.status(200).send({message:"uploaded successfully", success: true})
-				}
-			}
-		})
+			})
+		}
 	})
 	// console.log("2",req.body)
 	
