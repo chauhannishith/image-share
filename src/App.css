@@ -4,8 +4,34 @@
   --light: #bbbdbf;
   --background: #a3a5a8;/*#5e6568;/*#404547;#75ccff;*/
   --fontcolor: #fff;
+  --linkcolor: #fff;
   --shadow: 0 4px 5px rgba(104, 104, 104, 0.8);
 
+}
+
+*{
+  margin: 0px;
+  padding: 0px;
+}
+
+a:link {
+  text-decoration: none;
+  color: var(--linkcolor);
+}
+
+a:visited {
+  color: var(--linkcolor);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--linkcolor);
+}
+
+a:active {
+  text-decoration: underline;
+  color: var(--linkcolor);
 }
 
 body{
@@ -21,6 +47,10 @@ body{
   z-index: 1;
 }
 
+.banner h1{
+  margin: 0px;
+}
+
 .btn{
   padding: 5px;
   border-radius: 3px;
@@ -33,7 +63,6 @@ body{
 
 .container{
   background-color: var(--background);
-  margin: 0px 20x;
   color: var(--fontcolor);
   min-height: 100vh;
 }
@@ -136,22 +165,44 @@ body{
 .list-box{
   border: 1px solid black;
   border-radius: 10px;
+  background-color: var(--light);
   padding: 1rem 2rem;
   margin: 1rem;
 }
 
+.list-box h1{
+  font-size: 2rem;
+  text-shadow: 1px 1px 1px black;
+}
+
 .login-wrapper{
   margin: 1rem;
-  min-height: 60vh;
+  min-height: 80vh;
   align-items: center;
   z-index: -1;
-  padding: 5rem;
 }
 
 .navbar{
-  margin: 1rem;
-  padding: 1rem;
+  padding: 1rem 0rem 1rem 1rem;
+  display: inline-block;
+  width: 100%;
+  border-top: 1px solid var(--light);
+  border-bottom: 1px solid var(--light);
   float: right;
+  overflow: hidden;
+  z-index: 2;
+  background-color: var(--primary);
+  text-align: right;
+}
+
+.navbar a{
+  padding: 1rem;
+  text-decoration: none;
+  border-left: 1px solid var(--light);
+}
+
+.navbar a:hover{
+  background-color: var(--secondary);
 }
 
 .row{
@@ -168,10 +219,15 @@ body{
 }
 
 .wrapper{
-  margin: 2rem;
+  margin: 0rem;
+  padding: 3rem;
   min-height: 80vh;
 }
 
 ul li{
   list-style-type: none;
+}
+
+ul li a{
+  font-size: 1.5rem;
 }
