@@ -131,7 +131,7 @@ class Project extends Component{
 
 		return (
 			<div className="wrapper">
-			<button onClick={this.goBack.bind(this)} >GoBack</button>
+			<button className="btn-small" onClick={this.goBack.bind(this)} >GoBack</button>
 				<h1>{this.props.location.state.projectTitle}</h1>
 				{this.state.shareError}
 				{this.state.displayShareForm && 
@@ -140,7 +140,7 @@ class Project extends Component{
 						<input type="submit" value="Add" />
 					</form>
 				}
-				<button id="share" onClick={this.toggleShareForm.bind(this)}>Share</button>
+				<button id="share" className="btn-small" onClick={this.toggleShareForm.bind(this)}>Share</button>
 				<hr />
 				<br />
 				{this.state.displayGroupForm && 
@@ -149,7 +149,7 @@ class Project extends Component{
 						<input type="submit" value="Create" />
 					</form>
 				}
-				<button id="group" onClick={this.toggleCreateGroup.bind(this)}>Create subgroup</button>
+				<button id="group" className="btn-small" onClick={this.toggleCreateGroup.bind(this)}>Create subgroup</button>
 				<br />
 				<ul>
 					{eachGroup}
