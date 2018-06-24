@@ -105,16 +105,26 @@ class Project extends Component{
 		
 	}
 
+		// const eachImage = this.state.images.map((image, i) => {
+		// 	if(image.metadata.subgroup !== null){
+		// 		return (
+		// 			<Image key={i} source={image} />
+		// 			)
+		// 	}
+		// 	else{
+		// 		return null
+		// 	}
+		// })
+
 	render() {
-		const eachImage = this.state.images.map((image, i) => {
-			if(!image.metadata.subgroup){
-				return (
-					<Image key={i} source={image} />
-					)
-			}
-			else{
-				return null
-			}
+
+		const eachImage = this.state.images.filter((image) => {
+			if(image.metadata.subgroup !== "null")
+				return false
+			else
+				return true
+		}).map((image, i) => {
+			return <Image key={i} source={image} />
 		})
 
 		const eachGroup = this.state.subgroups.map((group, i) => {
@@ -149,7 +159,7 @@ class Project extends Component{
 						<input type="submit" value="Create" />
 					</form>
 				}
-				<button id="group" className="btn-small" onClick={this.toggleCreateGroup.bind(this)}>Create subgroup</button>
+				<button id="group" onClick={this.toggleCreateGroup.bind(this)}>Create subgroup</button>
 				<br />
 				<ul>
 					{eachGroup}

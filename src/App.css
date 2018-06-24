@@ -199,7 +199,6 @@ body{
   width: 100%;
   border-top: 1px solid var(--light);
   border-bottom: 1px solid var(--light);
-
   overflow: hidden;
   z-index: 2;
   background-color: var(--primary);
