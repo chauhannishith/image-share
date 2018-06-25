@@ -152,9 +152,9 @@ class Project extends Component{
 					<a className="right" onClick={this.logout.bind(this)}>LogOut</a>
 				</div>
 			<div className="project">
-				<div>
+				<div className="project-header">
 					<h1 className="project-title">{this.props.location.state.projectTitle}</h1>
-					<button id="share" className="btn-small" onClick={this.toggleShareForm.bind(this)}>Share</button>
+					<a id="share" className="btn-share" onClick={this.toggleShareForm.bind(this)}>Share</a>
 				</div>
 				{this.state.shareError}
 				{this.state.displayShareForm && 
