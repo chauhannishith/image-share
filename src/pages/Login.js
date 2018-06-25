@@ -78,8 +78,12 @@ class Login extends Component{
 				        <div className="row">
 				        	<button type="submit" className="btn" name="action">Submit</button>
 				        </div>
+				        <div className="row">
 				        <a href="https://groupphotos.herokuapp.com/api/users/auth/google"><img alt="Google" className="google-btn" src="/google.png"/></a>
+				        </div>
+				        <div className="row">
 						<p>New user? <a href="/signup">Signup</a> instead</p>
+						</div>
 					</form>
 				</div>
 				

@@ -126,17 +126,20 @@ class Home extends Component{
 				)
 		})
 		
-		const allTags  = this.state.tags.map((tag, i) => { 
-			// console.log(tag)
-			return (
-				<li key={i} className="collection-item" >
-					<Link to={{ pathname: '/tag', state: {tagdata: tag} }}>
-						{tag.tagname}
-					</Link>
-				</li>
-				)
-		})
-		
+		var allTags = null
+
+		if(this.state.tags){
+			allTags  = this.state.tags.map((tag, i) => { 
+				// console.log(tag)
+				return (
+					<li key={i} className="collection-item" >
+						<Link to={{ pathname: '/tag', state: {tagdata: tag} }}>
+							{tag.tagname}
+						</Link>
+					</li>
+					)
+			})
+		}
 
 		if(this.state.isLoading)
 			return <Loading />
@@ -159,7 +162,7 @@ class Home extends Component{
 							<ul className="collection">
 								{eachProject.length ? eachProject : <p>You haven't created any project yet</p>}
 							</ul>
-							{!this.state.createForm && <button onClick={this.displayForm.bind(this)} >Create New Project</button>}
+							{!this.state.createForm && <button className="btn-small" onClick={this.displayForm.bind(this)} >Create New Project</button>}
 							{this.state.createForm && this.renderForm()}
 						</div>
 						<div className="list-box">
