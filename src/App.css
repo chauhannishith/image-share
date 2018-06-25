@@ -75,8 +75,8 @@ body{
 }
 
 .btn-small{
-  padding: 0.5rem;
-  width: 100px;
+  padding: 0.4rem;
+  border-radius: 3px;
   font-size: 1rem;
 }
 
@@ -227,6 +227,7 @@ body{
 
 .navbar a{
   padding: 1rem;
+  font-size: 1.4rem;
   text-decoration: none;
   border: 1px solid var(--light);
 }
@@ -251,6 +252,10 @@ body{
   margin: 1.5rem;
   padding: 2rem 2rem;
   min-height: 80vh;
+}
+
+.project input[type=text]{
+  font-size: 1.2rem;
 }
 
 .project-header{

@@ -96,7 +96,7 @@ class Project extends Component{
 		if(temp === true)
 			e.target.textContent = 'Cancel'// document.getElementById('group').innerText = 'Cancel'
 		else
-			e.target.textContent = 'Create'// document.getElementById('group').innerText = 'Create'
+			e.target.textContent = 'Create Subgroup'// document.getElementById('group').innerText = 'Create'
 		this.setState({displayGroupForm: temp})
 		
 	}
@@ -160,7 +160,7 @@ class Project extends Component{
 				{this.state.displayShareForm && 
 					<form onSubmit={this.addMember.bind(this)}>
 						<input type="email" ref="email" placeholder="email" required />
-						<input type="submit" value="Add" />
+						<input className="btn-small" type="submit" value="Add" />
 					</form>
 				}
 				<hr />
@@ -168,10 +168,10 @@ class Project extends Component{
 				{this.state.displayGroupForm && 
 					<form onSubmit={this.createGroup.bind(this)}>
 						<input type="text" ref="groupname" placeholder="Group title" required />
-						<input type="submit" value="Create" />
+						<input className="btn-small" type="submit" value="Create" />
 					</form>
 				}
-				<button id="group" onClick={this.toggleCreateGroup.bind(this)}>Create subgroup</button>
+				<button className="btn-small" id="group" onClick={this.toggleCreateGroup.bind(this)}>Create subgroup</button>
 				<br />
 				<ul>
 					{eachGroup}

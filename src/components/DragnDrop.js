@@ -71,7 +71,7 @@ class DragnDrop extends Component {
 
 		return (
 			<div>
-				<button id="display" onClick={this.toggleState.bind(this)}>Upload</button>
+				<button className="btn-small" id="display" onClick={this.toggleState.bind(this)}>Upload</button>
 				{this.state.displayDrop &&
 				<div>
 					{this.state.uploading? <div className="progress">
@@ -85,9 +85,9 @@ class DragnDrop extends Component {
 							Drop some files here!
 						</FileDrop>
 						<h1> OR </h1>
-						<input type="file" onChange={this.fileHandler.bind(this)} multiple name="files"/>
+						<input className="btn-small" type="file" onChange={this.fileHandler.bind(this)} multiple name="files"/>
 						<br />
-						<button onClick={this.uploadHandler.bind(this)} id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
+						<button className="btn-small" onClick={this.uploadHandler.bind(this)} id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
 					</div>
 				</div>
 				}
