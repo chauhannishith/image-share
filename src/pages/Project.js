@@ -6,7 +6,7 @@ import createSubGroup from '../helpers/createSubGroup'
 import fetchUploadedFiles from '../helpers/fetchUploadedFiles'
 import Loading from './Loading'
 import shareProject from '../helpers/shareProject'
-import { removeFromStorage } from '../utils/storage'
+import { getFromStorage, removeFromStorage } from '../utils/storage'
 
 class Project extends Component{
 	constructor(props) {
@@ -39,7 +39,12 @@ class Project extends Component{
 	}
 
 	componentDidMount() {
-		setTimeout(() => this.fetchFiles(), 2000 )
+	let token = getFromStorage('imageshare');
+		if(token !== null){
+			setTimeout(() => this.fetchFiles(), 2000 )
+		}else{
+			this.props.history.push('/')
+		}
 		
 	}
 

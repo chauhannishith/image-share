@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import FetchImage from '../components/FetchImage'
+import { getFromStorage } from '../utils/storage'
 
 class Tag extends Component {
 
@@ -11,7 +12,12 @@ class Tag extends Component {
 	}
 
 	componentDidMount() {
-		this.setState({images: this.props.location.state.tagdata.images})
+		let token = getFromStorage('imageshare');
+		if(token !== null){
+			this.setState({images: this.props.location.state.tagdata.images})
+		}else{
+			this.props.history.push('/')
+		}
 	}
 	
 	goBack() {
