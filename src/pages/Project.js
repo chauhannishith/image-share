@@ -27,6 +27,7 @@ class Project extends Component{
 		.then(response => {
 			if(response.data.success){
 				console.log(response.data.message)
+				this.setState({shareError: response.data.message})
 			}
 			else{
 				console.log(response.data.message)
@@ -85,6 +86,11 @@ class Project extends Component{
 		this.props.history.goBack()
 	}
 
+	logout(){
+		removeFromStorage('imageshare')
+		this.props.history.push('/')
+	}
+
 	toggleCreateGroup(e) {
 		let temp = !this.state.displayGroupForm
 		if(temp === true)
@@ -140,9 +146,16 @@ class Project extends Component{
 		})
 
 		return (
-			<div className="wrapper">
-			<button className="btn-small" onClick={this.goBack.bind(this)} >GoBack</button>
-				<h1>{this.props.location.state.projectTitle}</h1>
+			<div>
+				<div className="navbar">
+					<a className="left" onClick={this.goBack.bind(this)} >GoBack</a>
+					<a className="right" onClick={this.logout.bind(this)}>LogOut</a>
+				</div>
+			<div className="project">
+				<div>
+					<h1 className="project-title">{this.props.location.state.projectTitle}</h1>
+					<button id="share" className="btn-small" onClick={this.toggleShareForm.bind(this)}>Share</button>
+				</div>
 				{this.state.shareError}
 				{this.state.displayShareForm && 
 					<form onSubmit={this.addMember.bind(this)}>
@@ -150,7 +163,6 @@ class Project extends Component{
 						<input type="submit" value="Add" />
 					</form>
 				}
-				<button id="share" className="btn-small" onClick={this.toggleShareForm.bind(this)}>Share</button>
 				<hr />
 				<br />
 				{this.state.displayGroupForm && 
@@ -172,6 +184,7 @@ class Project extends Component{
 				</div>
 				<br />
 				<DragnDrop projectid={this.props.location.state.projectId} />
+			</div>
 			</div>
 			)
 	}
