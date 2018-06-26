@@ -66,30 +66,41 @@ class DragnDrop extends Component {
 			this.setState({bool: true}, () => this.setState.attachments: null)})
 		.catch(error => console.log(error))
 	}
-
+// style={{ border: '1px solid black', width: 600, margin: 'auto', color: 'black', padding: 20 }}
 	render() {
 
 		return (
-			<div>
+			<div className="dragndrop">
 				<button className="btn-small" id="display" onClick={this.toggleState.bind(this)}>Upload</button>
 				{this.state.displayDrop &&
-				<div>
-					{this.state.uploading? <div className="progress">
-					    <div className="indeterminate"></div>
-					</div>:<p></p>}
+					<div>
+						{this.state.uploading ? 
+							<div className="progress">
+						    	<div className="indeterminate"></div>
+							</div>:<p></p>}
 
-					<div
-					 id="file-drop"
-					 style={{ border: '1px solid black', width: 600, margin: 'auto', color: 'black', padding: 20 }}>
-						<FileDrop onDrop={this.handleDrop.bind(this)}>
-							Drop some files here!
-						</FileDrop>
-						<h1> OR </h1>
-						<input className="btn-small" type="file" onChange={this.fileHandler.bind(this)} multiple name="files"/>
-						<br />
-						<button className="btn-small" onClick={this.uploadHandler.bind(this)} id="upload" disabled={(this.state.bool ? "true" : undefined)}>Upload</button>
+						<div id="file-drop" className="file-drop-area">
+							<FileDrop onDrop={this.handleDrop.bind(this)}>
+								Drop some files here!
+							</FileDrop>
+							<h1> OR </h1>
+							<div className="pick-files">
+								<input
+								 className="btn-small" 
+								 type="file" 
+								 onChange={this.fileHandler.bind(this)} 
+								 multiple 
+								 name="files"
+								/>
+								<button
+								 className="btn-small" 
+								 onClick={this.uploadHandler.bind(this)} 
+								 id="upload" 
+								 disabled={(this.state.bool ? "true" : undefined)}
+								>Upload</button>
+							</div>
+						</div>
 					</div>
-				</div>
 				}
 			</div>
 			);

@@ -144,35 +144,40 @@ body{
   margin: 0px;
 }
 
-.file-drop-area{
-  border: 1px solid black;
-  width: 600;
-  margin: 'auto';
-  padding: 20;
-}
-
-.file-drop-target-area{
-  margin: 10px;
-  padding: 100px;
-  background-color: rgb(230, 230, 230);
-}
-
 .file-drop{
   border: 1px solid black;
-  width: 600;
+  width: 40vw;
   margin: auto;
   color: black;
-  padding: 20;
+}
+
+.file-drop-area{
+  border: 1px solid black;
+  width: 40vw;
+  margin: auto;
+  padding: 2rem;
+}
+
+.file-drop-area h1{
+  margin: 1rem;
+  text-align: center;
 }
 
 .file-drop .file-drop-target{
-  padding: 100px;
+  padding: 15vh 15vw;
+  text-align: center;
   background-color: rgb(230, 230, 230);
 }
 
 .file-drop .file-drop-target .file-drop-dragging-over-frame{
   background-color: rgb(240, 240, 240);
 }
+
+.file-drop .file-drop-target.file-drop-dragging-over-target{
+  background-color: rgb(250, 250, 250);
+}
+
+
 .footer{
   background-color: var(--primary);
   margin: 0px;
@@ -241,16 +246,20 @@ body{
   border: 1px solid black;
   border-radius: 3px;
   margin: 1rem;
+  padding: 0.4rem;
   display: grid;
   grid-template-rows: 2.5fr 0.5fr 0.5fr;
 }
 
-.image-card input{
-
+.image-card input[type=text]{
+  width: 10rem;
+  font-size: 1rem;
+  padding: 0.2rem;
 }
 
 .image-card div{
-  margin: 1rem;
+  margin: 0.5rem;
+  padding: 0.5rem;
 }
 
 .list-box{
@@ -299,6 +308,11 @@ body{
   background-color: var(--secondary);
 }
 
+.pick-files{
+  display: flex;
+  justify-content: space-between;
+}
+
 .project{
   border-radius: 3rem;
   border: 2px solid var(--light);
@@ -335,6 +349,7 @@ body{
   padding: 5px;
   margin: 5px;
 }
+
 
 .share-error-msg{
   background-color: rgba(255, 0, 0, 0.4);

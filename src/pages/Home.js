@@ -147,7 +147,8 @@ class Home extends Component{
 		return (
 			<div>
 				<div className="navbar">
-					<div></div>
+					<div>
+					</div>
 					<a onClick={this.logout.bind(this)}>LogOut</a>
 				</div>
 				<div className="wrapper">
