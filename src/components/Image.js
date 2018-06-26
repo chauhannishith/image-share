@@ -30,7 +30,7 @@ class Image extends Component {
 						{this.props.source.metadata.tags && eachTag}
 					</p>
 				</div>
-				<div>
+				<div className="add-tag">
 					<input type="text" ref="tagname" />
 					<button className="btn-small" onClick={this.addTag.bind(this)}>Add tag</button>
 				</div>

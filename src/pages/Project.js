@@ -18,7 +18,8 @@ class Project extends Component{
 			displayShareForm: false,
 			displayGroupForm: false,
 			isLoading: true,
-			shareError: ''
+			shareError: '',
+			shareSuccess: ''
 		}
 	}
 
@@ -27,7 +28,7 @@ class Project extends Component{
 		.then(response => {
 			if(response.data.success){
 				console.log(response.data.message)
-				this.setState({shareError: response.data.message})
+				this.setState({shareSuccess: response.data.message})
 			}
 			else{
 				console.log(response.data.message)
@@ -113,7 +114,9 @@ class Project extends Component{
 		// else
 		// 	e.target.textContent = 'Share'// document.getElementById('share').innerText = 'Share'
 		this.setState({displayShareForm: temp}, () => {
-			this.setState({shareError: ''})
+			this.setState({shareError: ''}, () => {
+				this.setState({shareSuccess: ''})
+			})
 		})
 		
 	}
@@ -165,6 +168,11 @@ class Project extends Component{
 							{this.state.shareError && 	
 								<div className="share-error-msg">
 									{this.state.shareError}
+								</div>
+							}
+							{this.state.shareSuccess && 	
+								<div className="share-success-msg">
+									{this.state.shareSuccess}
 								</div>
 							}
 							{this.state.displayShareForm && 

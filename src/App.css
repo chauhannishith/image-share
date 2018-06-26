@@ -185,6 +185,10 @@ body{
   z-index: 1;
 }
 
+.footer h4, h6{
+  padding: 0.4rem;
+}
+
 .form{
   margin: auto;
   border: 1px solid black;
@@ -250,7 +254,13 @@ body{
   display: grid;
   grid-template-rows: 2.5fr 0.5fr 0.5fr;
 }
-
+/*
+.image-card .add-tag{
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 0.5rem;
+}*/
+/**/
 .image-card input[type=text]{
   width: 10rem;
   font-size: 1rem;
@@ -261,7 +271,7 @@ body{
   margin: 0.5rem;
   padding: 0.5rem;
 }
-
+/**/
 .list-box{
   border: 1px solid black;
   border-radius: 10px;
@@ -311,6 +321,7 @@ body{
 .pick-files{
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .project{
@@ -356,6 +367,14 @@ body{
   border-radius: 5px;
   font-size: 1.2rem;
   border: 2px solid red;
+  padding: 0.5rem;
+}
+
+.share-success-msg{
+  background-color: rgba(0, 255, 0, 0.4);
+  border-radius: 5px;
+  font-size: 1.2rem;
+  border: 2px solid rgb(0, 255, 0, 0);
   padding: 0.5rem;
 }
 
