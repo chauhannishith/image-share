@@ -93,6 +93,24 @@ body{
   min-height: 100vh;
 }
 
+.display-group-form{
+  display: flex;
+  margin: 5px 0px 5px 0px;
+  padding: 5px 0px 5px 5px;
+}
+
+.display-group-form input[type=text]{
+  margin: 5px;
+  padding: 5px;
+}
+
+.display-group-form .btn-group{
+  margin: 4px 0px 3px 5px;
+  padding: 0.5rem 0.4rem;
+  border-radius: 3px;
+  font-size: 1rem;
+}
+
 .error-msg{
   background-color: rgba(255, 0, 0, 0.5);
   border-radius: 5px;
@@ -134,7 +152,7 @@ body{
 .footer{
   background-color: var(--primary);
   margin: 0px;
-  padding: 2rem 1rem 3rem 1rem;
+  padding: 2rem 1rem;
   z-index: 1;
 }
 
@@ -203,6 +221,10 @@ body{
   grid-template-rows: 2.5fr 0.5fr 0.5fr;
 }
 
+.image-card input{
+
+}
+
 .image-card div{
   margin: 1rem;
 }
@@ -218,6 +240,10 @@ body{
 .list-box h1{
   font-size: 2rem;
   text-shadow: 1px 1px 1px black;
+}
+
+.list-box ul li, button{
+  margin: 0.2rem;
 }
 
 .login-wrapper{

@@ -99,19 +99,19 @@ class Project extends Component{
 	toggleCreateGroup(e) {
 		let temp = !this.state.displayGroupForm
 		if(temp === true)
-			e.target.textContent = 'Cancel'// document.getElementById('group').innerText = 'Cancel'
+			e.target.value = 'Cancel'// document.getElementById('group').innerText = 'Cancel'
 		else
-			e.target.textContent = 'Create Subgroup'// document.getElementById('group').innerText = 'Create'
+			e.target.value = 'Create Subgroup'// document.getElementById('group').innerText = 'Create'
 		this.setState({displayGroupForm: temp})
 		
 	}
 
 	toggleShareForm(e) {
 		let temp = !this.state.displayShareForm
-		if(temp === true)
-			e.target.textContent = 'Cancel'// document.getElementById('share').innerText = 'Cancel'
-		else
-			e.target.textContent = 'Share'// document.getElementById('share').innerText = 'Share'
+		// if(temp === true)
+		// 	e.target.textContent = 'Cancel'// document.getElementById('share').innerText = 'Cancel'
+		// else
+		// 	e.target.textContent = 'Share'// document.getElementById('share').innerText = 'Share'
 		this.setState({displayShareForm: temp})
 		
 	}
@@ -170,13 +170,22 @@ class Project extends Component{
 				}
 				<hr />
 				<br />
-				{this.state.displayGroupForm && 
-					<form onSubmit={this.createGroup.bind(this)}>
-						<input type="text" ref="groupname" placeholder="Group title" required />
-						<input className="btn-small" type="submit" value="Create" />
-					</form>
-				}
-				<button className="btn-small" id="group" onClick={this.toggleCreateGroup.bind(this)}>Create subgroup</button>
+				<div className="display-group-form">
+					{this.state.displayGroupForm && 
+						<form onSubmit={this.createGroup.bind(this)}>
+							<input type="text" ref="groupname" placeholder="Group title" required />
+							<input className="btn-group" type="submit" value="Create" />
+							<input type="button" className="btn-group" onClick={this.toggleCreateGroup.bind(this)} value="Cancel" />
+						</form>
+					}
+					{!this.state.displayGroupForm &&
+						<input type="button"
+						 className="btn-group" 
+						 onClick={this.toggleCreateGroup.bind(this)} 
+						 value="Create subgroup" 
+						/>
+					}
+				</div>
 				<br />
 				<ul>
 					{eachGroup}
