@@ -386,7 +386,7 @@ router.get('/auth/google/callback',
   		firstname: tempUser.profile.name.givenName,
   		lastname: tempUser.profile.name.familyName
   	}
-  	console.log(user)
+  	// console.log(user)
     	jwt.sign({user: user}, jwtSecret, { expiresIn: '1d' }, (err, token) => {
     		// console.log(token)
     		if(err){
@@ -612,7 +612,7 @@ router.post('/share', verifyToken, (req,res) => {
 				}
 				if(!user){
 					// console.log("this 1")
-			      ThirdPartyUser.findOne({ "profile.emails[0].value": email }, function (err, tuser) {
+			      ThirdPartyUser.findOne({ "profile.emails.value": email }, function (err, tuser) {
 			  		if(err){
 			  			console.log(err)
 			  			res.status(200).send({message: 'error occured', success: false, error: err})
@@ -623,11 +623,12 @@ router.post('/share', verifyToken, (req,res) => {
 			  		}
 			  		else{
 			  			// console.log(tuser)
+			  			var tempUser = JSON.parse(JSON.stringify(tuser))
 						var newuser = {
-							userId: tuser._id,
-							firstname: tuser.profile.givenName,
-							lastname: tuser.profile.name.familyName,
-							email: tuser.profile.emails[0]
+							userId: tempUser._id,
+							firstname: tempUser.profile.givenName,
+							lastname: tempUser.profile.name.familyName,
+							email: tempUser.profile.emails[0].value
 						}	
 						Project.findOneAndUpdate({_id: projectID},
 							{$push: {sharedwith: newuser}},
@@ -655,7 +656,7 @@ router.post('/share', verifyToken, (req,res) => {
 					Project.findOneAndUpdate({_id: req.body.projectId},
 						{$push: {sharedwith: newuser}},
 						(err, project) => {
-							console.log(project)
+							// console.log(project)
 							if(err){
 								console.log(err)
 								res.status(200).send({message: "share with user failed", success: false})
