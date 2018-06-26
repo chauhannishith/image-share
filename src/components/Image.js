@@ -18,7 +18,7 @@ class Image extends Component {
 
 		if(this.props.source.metadata.tags){
 			eachTag = this.props.source.metadata.tags.map((tag, i) => {
-				return <p key={i}> {tag} </p>
+				return <span key={i}> #{tag} </span>
 			})
 		}
 		
@@ -26,7 +26,9 @@ class Image extends Component {
 			<div className="image-card">
 				<img src={`${BACKEND}` + '/api/users/images/' + `${this.props.source.filename}`} alt="noimage.jpg" className="thumb center"/>
 				<div>
-					{this.props.source.metadata.tags && eachTag}
+					<p>
+						{this.props.source.metadata.tags && eachTag}
+					</p>
 				</div>
 				<div>
 					<input type="text" ref="tagname" />

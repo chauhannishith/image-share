@@ -153,8 +153,8 @@ class Project extends Component{
 		return (
 			<div>
 				<div className="navbar">
-					<a className="left" onClick={this.goBack.bind(this)} >GoBack</a>
-					<a className="right" onClick={this.logout.bind(this)}>LogOut</a>
+					<a onClick={this.goBack.bind(this)} >GoBack</a>
+					<a onClick={this.logout.bind(this)}>LogOut</a>
 				</div>
 			<div className="project">
 				<div className="project-header">

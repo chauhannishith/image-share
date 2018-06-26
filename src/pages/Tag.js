@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import FetchImage from '../components/FetchImage'
-import { getFromStorage } from '../utils/storage'
+import { getFromStorage, removeFromStorage } from '../utils/storage'
 
 class Tag extends Component {
 
@@ -24,6 +24,11 @@ class Tag extends Component {
 		this.props.history.goBack()
 	}
 
+	logout(){
+		removeFromStorage('imageshare')
+		this.props.history.push('/')
+	}
+
 	render (){
 		const fetchImage = this.state.images.map((image, i) => {
 			// console.log(image)
@@ -34,9 +39,14 @@ class Tag extends Component {
 		})
 		return (
 			<div>
-				<button onClick={this.goBack.bind(this)} >GoBack</button>
-				<div className="image-grid">
-					{fetchImage}
+				<div className="navbar">
+					<a className="left" onClick={this.goBack.bind(this)} >GoBack</a>
+					<a className="right" onClick={this.logout.bind(this)}>LogOut</a>
+				</div>
+				<div className="project">
+					<div className="image-grid">
+						{fetchImage}
+					</div>
 				</div>
 			</div>
 		)

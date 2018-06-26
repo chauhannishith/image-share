@@ -4,7 +4,8 @@
   --light: #bbbdbf;
   --background: #a3a5a8;/*#5e6568;/*#404547;#75ccff;*/
   --fontcolor: #fff;
-  --linkcolor: #fff;
+  --smallfont: #353535;
+  --linkcolor: #353535;/*#fff;*/
   --shadow: 0 4px 5px rgba(104, 104, 104, 0.8);
 
 }
@@ -197,10 +198,13 @@ body{
 .image-card{
   border: 1px solid black;
   border-radius: 3px;
-  padding: 1rem;
   margin: 1rem;
   display: grid;
-  grid-template-rows: 4fr 1fr 1fr;
+  grid-template-rows: 2.5fr 0.5fr 0.5fr;
+}
+
+.image-card div{
+  margin: 1rem;
 }
 
 .list-box{
@@ -227,29 +231,22 @@ body{
 .navbar{
   display: flex;
   z-index: 2;
+  justify-content: space-between;
   background-color: var(--primary);
+  border-top: 1px solid var(--light);
+  border-bottom: 1px solid var(--primary);
 }
 
 
 .navbar a{
   padding: 1rem;
   font-size: 1.4rem;
+  width: 5rem;
   text-decoration: none;
-  border: 1px solid var(--light);
 }
 
 .navbar a:hover{
-  border-top: 1px solid var(--primary);
-  border-bottom: 1px solid var(--primary);
   background-color: var(--secondary);
-}
-
-.navbar .left{
-  text-align: left;
-}
-
-.navbar .right{
-  text-align: right;
 }
 
 .project{
@@ -314,29 +311,40 @@ ul li a{
   .image-grid{
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .list-box{
+    border-radius: 5px;
+  }
+
+  .project{
+    border-radius: 1rem;
+  }
+
+  .wrapper{
+    padding: 1rem;
+  }
 }
 
 @media(max-width: 700px){
   
-.form{
-  margin: auto;
-  border: 0px;
-  border-radius: 0px;
-  padding: 2rem;
-  z-index: 0;
-  box-shadow: '';
-  background-color: var(--light);
-}
+  .form{
+    margin: auto;
+    border: 0px;
+    border-radius: 0px;
+    padding: 2rem;
+    z-index: 0;
+    box-shadow: '';
+    background-color: var(--light);
+  }
 
-.form h1{
-  font-size: 2rem;
-  text-align: center;
-}
+  .form h1{
+    text-align: center;
+  }
 
-.form input, a, p{
-  font-size: 1.2rem;
-  width: 100%;
-}
+  .form input, a, p{
+    font-size: 1.2rem;
+    width: 100%;
+  }
 
   .home-grid{
     grid-template-columns: 1fr;
