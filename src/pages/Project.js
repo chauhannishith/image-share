@@ -98,10 +98,10 @@ class Project extends Component{
 
 	toggleCreateGroup(e) {
 		let temp = !this.state.displayGroupForm
-		if(temp === true)
-			e.target.value = 'Cancel'// document.getElementById('group').innerText = 'Cancel'
-		else
-			e.target.value = 'Create Subgroup'// document.getElementById('group').innerText = 'Create'
+		// if(temp === true)
+		// 	e.target.value = 'Cancel'// document.getElementById('group').innerText = 'Cancel'
+		// else
+		// 	e.target.value = 'Create Subgroup'// document.getElementById('group').innerText = 'Create'
 		this.setState({displayGroupForm: temp})
 		
 	}
@@ -112,7 +112,9 @@ class Project extends Component{
 		// 	e.target.textContent = 'Cancel'// document.getElementById('share').innerText = 'Cancel'
 		// else
 		// 	e.target.textContent = 'Share'// document.getElementById('share').innerText = 'Share'
-		this.setState({displayShareForm: temp})
+		this.setState({displayShareForm: temp}, () => {
+			this.setState({shareError: ''})
+		})
 		
 	}
 
@@ -156,49 +158,58 @@ class Project extends Component{
 					<a onClick={this.goBack.bind(this)} >GoBack</a>
 					<a onClick={this.logout.bind(this)}>LogOut</a>
 				</div>
-			<div className="project">
-				<div className="project-header">
-					<h1 className="project-title">{this.props.location.state.projectTitle}</h1>
-					<a id="share" className="btn-share" onClick={this.toggleShareForm.bind(this)}>Share</a>
+				<div className="project">
+					<div className="project-header">
+						<h1 className="project-title">{this.props.location.state.projectTitle}</h1>
+						<div className="display-share-form">
+							{this.state.shareError && 	
+								<div className="share-error-msg">
+									{this.state.shareError}
+								</div>
+							}
+							{this.state.displayShareForm && 
+								<form onSubmit={this.addMember.bind(this)}>
+									<input type="email" ref="email" placeholder="email" required />
+									<input className="btn-gshare" type="submit" value="Add" />
+									<input type="button" className="btn-gshare" onClick={this.toggleShareForm.bind(this)} value="Cancel" />
+								</form>
+							}
+							{!this.state.displayShareForm && <a id="share" className="btn-share" onClick={this.toggleShareForm.bind(this)}>Share</a>}
+							
+						</div>
+			
+					</div>
+					<hr />
+					<div className="display-group-form">
+						{this.state.displayGroupForm && 
+							<form onSubmit={this.createGroup.bind(this)}>
+								<input type="text" ref="groupname" placeholder="Group title" required />
+								<input className="btn-group" type="submit" value="Create" />
+								<input type="button" className="btn-group" onClick={this.toggleCreateGroup.bind(this)} value="Cancel" />
+							</form>
+						}
+						{!this.state.displayGroupForm &&
+							<input type="button"
+							 className="btn-group" 
+							 onClick={this.toggleCreateGroup.bind(this)} 
+							 value="Create subgroup" 
+							/>
+						}
+					</div>
+					<div className="project-container">
+						<ul>
+							{eachGroup}
+						</ul>
+						<hr />
+						<div className="image-grid">
+						{this.state.isLoading ? <Loading /> : 
+							(eachImage.length ? eachImage : <p>You have not added any images yet</p>)
+						}
+						</div>
+						<br />
+						<DragnDrop projectid={this.props.location.state.projectId} />
+					</div>
 				</div>
-				{this.state.shareError}
-				{this.state.displayShareForm && 
-					<form onSubmit={this.addMember.bind(this)}>
-						<input type="email" ref="email" placeholder="email" required />
-						<input className="btn-small" type="submit" value="Add" />
-					</form>
-				}
-				<hr />
-				<br />
-				<div className="display-group-form">
-					{this.state.displayGroupForm && 
-						<form onSubmit={this.createGroup.bind(this)}>
-							<input type="text" ref="groupname" placeholder="Group title" required />
-							<input className="btn-group" type="submit" value="Create" />
-							<input type="button" className="btn-group" onClick={this.toggleCreateGroup.bind(this)} value="Cancel" />
-						</form>
-					}
-					{!this.state.displayGroupForm &&
-						<input type="button"
-						 className="btn-group" 
-						 onClick={this.toggleCreateGroup.bind(this)} 
-						 value="Create subgroup" 
-						/>
-					}
-				</div>
-				<br />
-				<ul>
-					{eachGroup}
-				</ul>
-				<hr />
-				<div className="image-grid">
-				{this.state.isLoading ? <Loading /> : 
-					(eachImage.length ? eachImage : <p>You have not added any images yet</p>)
-				}
-				</div>
-				<br />
-				<DragnDrop projectid={this.props.location.state.projectId} />
-			</div>
 			</div>
 			)
 	}
