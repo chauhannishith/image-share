@@ -49,7 +49,7 @@ class DragnDrop extends Component {
 	}
 
 	uploadHandler() {
-		this.setState({uploading: true})
+		this.setState({uploading: true}, () => this.setState({bool: true}))
 		const fd = new FormData()
 		fd.append('projectId', this.props.projectid)
 		var subgroup = this.props.subgroup || null
@@ -70,7 +70,9 @@ class DragnDrop extends Component {
 				console.log(response.data.message)
 				this.setState({uploadError: response.data.message}, () => this.setState({uploading: false}))	
 			}
-			this.setState({bool: true}, () => this.setState.attachments: null)})
+			this.setState({attachments: null})
+			window.location.reload()
+		})
 		.catch(error => console.log(error))
 	}
 // style={{ border: '1px solid black', width: 600, margin: 'auto', color: 'black', padding: 20 }}
