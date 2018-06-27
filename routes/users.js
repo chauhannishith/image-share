@@ -333,18 +333,18 @@ router.get('/files/:id', (req, res, next) => {
 });
 
 //delete file
-router.delete('/files/:id', verifyToken, (req, res, next) => {
+router.post('/files', verifyToken, (req, res, next) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
 			console.log(err)
 		}
 		else{
-			Tag.update( {userId: authData.user._id}, { $pull: {"images": req.params.id } },(err, affected) => {
+			Tag.update( {userId: authData.user._id}, { $pull: {"images": req.body.filename } },(err, affected) => {
 				if(err){
 					console.log(err)
 				}
 				else{
-					gfs.remove({filename: req.params.id, root: 'images'}, (err, gridStore) => {
+					gfs.remove({_id: req.body.imageId, root: 'images'}, (err, gridStore) => {
 						if(err){
 							console.log(err)
 							res.status(404).send({message:error, success: false})
