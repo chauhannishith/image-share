@@ -8,7 +8,8 @@ class FetchImage extends Component {
 		super(props)
 		this.state ={
 			file: [],
-			fetched: false
+			fetched: false,
+			exists: ''
 		}
 	}
 
@@ -21,7 +22,8 @@ class FetchImage extends Component {
 					this.setState({file: response.data.file}, ()=> this.setState({fetched: true}))
 				}
 				else{
-					console.log(response.data.message)
+					this.setState({exists: response.data.message} )
+					// console.log(response.data.message)
 				}
 			})
 			.catch(error => console.log(error))
@@ -30,7 +32,13 @@ class FetchImage extends Component {
 	render() {
 		return (
 			<div>
+				{this.state.exists && 
+					<div className="upload share-error-msg">
+						{this.state.exists}
+					</div>
+				}
 				{this.state.fetched && <Image source={this.state.file} />}
+			
 			</div>
 			)
 	}
