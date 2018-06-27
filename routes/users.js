@@ -165,17 +165,17 @@ router.post('/upload', verifyToken, (req, res, next) => {
 				if(err){
 					if(err.code === 'LIMIT_FILE_SIZE'){
 						console.log("Error: File size too large");
-						res.status(404).send({message:"File size too large", success: false})	
+						res.status(200).send({message:"File size too large", success: false})	
 					}
 					else{
 						console.log("error"+err);
-						res.status(404).send({message:err, success: false})
+						res.status(200).send({message:err, success: false})
 					}
 				}
 				else{
 					if(req.files == undefined){
 						console.log("undefined")
-						res.status(404).send({message:"No files selected", success: false})
+						res.status(200).send({message:"No files selected", success: false})
 					}
 					else{
 						console.log("files uploaded")	
@@ -406,7 +406,7 @@ router.post('/login', (req, res, next) => {
   		}
   		if(!user){
   			// console.log('No user found')
-  			return res.send({
+  			return res.status(200).send({
   				message:"Email and passwords do not match",
   				success: false
   			});
@@ -455,7 +455,7 @@ router.post('/signup', (req, res, next) => {
 				}
 				else{
 					console.log("success adding user")
-					res.send({
+					res.status(200).send({
 						message: "signed up successfully",
 						success: true
 					});
@@ -467,7 +467,7 @@ router.post('/signup', (req, res, next) => {
 });
 
 //create new project
-router.post('/create', verifyToken, (req,res) => {
+router.post('/create', verifyToken, (req, res) => {
 	//
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
@@ -488,7 +488,7 @@ router.post('/create', verifyToken, (req,res) => {
 				}
 				else{
 					console.log("success adding project")
-					res.send({
+					res.status(200).send({
 						message: "project added successfully",
 						success: true
 					});
@@ -500,7 +500,7 @@ router.post('/create', verifyToken, (req,res) => {
 });
 
 //create new subgroups
-router.post('/createsubgroup', verifyToken, (req,res) => {
+router.post('/createsubgroup', verifyToken, (req, res) => {
 	//
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
@@ -531,7 +531,7 @@ router.post('/createsubgroup', verifyToken, (req,res) => {
 });
 
 //fetch projects
-router.post('/projects', verifyToken, (req,res) => {
+router.post('/projects', verifyToken, (req, res) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
 			console.log(err)
@@ -548,7 +548,7 @@ router.post('/projects', verifyToken, (req,res) => {
 				}
 				else{
 					console.log("success finding projects")
-					res.send({
+					res.status(200).send({
 						message: "project added successfully",
 						success: true,
 						projects: projects
@@ -562,7 +562,7 @@ router.post('/projects', verifyToken, (req,res) => {
 });
 
 //projects with user by other persons
-router.post('/sharedprojects', verifyToken, (req,res) => {
+router.post('/sharedprojects', verifyToken, (req, res) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
 			console.log(err)
@@ -575,12 +575,12 @@ router.post('/sharedprojects', verifyToken, (req,res) => {
 			Project.find({sharedwith: {$elemMatch: {userId: userID}}}, (err, projects) => {
 				if(err){
 					console.log("some error");
-					return;
+					res.status(200).send({message: 'error occured', success: false, error: err})
 				}
 				else{
 					// console.log(projects)
 					console.log("success finding projects")
-					res.send({
+					res.status(200).send({
 						message: "shared project fetched successfully",
 						success: true,
 						sharedProjects: projects
@@ -594,7 +594,7 @@ router.post('/sharedprojects', verifyToken, (req,res) => {
 });
 
 //share project with other users by their registered email
-router.post('/share', verifyToken, (req,res) => {
+router.post('/share', verifyToken, (req, res, next) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
 			console.log(err)
@@ -603,37 +603,84 @@ router.post('/share', verifyToken, (req,res) => {
 		else{
 			// console.log(authData)
 			var email = req.body.email;
-			var projectID = req.body.projectId;
-			User.findOne({email: email}, (error, user) => {
-				// console.log(user)
-				if(error){
-					console.log(error)
-					res.status(200).send({message: 'error occured', success: false, error: err})
-				}
-				if(!user){
-					// console.log("this 1")
-			      ThirdPartyUser.findOne({ "profile.emails.value": email }, function (err, tuser) {
-			  		if(err){
-			  			console.log(err)
-			  			res.status(200).send({message: 'error occured', success: false, error: err})
-			  			// return next(err);
-			  		}
-			  		if(!tuser){
-			  			res.status(200).send({message: "user does not exist", success: false})
-			  		}
-			  		else{
-			  			// console.log(tuser)
-			  			var tempUser = JSON.parse(JSON.stringify(tuser))
+			if(authData.user.email === email){
+				res.status(200).send({message: "You can't share", success: false})
+				return next();
+			}
+			else{
+				var projectID = req.body.projectId;
+				Project.findOne({"sharedwith.email": email}, (error, project) => {
+					if(err){
+						console.log("some error");
+						res.status(200).send({message: 'error occured', success: false, error: err});
+					}
+					if(!project){
+						res.status(200).send({message: 'error occured', success: false, error: err});
+					}
+					else{
+						// console.log(projects)
+						console.log("user already added")
+						res.status(200).send({
+							message: "user already added",
+							success: false							
+						});
+						return next();
+					}
+				//
+				User.findOne({email: email}, (error, user) => {
+					// console.log(user)
+					if(error){
+						console.log(error)
+						res.status(200).send({message: 'error occured', success: false, error: err})
+						return next();
+					}
+					if(!user){
+						// console.log("this 1")
+				      ThirdPartyUser.findOne({ "profile.emails.value": email }, function (err, tuser) {
+				  		if(err){
+				  			console.log(err)
+				  			res.status(200).send({message: 'error occured', success: false, error: err})
+				  			// return next(err);
+				  		}
+				  		if(!tuser){
+				  			res.status(200).send({message: "user does not exist", success: false})
+				  		}
+				  		else{
+				  			// console.log(tuser)
+				  			var tempUser = JSON.parse(JSON.stringify(tuser))
+							var newuser = {
+								userId: tempUser._id,
+								firstname: tempUser.profile.givenName,
+								lastname: tempUser.profile.name.familyName,
+								email: tempUser.profile.emails[0].value
+							}	
+							Project.findOneAndUpdate({_id: projectID},
+								{$push: {sharedwith: newuser}},
+								(err, project) => {
+									console.log(project)
+									if(err){
+										console.log(err)
+										res.status(200).send({message: "share with user failed", success: false})
+									}
+									else{
+										res.status(200).send({message: "shared with user", success: true})
+									}
+							})
+				  		}
+				      });
+						// res.status(200).send({message: "user does not exist", success: false})
+					}
+					else{
 						var newuser = {
-							userId: tempUser._id,
-							firstname: tempUser.profile.givenName,
-							lastname: tempUser.profile.name.familyName,
-							email: tempUser.profile.emails[0].value
+							userId: user._id,
+							firstname: user.firstname,
+							lastname: user.lastname,
+							email: user.email
 						}	
-						Project.findOneAndUpdate({_id: projectID},
+						Project.findOneAndUpdate({_id: req.body.projectId},
 							{$push: {sharedwith: newuser}},
 							(err, project) => {
-								console.log(project)
+								// console.log(project)
 								if(err){
 									console.log(err)
 									res.status(200).send({message: "share with user failed", success: false})
@@ -642,31 +689,10 @@ router.post('/share', verifyToken, (req,res) => {
 									res.status(200).send({message: "shared with user", success: true})
 								}
 						})
-			  		}
-			      });
-					// res.status(200).send({message: "user does not exist", success: false})
-				}
-				else{
-					var newuser = {
-						userId: user._id,
-						firstname: user.firstname,
-						lastname: user.lastname,
-						email: user.email
-					}	
-					Project.findOneAndUpdate({_id: req.body.projectId},
-						{$push: {sharedwith: newuser}},
-						(err, project) => {
-							// console.log(project)
-							if(err){
-								console.log(err)
-								res.status(200).send({message: "share with user failed", success: false})
-							}
-							else{
-								res.status(200).send({message: "shared with user", success: true})
-							}
-					})
-				}
-			})
+					}
+				})
+				})//
+			}
 		}
 	});
 });
