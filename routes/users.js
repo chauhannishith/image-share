@@ -216,7 +216,7 @@ router.post('/addtag', verifyToken, (req,res) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
 			console.log(err)
-			res.status(200).send({message: 'Please login again', success: false})
+			// res.status(200).send({message: 'Please login again', success: false})
 		}
 		else{
 			//find if user exists in tag collection, if not then add user
@@ -332,12 +332,40 @@ router.get('/files/:id', (req, res, next) => {
 	});
 });
 
+//delete file
+router.delete('/files/:id', verifyToken, (req, res, next) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
+		if(err){
+			console.log(err)
+		}
+		else{
+			Tag.update( {userId: authData.user._id}, { $pull: {"images": req.params.id } },(err, affected) => {
+				if(err){
+					console.log(err)
+				}
+				else{
+					gfs.remove({filename: req.params.id, root: 'images'}, (err, gridStore) => {
+						if(err){
+							console.log(err)
+							res.status(404).send({message:error, success: false})
+						}
+						else{
+							res.status(200).send({message: 'File successfully deleted', success: true})	
+						}
+					})					
+				}
+			})				
+		}
+	});
+	
+});
+
 //fetch all files by tag
 router.get('/tagfiles/:id', (req, res, next) => {
 	gfs.files.findOne({filename: req.params.id}, (err, file) => {
 		// check files
 		if(!file || file.length === 0){
-			return res.status(404).send({message:'No file exists', success: false})
+			return res.status(200).send({message:'File does not exist or has been deleted', success: false})
 		}
 
 		if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
@@ -391,7 +419,7 @@ router.get('/auth/google/callback',
     		// console.log(token)
     		if(err){
     			console.log(err)
-    			res.status(200).send({message: 'error occured', success: false, error: err})
+    			res.status(200).send({message: 'Error occured', success: false, error: err})
     		}
     		res.redirect(frontend+'/auth/'+token);
   		})
@@ -417,7 +445,7 @@ router.post('/login', (req, res, next) => {
   			}
   			else{
   				jwt.sign({user: user}, jwtSecret, { expiresIn: '1d' }, (err, token) => {
-  					res.status(200).send({message: 'successfully logged in', success: true, token: token})	
+  					res.status(200).send({message: 'Successfully logged in', success: true, token: token})	
   				})
   				
   			}
@@ -445,18 +473,18 @@ router.post('/signup', (req, res, next) => {
 		bcrypt.hash(newUser.password, salt, function(err, hash){
 			if(err){
 				console.log("user error");
-				res.status(200).send({message: 'error occured', success: false, error: err})
+				res.status(200).send({message: 'Error occured', success: false, error: err})
 			}
 			newUser.password = hash;
 			newUser.save(function(err){
 				if(err){
-					console.log("some error:"+ fname + ", e:"+ email +", p:" + password);
+					console.log("Some error:"+ fname + ", e:"+ email +", p:" + password);
 					return;
 				}
 				else{
 					console.log("success adding user")
 					res.status(200).send({
-						message: "signed up successfully",
+						message: "Signed up successfully",
 						success: true
 					});
 				}
@@ -489,7 +517,7 @@ router.post('/create', verifyToken, (req, res) => {
 				else{
 					console.log("success adding project")
 					res.status(200).send({
-						message: "project added successfully",
+						message: "Project added successfully",
 						success: true
 					});
 				}
@@ -522,7 +550,7 @@ router.post('/createsubgroup', verifyToken, (req, res) => {
 						res.status(200).send({message: "Failed to create subgroup", success: false})
 					}
 					else{
-						res.status(200).send({message: "group created", success: true})
+						res.status(200).send({message: "Group created", success: true})
 					}
 			})
 		}
@@ -547,9 +575,9 @@ router.post('/projects', verifyToken, (req, res) => {
 					return;
 				}
 				else{
-					console.log("success finding projects")
+					// console.log("success finding projects")
 					res.status(200).send({
-						message: "project added successfully",
+						message: "Project added successfully",
 						success: true,
 						projects: projects
 					});
@@ -571,17 +599,17 @@ router.post('/sharedprojects', verifyToken, (req, res) => {
 		else{
 			// console.log(authData)
 			var userID = authData.user._id;
-			console.log(userID)
+			// console.log(userID)
 			Project.find({sharedwith: {$elemMatch: {userId: userID}}}, (err, projects) => {
 				if(err){
 					console.log("some error");
-					res.status(200).send({message: 'error occured', success: false, error: err})
+					res.status(200).send({message: 'Error occured', success: false, error: err})
 				}
 				else{
 					// console.log(projects)
 					console.log("success finding projects")
 					res.status(200).send({
-						message: "shared project fetched successfully",
+						message: "Shared project fetched successfully",
 						success: true,
 						sharedProjects: projects
 					});
@@ -612,16 +640,16 @@ router.post('/share', verifyToken, (req, res, next) => {
 				Project.findOne({"sharedwith.email": email}, (error, project) => {
 					if(err){
 						console.log("some error");
-						res.status(200).send({message: 'error occured', success: false, error: err});
+						res.status(200).send({message: 'Error occured', success: false, error: err});
 					}
 					if(!project){
-						res.status(200).send({message: 'error occured', success: false, error: err});
+						res.status(200).send({message: 'Error occured', success: false, error: err});
 					}
 					else{
 						// console.log(projects)
 						console.log("user already added")
 						res.status(200).send({
-							message: "user already added",
+							message: "User already added",
 							success: false							
 						});
 						return next();
@@ -631,7 +659,7 @@ router.post('/share', verifyToken, (req, res, next) => {
 					// console.log(user)
 					if(error){
 						console.log(error)
-						res.status(200).send({message: 'error occured', success: false, error: err})
+						res.status(200).send({message: 'Error occured', success: false, error: err})
 						return next();
 					}
 					if(!user){
@@ -639,11 +667,11 @@ router.post('/share', verifyToken, (req, res, next) => {
 				      ThirdPartyUser.findOne({ "profile.emails.value": email }, function (err, tuser) {
 				  		if(err){
 				  			console.log(err)
-				  			res.status(200).send({message: 'error occured', success: false, error: err})
+				  			res.status(200).send({message: 'Error occured', success: false, error: err})
 				  			// return next(err);
 				  		}
 				  		if(!tuser){
-				  			res.status(200).send({message: "user does not exist", success: false})
+				  			res.status(200).send({message: "User does not exist", success: false})
 				  		}
 				  		else{
 				  			// console.log(tuser)
@@ -660,10 +688,10 @@ router.post('/share', verifyToken, (req, res, next) => {
 									console.log(project)
 									if(err){
 										console.log(err)
-										res.status(200).send({message: "share with user failed", success: false})
+										res.status(200).send({message: "Share with user failed", success: false})
 									}
 									else{
-										res.status(200).send({message: "shared with user", success: true})
+										res.status(200).send({message: "Shared with user", success: true})
 									}
 							})
 				  		}
@@ -683,10 +711,10 @@ router.post('/share', verifyToken, (req, res, next) => {
 								// console.log(project)
 								if(err){
 									console.log(err)
-									res.status(200).send({message: "share with user failed", success: false})
+									res.status(200).send({message: "Share with user failed", success: false})
 								}
 								else{
-									res.status(200).send({message: "shared with user", success: true})
+									res.status(200).send({message: "Shared with user", success: true})
 								}
 						})
 					}
