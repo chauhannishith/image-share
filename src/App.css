@@ -118,7 +118,7 @@ body{
   padding: 5px 0px 5px 5px;
 }
 
-.display-share-form input[type=email]{
+.display-share-form input[type=email], input[type=text]{
   margin: 5px;
   padding: 6px;
   font-size: 1.2rem;
@@ -295,6 +295,10 @@ body{
   margin: 0.2rem;
 }
 
+.loading{
+  min-height: 90vh;
+}
+
 .login-wrapper{
   display: flex;
   margin: 1rem;
@@ -352,6 +356,7 @@ body{
   justify-content: space-between;
   margin: 5px;
   padding: 5px;
+  flex-wrap: wrap;
 }
 
 .project-header a{
@@ -369,19 +374,21 @@ body{
 
 
 .share-error-msg{
-  background-color: rgba(255, 0, 0, 0.4);
+  /*background-color: rgba(255, 0, 0, 0.4);*/
   border-radius: 5px;
   font-size: 1.2rem;
   border: 2px solid red;
+  color: red;
   padding: 0.5rem;
 }
 
 .share-success-msg{
-  background-color: rgba(0, 255, 0, 0.4);
+  /*background-color: rgba(0, 255, 0, 0.4);*/
   border-radius: 5px;
   font-size: 1.2rem;
-  border: 2px solid rgb(0, 255, 0, 0);
+  border: 2px solid green;
   padding: 0.5rem;
+  color: green;
 }
 
 .thumb{
@@ -396,6 +403,7 @@ body{
   margin: 0rem;
   padding: 3rem;
   min-height: 80vh;
+  box-sizing: border-box;
 }
 
 ul li{
@@ -406,7 +414,14 @@ ul li a{
   font-size: 1.5rem;
 }
 
-@media(max-width: 1100px){
+.upload{
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  margin: auto;
+}
+
+@media(max-width: 1000px){
   .home-grid{
     grid-template-columns: 1fr 1fr;
   }
@@ -428,7 +443,7 @@ ul li a{
   }
 }
 
-@media(max-width: 700px){
+@media(max-width: 768px){
   
   .form{
     margin: auto;
@@ -455,5 +470,22 @@ ul li a{
 
   .image-grid{
     grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width: 640px){
+  .wrapper{
+    margin: 0rem;
+    padding: 0rem;
+    min-height: 80vh;
+    box-sizing: border-box;
+  }
+
+  .project{
+    border-radius: 0.2rem;
+    border: 2px solid var(--light);
+    margin: 0.5rem;
+    padding: 0.5rem;
+    min-height: 80vh;
   }
 }

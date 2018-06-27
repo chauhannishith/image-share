@@ -29,6 +29,7 @@ class Project extends Component{
 			if(response.data.success){
 				console.log(response.data.message)
 				this.setState({shareSuccess: response.data.message})
+				this.refs.email.value = ''
 			}
 			else{
 				console.log(response.data.message)

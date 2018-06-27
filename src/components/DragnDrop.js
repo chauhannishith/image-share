@@ -11,6 +11,9 @@ class DragnDrop extends Component {
 			bool: true,// to disable the upload button
 			uploading: false,// to display status of files uploaded
 			displayDrop: false,
+			uploadError: '',
+			uploadStatus: '',
+			uploadProgress: ''
 		}
 	}
 
@@ -22,6 +25,7 @@ class DragnDrop extends Component {
 	}
 
 	handleDrop(files, event) {
+		this.setState({upladStatus: ''}, () => this.setState({uploadError: ''}))
 		this.setState({attachments: files},() =>{
 			this.setState({uploading: true}, () => {
 				this.uploadHandler()
@@ -36,6 +40,7 @@ class DragnDrop extends Component {
 	}
 
 	toggleState(e) {
+		this.setState({upladStatus: ''}, () => this.setState({uploadError: ''}))
 		let temp = !this.state.displayDrop
 		if(temp === true)
 			e.target.textContent="Hide"//document.getElementById('display').innerText = 'Hide'
@@ -53,15 +58,17 @@ class DragnDrop extends Component {
 		// console.log(this.props.projectid)
 		for(let i = 0; i < this.state.attachments.length; i++ )
 			fd.append('image', this.state.attachments[i], this.state.attachments[i].name)
-		console.log(fd.get('image'))
+		// console.log(fd.get('image'))
 		uploadFiles(fd)
 		.then(response => {
 			console.log(response.data)
 			if(response.data.success){
-				console.log(response.data.message)
+				// console.log(response.data.message)
+				this.setState({uploadStatus: response.data.message})
 			}
 			else{
-				console.log(response.data.message)	
+				// console.log(response.data.message)
+				this.setState({uploadError: response.data.message})	
 			}
 			this.setState({bool: true}, () => this.setState.attachments: null)})
 		.catch(error => console.log(error))
@@ -76,9 +83,23 @@ class DragnDrop extends Component {
 					<div>
 						{this.state.uploading ? 
 							<div className="progress">
-						    	<div className="indeterminate"></div>
-							</div>:<p></p>}
+						    	<div className="indeterminate">{this.state.uploadProgress}</div>
+							</div>:<p></p>
+						}
+						<div className="upload">
+							{this.state.uploadStatus && 
+								<div className="share-success-msg">
+									{this.state.uploadStatus}
+								</div>
+							}
 
+							{this.state.uploadError && 
+								<div className="share-error-msg">
+									{this.state.uploadError}
+								</div>
+							}
+						</div>
+						
 						<div id="file-drop" className="file-drop-area">
 							<FileDrop onDrop={this.handleDrop.bind(this)}>
 								Drop some files here!

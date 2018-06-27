@@ -87,16 +87,17 @@ class Home extends Component{
 
 	renderForm() {
 		return (
-			<div>
+			<div className="display-share-form">
 				<form onSubmit={this.createComponent.bind(this)}>
 					<input
 					 type="text"
 					 ref="projectTitle" 
 					 placeholder="Title" />
-					<input type="submit" value="Create" />
+					<input className="btn-gshare" type="submit" value="Add" />
+					<input type="button" className="btn-gshare" onClick={this.displayForm.bind(this)} value="Cancel" />
 				</form>
-				<button onClick={this.displayForm.bind(this)}>Cancel</button>
 			</div>
+			
 			)
 	}
 
