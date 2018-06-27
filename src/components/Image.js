@@ -22,7 +22,7 @@ class Image extends Component {
 	}
 
 	deleteThisImage() {
-		deleteImage(this.props.source.filename)
+		deleteImage(this.props.source._id, this.props.source.filename)
 		.then(response=> {
 			console.log(response.data.message)
 			this.setState({deleted: true})

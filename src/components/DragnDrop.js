@@ -12,8 +12,7 @@ class DragnDrop extends Component {
 			uploading: false,// to display status of files uploaded
 			displayDrop: false,
 			uploadError: '',
-			uploadStatus: '',
-			uploadProgress: ''
+			uploadStatus: ''
 		}
 	}
 
@@ -50,6 +49,7 @@ class DragnDrop extends Component {
 	}
 
 	uploadHandler() {
+		this.setState({uploading: true})
 		const fd = new FormData()
 		fd.append('projectId', this.props.projectid)
 		var subgroup = this.props.subgroup || null
@@ -61,14 +61,14 @@ class DragnDrop extends Component {
 		// console.log(fd.get('image'))
 		uploadFiles(fd)
 		.then(response => {
-			console.log(response.data)
+			console.log(response.data.message)
 			if(response.data.success){
 				// console.log(response.data.message)
-				this.setState({uploadStatus: response.data.message})
+				this.setState({uploadStatus: response.data.message}, () => this.setState({uploading: false}))
 			}
 			else{
-				// console.log(response.data.message)
-				this.setState({uploadError: response.data.message})	
+				console.log(response.data.message)
+				this.setState({uploadError: response.data.message}, () => this.setState({uploading: false}))	
 			}
 			this.setState({bool: true}, () => this.setState.attachments: null)})
 		.catch(error => console.log(error))
@@ -82,8 +82,8 @@ class DragnDrop extends Component {
 				{this.state.displayDrop &&
 					<div>
 						{this.state.uploading ? 
-							<div className="progress">
-						    	<div className="indeterminate">{this.state.uploadProgress}</div>
+							<div className="loader">
+						    	
 							</div>:<p></p>
 						}
 						<div className="upload">
