@@ -17,6 +17,7 @@ class Image extends Component {
 		addTag(this.refs.tagname.value, this.props.source.filename)
 		.then(response => {
 			console.log(response.data)
+			window.location.reload()
 		})
 		.catch(error => console.log(error))
 	}
