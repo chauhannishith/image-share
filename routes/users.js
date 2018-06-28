@@ -220,6 +220,9 @@ router.post('/addtag', verifyToken, (req,res) => {
 		}
 		else{
 			//find if user exists in tag collection, if not then add user
+			if(!req.body.tagname || !req.body.filename){
+				res.status(200).send({message: "Failed to add tag", success: false})
+			}
 			Tag.findOne({userId: authData.user._id},				
 				(err, tag) => {
 					// console.log(project)
@@ -248,6 +251,7 @@ router.post('/addtag', verifyToken, (req,res) => {
 						})
 					}
 					else{
+
 						Tag.findOneAndUpdate({_id: tag._id, "tag.tagname": req.body.tagname },
 							{$push: {"tag.$.images": req.body.filename}},
 							(err, tagg) => {
@@ -339,6 +343,9 @@ router.post('/files', verifyToken, (req, res, next) => {
 			console.log(err)
 		}
 		else{
+			if(!req.body.imageId || !req.body.filename){
+				res.status(200).send({message: "Failed to delete image", success: false})
+			}
 			Tag.update( {userId: authData.user._id}, { $pull: {"images": req.body.filename } },(err, affected) => {
 				if(err){
 					console.log(err)
@@ -503,6 +510,9 @@ router.post('/create', verifyToken, (req, res) => {
 			res.status(200).send({message: 'Please login again', success: false})
 		}
 		else{
+			if(!req.body.title){
+				res.status(200).send({message: "Failed to create project", success: false})
+			}
 			var projectTitle = req.body.title;
 			var userID = authData.user._id;
 			var newProject = new Project({
@@ -536,6 +546,9 @@ router.post('/createsubgroup', verifyToken, (req, res) => {
 			res.status(200).send({message: 'Please login again', success: false})
 		}
 		else{
+			if(!req.body.title || !req.body.projectId){
+				res.status(200).send({message: "Failed to create group", success: false})
+			}
 			var group = {
 				groupTitle: req.body.title,
 				createdby: authData.user._id,
@@ -630,6 +643,9 @@ router.post('/share', verifyToken, (req, res, next) => {
 		}
 		else{
 			// console.log(authData)
+			if(!req.body.email || !req.body.projectId){
+				res.status(200).send({message: "Failed to share project", success: false})
+			}
 			var email = req.body.email;
 			if(authData.user.email === email){
 				res.status(200).send({message: "You can't share", success: false})
