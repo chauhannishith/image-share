@@ -5,10 +5,10 @@ the env variables need to be setup to run locally
 command to run server in root folder
 npm run server
 
-command to run react in client folder
+command to run react in client folder/ frontend branch
 npm start
 
-or to run both together in root folder
+or to run both together in root folder by one command copy the frontend branch in a folder named client in root folder and then 
 npm run dev
 
 functionalities
