@@ -346,7 +346,7 @@ router.post('/files', verifyToken, (req, res, next) => {
 			if(!req.body.imageId || !req.body.filename){
 				res.status(200).send({message: "Failed to delete image", success: false})
 			}
-			Tag.update( {userId: authData.user._id}, { $pull: {"images": req.body.filename } },(err, affected) => {
+			Tag.update( {/*userId: authData.user._id*/}, { $pull: {"images": req.body.filename } },(err, affected) => {
 				if(err){
 					console.log(err)
 				}
