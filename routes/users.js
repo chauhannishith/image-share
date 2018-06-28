@@ -303,7 +303,7 @@ router.post('/addtag', verifyToken, (req,res) => {
 		      		res.status(200).send({message: 'error occured', success: false, error: err})
 		      	}
 		      	else{
-		      		console.log('something happened')
+		      		// console.log('tag added')
 		      		res.status(200).send({message: 'success adding tag to image', success: true})
 		      	}
 		      } 
@@ -346,11 +346,13 @@ router.post('/files', verifyToken, (req, res, next) => {
 			if(!req.body.imageId || !req.body.filename){
 				res.status(200).send({message: "Failed to delete image", success: false})
 			}
-			Tag.update( {userId: authData.user._id}, { $pull: {"images": req.body.filename } },(err, affected) => {
+			Tag.update( {/*userId: authData.user._id*/}, { $pull: {tag: {"images": req.body.filename }} },{multi: true},(err, affected) => {
 				if(err){
 					console.log(err)
+					res.status(200).send({message: 'ERROR', success: false})	
 				}
 				else{
+					// console.log(affected)
 					gfs.remove({_id: req.body.imageId, root: 'images'}, (err, gridStore) => {
 						if(err){
 							console.log(err)
