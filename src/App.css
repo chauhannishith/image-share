@@ -295,7 +295,7 @@ body{
   font-size: 1.2rem;
   border: .5px solid #c5c5c5;
   border-radius: 0;
-  width: 10rem;
+  width: 9rem;
   font-size: 1rem;
 }
 
@@ -452,6 +452,12 @@ body{
   border: 2px solid green;
   padding: 0.5rem;
   color: green;
+}
+
+.tags{
+  display:inline-block;
+  white-space: nowrap;
+  text-overflow:ellipsis;
 }
 
 .thumb{

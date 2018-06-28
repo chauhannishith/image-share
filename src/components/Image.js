@@ -14,11 +14,16 @@ class Image extends Component {
 
 	addTag(){
 		// console.log(this.refs.tagname.value)
-		if(this.refs.tagname.value !== ''){
+		if(this.refs.tagname.value !== '' || this.props.source.filename !== ''){
 			addTag(this.refs.tagname.value, this.props.source.filename)
 			.then(response => {
-				console.log(response.data)
-				window.location.reload()
+				if(response.data.success){
+					console.log(response.data)
+					window.location.reload()
+				}
+				else{
+					console.log(response.data)
+				}
 			})
 			.catch(error => console.log(error))
 		}
@@ -35,6 +40,7 @@ class Image extends Component {
 			.then(response=> {
 				console.log(response.data.message)
 				this.setState({deleted: true})
+				window.location.reload()
 			})
 			.catch(error => console.log(error))
 		}
@@ -72,9 +78,12 @@ class Image extends Component {
 						<img src={`${BACKEND}` + '/api/users/images/' + `${this.props.source.filename}`} alt="noimage.jpg" className="thumb center"/>
 					</div>
 					<div>
-						<p>
-							{this.props.source.metadata.tags && eachTag}
-						</p>
+						{this.props.source.metadata.tags && 
+							<p className="tags">
+								{eachTag}
+							</p>
+						}
+						
 					</div>
 					<div className="add-tag">
 						<form>
