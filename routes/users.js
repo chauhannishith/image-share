@@ -659,7 +659,8 @@ router.post('/share', verifyToken, (req, res, next) => {
 						res.status(200).send({message: 'Error occured', success: false, error: err});
 					}
 					if(!project){
-						res.status(200).send({message: 'Error occured', success: false, error: err});
+						// res.status(200).send({message: 'Project not found', success: false, error: err});
+						// return next();
 					}
 					else{
 						// console.log(projects)
