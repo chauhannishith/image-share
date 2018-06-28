@@ -23,7 +23,9 @@ class Image extends Component {
 			.catch(error => console.log(error))
 		}
 		else{
-			alert('Tag name can not be blank')
+			// alert('Tag name can not be blank')
+			this.refs.tagname.focus();
+			this.refs.tagname.placeholder = 'can not be blank'
 		}
 	}
 
@@ -75,8 +77,12 @@ class Image extends Component {
 						</p>
 					</div>
 					<div className="add-tag">
-						<input className="tag-text-box" type="text" ref="tagname" onKeyPress={this.handleKey.bind(this)} required/>
+						<form>
+						<input className="tag-text-box" type="text" ref="tagname" onKeyPress={this.handleKey.bind(this)}
+							placeholder="Add tag"
+							required/>
 						<button className="add-tag-btn" onClick={this.addTag.bind(this)}>Add tag</button>
+						</form>
 					</div>
 				</div>
 			}
