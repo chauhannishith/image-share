@@ -24,19 +24,25 @@ class Project extends Component{
 	}
 
 	addMember(e) {
-		shareProject(this.refs.email.value, this.props.location.state.projectId)
-		.then(response => {
-			if(response.data.success){
-				console.log(response.data.message)
-				this.setState({shareSuccess: response.data.message})
-				this.refs.email.value = ''
-			}
-			else{
-				console.log(response.data.message)
-				this.setState({shareError: response.data.message})
-			}
-		})
-		.catch(error => console.log(error))
+		if(this.refs.email.value !== '' || this.props.location.state.projectId !== ''){
+			shareProject(this.refs.email.value, this.props.location.state.projectId)
+			.then(response => {
+				if(response.data.success){
+					console.log(response.data.message)
+					this.setState({shareSuccess: response.data.message})
+					this.refs.email.value = ''
+				}
+				else{
+					console.log(response.data.message)
+					this.setState({shareError: response.data.message})
+				}
+			})
+			.catch(error => console.log(error))	
+		}
+		else{
+			this.props.history.push('/')
+		}
+		
 		e.preventDefault()
 	}
 
@@ -52,41 +58,51 @@ class Project extends Component{
 
 	createGroup(e) {
 		console.log('create group', this.refs.groupname.value)
-		createSubGroup(this.props.location.state.projectId, this.refs.groupname.value)
-		.then(response => {
-			if(response.data.success){
-				 console.log(response.data.message)
-				 this.props.history.push('/home')
-			}
-			else{
-				console.log(response.data.message)
-			}
-		})
-		.catch(error => console.log(error))
+		if(this.props.location.state.projectId !== '' || this.refs.groupname.value !== ''){
+			createSubGroup(this.props.location.state.projectId, this.refs.groupname.value)
+			.then(response => {
+				if(response.data.success){
+					 console.log(response.data.message)
+					 this.props.history.push('/home')
+				}
+				else{
+					console.log(response.data.message)
+				}
+			})
+			.catch(error => console.log(error))
+		}
+		else{
+			this.props.history.push('/')
+		}
 		e.preventDefault()
 	}
 
 	fetchFiles() {
-		fetchUploadedFiles(this.props.location.state.projectId)
-		.then(response => {
-			if(response.data.redirect){
-					removeFromStorage('imageshare')
-					this.props.history.push('/')
+		if(this.props.location.state.projectId !== ''){
+			fetchUploadedFiles(this.props.location.state.projectId)
+			.then(response => {
+				if(response.data.redirect){
+						removeFromStorage('imageshare')
+						this.props.history.push('/')
+					}
+				if(response.data.success){
+					// console.log(response.data.files)
+					this.setState({images: [...this.state.images,...response.data.files]}, () => {
+						this.setState({subgroups: [...this.props.location.state.groups]},()=> {
+								this.setState({isLoading: false})
+							})
+					})
 				}
-			if(response.data.success){
-				// console.log(response.data.files)
-				this.setState({images: [...this.state.images,...response.data.files]}, () => {
-					this.setState({subgroups: [...this.props.location.state.groups]},()=> {
-							this.setState({isLoading: false})
-						})
-				})
-			}
-			else{
-				console.log(response.data.message)
-				this.setState({isLoading: false})
-			}
-		})
-		.catch(error => console.log(error))
+				else{
+					console.log(response.data.message)
+					this.setState({isLoading: false})
+				}
+			})
+			.catch(error => console.log(error))	
+		}
+		else{
+			this.props.history.push('/')
+		}
 	}
 
 	goBack() {
@@ -180,48 +196,41 @@ class Project extends Component{
 								<form onSubmit={this.addMember.bind(this)}>
 									<input type="email" ref="email" placeholder="email" required />
 									<input className="btn-gshare" type="submit" value="Add" />
-									<input type="button" className="btn-gshare" onClick={this.toggleShareForm.bind(this)} value="Cancel" />
+									<input type="button"
+									 className="btn-gshare" 
+									 onClick={this.toggleShareForm.bind(this)} 
+									 value="Cancel" 
+									/>
 								</form>
 							}
-							{!this.state.displayShareForm && <a id="share" className="btn-share" onClick={this.toggleShareForm.bind(this)}>Share</a>}
+							{!this.state.displayShareForm &&
+								<a id="share" className="btn-share" onClick={this.toggleShareForm.bind(this)}>Share</a>}
 							
 						</div>
 			
-					</div>
-					<hr />
-					<div className="display-group-form">
-						{this.state.displayGroupForm && 
-							<form onSubmit={this.createGroup.bind(this)}>
-								<input type="text" ref="groupname" placeholder="Group title" required />
-								<input className="btn-group" type="submit" value="Create" />
-								<input type="button" className="btn-group" onClick={this.toggleCreateGroup.bind(this)} value="Cancel" />
-							</form>
-						}
-						{!this.state.displayGroupForm &&
-							<input type="button"
-							 className="btn-group" 
-							 onClick={this.toggleCreateGroup.bind(this)} 
-							 value="Create subgroup" 
-							/>
-						}
-					</div>
-					<div className="project-container">
-						<ul>
-							{eachGroup}
-						</ul>
-						<hr />
-						<div className="image-grid">
-						{this.state.isLoading ? <Loading /> : 
-							(eachImage.length ? eachImage : <p>You have not added any images yet</p>)
-						}
-						</div>
-						<br />
-						<DragnDrop projectid={this.props.location.state.projectId} />
-					</div>
-				</div>
-			</div>
-			)
-	}
+                    </div>                     <hr />                     <div
+className="display-group-form">
+{this.state.displayGroupForm &&                              <form
+onSubmit={this.createGroup.bind(this)}>                                 <input
+type="text" ref="groupname" placeholder="Group title" required />
+<input className="btn-group" type="submit" value="Create" />
+<input type="button"                                  className="btn-group"
+onClick={this.toggleCreateGroup.bind(this)}
+value="Cancel"                                  />
+</form>                         }
+{!this.state.displayGroupForm &&                             <input
+type="button"                              className="btn-group"
+onClick={this.toggleCreateGroup.bind(this)}
+value="Create subgroup"                              />
+}                     </div>                     <div className="project-
+container">                         <ul>
+{eachGroup}                         </ul>                         <hr />
+<div className="image-grid">                         {this.state.isLoading ?
+<Loading /> :                              (eachImage.length ? eachImage :
+<p>You have not added any images yet</p>)                         }
+</div>                         <br />                         <DragnDrop
+projectid={this.props.location.state.projectId} />                     </div>
+</div>             </div>             )     }
 
 }
 

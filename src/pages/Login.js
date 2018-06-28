@@ -23,11 +23,16 @@ class Login extends Component{
 	}
 
 	onSubmit(e) {
-		const user = {
+		if(this.refs.email.value === '' || this.refs.password.value === ''){
+			alert('Email or password can not be blank')
+		}
+		else{
+			const user = {
 			email: this.refs.email.value,
 			password: this.refs.password.value
+			}
+			this.submitUser(user)
 		}
-		this.submitUser(user)
 		e.preventDefault();
 	}
 

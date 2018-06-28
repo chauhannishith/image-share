@@ -21,19 +21,25 @@ class SignUp extends Component {
 
 	onSubmit(e) {
 		e.preventDefault();
-		if(this.refs.password.value === this.refs.cpassword.value){
-			const user ={
-				email: this.refs.email.value,
-				firstname: this.refs.fname.value,
-				lastname: this.refs.lname.value,
-				password: this.refs.password.value
-			}
-			this.createUser(user)
+		if(this.refs.email.value === '' || this.refs.fname.value === '' || 
+			this.refs.lname.value === '' || this.refs.password.value === ''|| this.refs.cpassword.value === ''){
+			alert('All values required')
 		}
 		else{
-			// alert("Passwords do not match")
-			this.setState({signUpErrors: 'Passwords do not match'})
-			window.document.getElementById('cpassword').focus();
+			if(this.refs.password.value === this.refs.cpassword.value){
+				const user ={
+					email: this.refs.email.value,
+					firstname: this.refs.fname.value,
+					lastname: this.refs.lname.value,
+					password: this.refs.password.value
+				}
+				this.createUser(user)
+			}
+			else{
+				// alert("Passwords do not match")
+				this.setState({signUpErrors: 'Passwords do not match'})
+				window.document.getElementById('cpassword').focus();
+			}
 		}
 	}
 

@@ -14,21 +14,42 @@ class Image extends Component {
 
 	addTag(){
 		// console.log(this.refs.tagname.value)
-		addTag(this.refs.tagname.value, this.props.source.filename)
-		.then(response => {
-			console.log(response.data)
-			window.location.reload()
-		})
-		.catch(error => console.log(error))
+		if(this.refs.tagname.value !== ''){
+			addTag(this.refs.tagname.value, this.props.source.filename)
+			.then(response => {
+				console.log(response.data)
+				window.location.reload()
+			})
+			.catch(error => console.log(error))
+		}
+		else{
+			alert('Tag name can not be blank')
+		}
 	}
 
 	deleteThisImage() {
-		deleteImage(this.props.source._id, this.props.source.filename)
-		.then(response=> {
-			console.log(response.data.message)
-			this.setState({deleted: true})
-		})
-		.catch(error => console.log(error))
+		if(this.props.source._id !== '' || this.props.source.filename !== ''){
+			deleteImage(this.props.source._id, this.props.source.filename)
+			.then(response=> {
+				console.log(response.data.message)
+				this.setState({deleted: true})
+			})
+			.catch(error => console.log(error))
+		}
+		else{
+			this.props.history.push('/')
+		}
+		
+	}
+
+	handleKey(e) {
+		if((e.charCode > 96 && e.charCode <123) || (e.charCode > 64 && e.charCode < 91)){
+			// console.log('yes')
+		}
+		else{
+			// console.log('no')
+			e.preventDefault()
+		}
 	}
 
 	render (){
@@ -54,7 +75,7 @@ class Image extends Component {
 						</p>
 					</div>
 					<div className="add-tag">
-						<input type="text" ref="tagname" />
+						<input type="text" ref="tagname" onKeyPress={this.handleKey.bind(this)} required/>
 						<button className="btn-small" onClick={this.addTag.bind(this)}>Add tag</button>
 					</div>
 				</div>

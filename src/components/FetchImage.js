@@ -15,7 +15,8 @@ class FetchImage extends Component {
 
 	componentDidMount() {
 		// console.log(this.props.filename)
-		fetchFileTagBased(this.props.filename)
+		if(this.props.filename !== ''){
+			fetchFileTagBased(this.props.filename)
 			.then(response => {
 				// console.log(response.data)
 				if(response.data.success){
@@ -27,6 +28,10 @@ class FetchImage extends Component {
 				}
 			})
 			.catch(error => console.log(error))
+		}
+		else{
+			this.props.history.push('/')
+		}
 	}
 				
 	render() {
