@@ -21,18 +21,19 @@ class Home extends Component{
 	}
 	createComponent(e) {
 		e.preventDefault()
-		createProject(this.refs.projectTitle.value)
-		.then(response => {
-			// console.log(response)
-			if(response.data.success){
-				this.setState({createForm: false}, () => {
-					this.componentDidMount()
-				})
-			}else{
-				console.log(response.data.message)
-			}
-		}).catch(error => console.log(error))
-
+		if(this.refs.projectTitle.value !== ''){
+			createProject(this.refs.projectTitle.value)
+			.then(response => {
+				// console.log(response)
+				if(response.data.success){
+					this.setState({createForm: false}, () => {
+						this.componentDidMount()
+					})
+				}else{
+					console.log(response.data.message)
+				}
+			}).catch(error => console.log(error))	
+		}
 	}
 
 	displayForm() {

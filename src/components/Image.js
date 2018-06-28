@@ -62,7 +62,7 @@ class Image extends Component {
 		}
 		
 		return (
-			<div>
+			<div className="image-container">
 				{this.state.deleted ? <p>This image has been deleted</p>:
 				<div className="image-card">
 					<div>
@@ -75,8 +75,8 @@ class Image extends Component {
 						</p>
 					</div>
 					<div className="add-tag">
-						<input type="text" ref="tagname" onKeyPress={this.handleKey.bind(this)} required/>
-						<button className="btn-small" onClick={this.addTag.bind(this)}>Add tag</button>
+						<input className="tag-text-box" type="text" ref="tagname" onKeyPress={this.handleKey.bind(this)} required/>
+						<button className="add-tag-btn" onClick={this.addTag.bind(this)}>Add tag</button>
 					</div>
 				</div>
 			}

@@ -58,7 +58,8 @@ body{
   width: 100%; 
   padding: 5px;
   border-radius: 3px;
-  background-color: var(--secondary)
+  background-color: var(--secondary);
+  cursor: pointer;
 }
 
 .btn-share{
@@ -70,6 +71,7 @@ body{
   color: white;
   text-align: center;
   width: 100px;
+  cursor: pointer;
 }
 
 .btn-share:hover{
@@ -82,6 +84,7 @@ body{
   padding: 0.4rem;
   border-radius: 3px;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 .center{
@@ -95,22 +98,25 @@ body{
 }
 
 .delete-btn{
-  text-decoration: none;
   background-color: var(--primary);
   position: absolute;
-  top: -0.5rem;
-  right: -0.5rem;
+  top: -1rem;
+  right: -1rem;
   width: 1rem;
   border-radius: 2rem;
   padding: 0.2rem 0.5rem;
   text-align: center;
+  cursor: pointer;
+}
+
+.delete-btn a, a:hover, a:visited, a:link, a:active{
+  text-decoration: none;
 }
 
 .delete-btn:hover{
   background-color: var(--light);
   color: var(--primary);
 }
-
 
 .display-group-form{
   display: flex;
@@ -128,6 +134,7 @@ body{
   padding: 0.5rem 0.4rem;
   border-radius: 3px;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 .display-share-form{
@@ -136,7 +143,7 @@ body{
   padding: 5px 0px 5px 0px;
 }
 
-.display-share-form input[type=email], input[type=text]{
+.display-share-form .share-from-text{/*input[type=email], input[type=text]{*/
   margin: 5px;
   padding: 6px;
   font-size: 1.2rem;
@@ -149,6 +156,7 @@ body{
   padding: 0.5rem 0.4rem;
   border-radius: 3px;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 .error-msg{
@@ -279,24 +287,34 @@ body{
   display: grid;
   grid-template-rows: 2.5fr 0.5fr 0.5fr;
 }
-/*
-.image-card .add-tag{
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-gap: 0.5rem;
-}*/
-/**/
-.image-card input[type=text]{
+
+.image-card .add-tag .tag-text-box{
+  padding: 6px;
+  margin: 0 3px 0 0;
+  font-size: 1.2rem;
+  border: .5px solid #c5c5c5;
+  border-radius: 0;
   width: 10rem;
   font-size: 1rem;
-  padding: 0.3rem;
 }
 
-.image-card div{
-  margin: 0.1rem;
-  padding: 0rem;
+.image-card p{
+  /*padding: 0.3rem;
+  margin: 0.1rem;*/
 }
-/**/
+
+.image-card .add-tag .add-tag-btn{
+  margin: 0;
+  padding: 0.3rem;
+  border-radius: 1px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.image-container{
+  margin: auto;
+}
+
 .list-box{
   border: 1px solid black;
   border-radius: 10px;
@@ -433,7 +451,7 @@ body{
 .thumb{
   height: 10rem;
   width: 15rem;
-  padding: 10px;
+  /*padding: 10px;*/
   justify-self: center;
   align-self: center;
 }
@@ -469,13 +487,13 @@ ul li a{
     to {left: 100%;}
 }
 
-@media(max-width: 1000px){
+@media(max-width: 1136px){
   .home-grid{
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 
   .image-grid{
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .list-box{
@@ -483,7 +501,9 @@ ul li a{
   }
 
   .project{
-    border-radius: 1rem;
+    border-radius: 0.8rem;
+    margin: 0.3rem;
+    padding: 0.3rem;
   }
 
   .wrapper{
@@ -491,7 +511,7 @@ ul li a{
   }
 }
 
-@media(max-width: 768px){
+@media(max-width: 968px){
   
   .form{
     margin: auto;
@@ -513,15 +533,25 @@ ul li a{
   }
 
   .home-grid{
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .image-grid{
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .project{
+    border-radius: 0.2rem;
+    margin: 0.5rem;
+    padding: 0.2rem;
   }
 }
 
 @media(max-width: 640px){
+  .home-grid{
+    grid-template-columns: 1fr;
+  }
+
   .wrapper{
     margin: 0rem;
     padding: 0rem;
@@ -531,9 +561,11 @@ ul li a{
 
   .project{
     border-radius: 0.2rem;
-    border: 2px solid var(--light);
     margin: 0.5rem;
     padding: 0.5rem;
-    min-height: 80vh;
+  }
+
+  .image-grid{
+    grid-template-columns: 1fr;
   }
 }
