@@ -212,7 +212,7 @@ router.get('/fetchtags', verifyToken, (req, res, next) => {
 });
 
 //add tag
-router.post('/addtag', verifyToken, (req,res) => {
+router.post('/addtag', verifyToken, (req, res, next) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
 		if(err){
 			console.log(err)
@@ -222,6 +222,7 @@ router.post('/addtag', verifyToken, (req,res) => {
 			//find if user exists in tag collection, if not then add user
 			if(!req.body.tagname || !req.body.filename){
 				res.status(200).send({message: "Failed to add tag", success: false})
+				return next();
 			}
 			Tag.findOne({userId: authData.user._id},				
 				(err, tag) => {
@@ -294,46 +295,79 @@ router.post('/addtag', verifyToken, (req,res) => {
 					}
 			})
 			//update file metadata
-			gfs.files.findOneAndUpdate(
-		      { filename: req.body.filename },
-		      { $push: {"metadata.tags": req.body.tagname} },
-		      (err, update) => {
-		      	if(err){
-		      		console.log(err)
-		      		res.status(200).send({message: 'error occured', success: false, error: err})
-		      	}
-		      	else{
-		      		// console.log('tag added')
-		      		res.status(200).send({message: 'success adding tag to image', success: true})
-		      	}
-		      } 
-	    )
+			// gfs.files.findOneAndUpdate(
+		 //      { filename: req.body.filename },
+		 //      { $push: {"metadata.tags": req.body.tagname} },
+		 //      (err, update) => {
+		 //      	if(err){
+		 //      		console.log(err)
+		 //      		res.status(200).send({message: 'error occured', success: false, error: err})
+		 //      	}
+		 //      	else{
+		 //      		// console.log('tag added')
+		 //      		res.status(200).send({message: 'success adding tag to image', success: true})
+		 //      	}
+		 //      } 
+	  //   	)
+	    	//
+	    	gfs.files.findOne({ filename: req.body.filename, "metadata.tags": req.body.tagname }, (err, file) => {
+				// check files
+				if(file){
+					// console.log('tag exists')
+					return res.status(200).send({message:'yes', success: true})
+				}
+				else{
+						gfs.files.findOneAndUpdate(
+					      { filename: req.body.filename },
+					      { $push: {"metadata.tags": req.body.tagname} },
+					      (err, update) => {
+					      	if(err){
+					      		console.log(err)
+					      		res.status(200).send({message: 'error occured', success: false, error: err})
+					      	}
+					      	else{
+					      		// console.log('tag added')
+					      		res.status(200).send({message: 'success adding tag to image', success: true})
+					      	}
+					      } 
+				    	)
+				}
+			});
+	    	//
 		}
 	});
 });
 
 
 //fetch all files in project by id
-router.get('/files/:id', (req, res, next) => {
-	gfs.files.find({"metadata.projectId": req.params.id}).toArray((err, files) => {
-		// check files
-		if(!files || files.length === 0){
-			return res.status(200).send({message:'There are no files', success: false})
+router.get('/files/:id', verifyToken, (req, res, next) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
+		if(err){
+			console.log(err)
+			// res.status(200).send({message: 'Please login again', success: false})
 		}
-		else{
-			files.map((file) =>{
-				if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
-					file.isImage = true;
+		else{	
+			gfs.files.find({"metadata.projectId": req.params.id}).toArray((err, files) => {
+				// check files
+				if(!files || files.length === 0){
+					return res.status(200).send({message:'There are no files', success: false})
 				}
 				else{
-					file.isImage = false;
-				}	
-			})	
-				res.status(200).send({files: files, success: true})
+					files.map((file) =>{
+						if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
+							file.isImage = true;
+						}
+						else{
+							file.isImage = false;
+						}	
+					})	
+						res.status(200).send({files: files, success: true})
+				}
+				// console.log(files)
+				// return res.json(files);
+			});
 		}
-		// console.log(files)
-		// return res.json(files);
-	});
+	})
 });
 
 //delete file
