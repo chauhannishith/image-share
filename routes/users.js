@@ -638,6 +638,36 @@ router.post('/projects', verifyToken, (req, res) => {
 
 });
 
+//fetch project's data
+router.post('/project', verifyToken, (req, res) => {
+	jwt.verify(req.token, jwtSecret, (err, authData) =>{
+		if(err){
+			console.log(err)
+			res.status(200).send({redirect:true})
+		}
+		else{
+			// console.log(authData)
+			// console.log(req.body)
+			Project.findOne({_id: req.body.projectId}, (err, project) => {
+				if(err){
+					console.log("some error");
+					return;
+				}
+				else{
+					// console.log("success finding projects")
+					res.status(200).send({
+						message: "Project added successfully",
+						success: true,
+						project: project
+					});
+				}
+			})
+			//
+		}
+	});
+
+});
+
 //projects with user by other persons
 router.post('/sharedprojects', verifyToken, (req, res) => {
 	jwt.verify(req.token, jwtSecret, (err, authData) =>{
@@ -689,14 +719,18 @@ router.post('/share', verifyToken, (req, res, next) => {
 			}
 			else{
 				var projectID = req.body.projectId;
-				Project.findOne({"sharedwith.email": email}, (error, project) => {
+				Project.findOne({sharedwith:{"email": email}}, (error, project) => {
 					if(err){
 						console.log("some error");
 						res.status(200).send({message: 'Error occured', success: false, error: err});
 					}
 					if(!project){
-						// res.status(200).send({message: 'Project not found', success: false, error: err});
-						// return next();
+						console.log("user already added")
+						res.status(200).send({
+							message: "User already added",
+							success: false							
+						});
+						return next();						// console.log('finally')
 					}
 					else{
 						// console.log(projects)
@@ -707,6 +741,7 @@ router.post('/share', verifyToken, (req, res, next) => {
 						});
 						return next();
 					}
+				// })
 				//
 				User.findOne({email: email}, (error, user) => {
 					// console.log(user)
