@@ -3,6 +3,7 @@ import DragnDrop from '../components/DragnDrop'
 import Group from '../components/Group'
 import Image from '../components/Image'
 import createSubGroup from '../helpers/createSubGroup'
+import fetchProject from '../helpers/fetchProject'
 import fetchUploadedFiles from '../helpers/fetchUploadedFiles'
 import Loading from './Loading'
 import shareProject from '../helpers/shareProject'
@@ -12,6 +13,7 @@ class Project extends Component{
 	constructor(props) {
 		super(props)
 		this.state ={
+			projectData: null,
 			images: [],
 			subgroups: [],
 			displayDrop: false,
@@ -29,12 +31,12 @@ class Project extends Component{
 			.then(response => {
 				if(response.data.success){
 					console.log(response.data.message)
-					this.setState({shareSuccess: response.data.message})
+					this.setState({shareSuccess: response.data.message}, () => this.setState({shareError: ''}))
 					this.refs.email.value = ''
 				}
 				else{
 					console.log(response.data.message)
-					this.setState({shareError: response.data.message})
+					this.setState({shareError: response.data.message}, () => this.setState({shareSuccess: ''}))
 				}
 			})
 			.catch(error => console.log(error))	
@@ -56,14 +58,17 @@ class Project extends Component{
 		
 	}
 
+
+
 	createGroup(e) {
 		console.log('create group', this.refs.groupname.value)
-		if(this.props.location.state.projectId !== '' || this.refs.groupname.value !== ''){
+		if(this.props.location.state.projectId !== '' && this.refs.groupname.value !== ''){
 			createSubGroup(this.props.location.state.projectId, this.refs.groupname.value)
 			.then(response => {
 				if(response.data.success){
-					 console.log(response.data.message)
-					 this.props.history.push('/home')
+					console.log(response.data.message)
+					this.toggleCreateGroup()
+					this.fetchProjectData()//this.props.history.push('/home')
 				}
 				else{
 					console.log(response.data.message)
@@ -77,8 +82,28 @@ class Project extends Component{
 		e.preventDefault()
 	}
 
+	fetchProjectData() {
+		fetchProject(this.props.location.state.projectId)
+		.then(response => {
+			if(response.data.redirect){
+					removeFromStorage('imageshare')
+					this.props.history.push('/')
+			}
+			if(response.data.success){
+				this.setState({projectData: response.data.project}, () => {
+					this.setState({subgroups: [...response.data.project.subgroups]})
+				})
+			}
+			else{
+				console.log(response.data.message)
+				this.setState({isLoading: false})
+			}
+		})
+		.catch(error => console.log(error))	
+	}
+
 	fetchFiles() {
-		if(this.props.location.state.projectId !== ''){
+		if(this.props.location.state.projectId){
 			fetchUploadedFiles(this.props.location.state.projectId)
 			.then(response => {
 				if(response.data.redirect){
@@ -87,8 +112,9 @@ class Project extends Component{
 				}
 				if(response.data.success){
 					// console.log(response.data.files)
-					this.setState({images: [...this.state.images,...response.data.files]}, () => {
+					this.setState({images: [...response.data.files]}, () => {
 						this.setState({subgroups: [...this.props.location.state.groups]},()=> {
+							// this.fetchProjectData()
 								this.setState({isLoading: false})
 							})
 					})

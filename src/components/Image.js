@@ -14,15 +14,15 @@ class Image extends Component {
 
 	addTag(){
 		// console.log(this.refs.tagname.value)
-		if(this.refs.tagname.value !== '' || this.props.source.filename !== ''){
+		if(this.refs.tagname.value !== '' && this.props.source.filename !== ''){
 			addTag(this.refs.tagname.value, this.props.source.filename)
 			.then(response => {
 				if(response.data.success){
-					console.log(response.data)
+					console.log(response.data.message)
 					window.location.reload()
 				}
 				else{
-					console.log(response.data)
+					console.log(response.data.message)
 				}
 			})
 			.catch(error => console.log(error))
@@ -35,12 +35,12 @@ class Image extends Component {
 	}
 
 	deleteThisImage() {
-		if(this.props.source._id !== '' || this.props.source.filename !== ''){
+		if(this.props.source._id !== '' && this.props.source.filename !== ''){
 			deleteImage(this.props.source._id, this.props.source.filename)
 			.then(response=> {
 				console.log(response.data.message)
 				this.setState({deleted: true})
-				window.location.reload()
+				// window.location.reload()
 			})
 			.catch(error => console.log(error))
 		}
