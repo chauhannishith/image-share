@@ -401,7 +401,7 @@ body{
   border-radius: 0.2rem;
   border: 2px solid var(--light);
   margin: 1.5rem;
-  padding: 2rem 2rem;
+  padding: 2rem;
   min-height: 80vh;
 }
 
@@ -513,8 +513,8 @@ ul li a{
   }
 
   .project{
-    margin: 0.3rem;
-    padding: 0.3rem;
+    margin: 1rem;
+    padding: 1rem;
   }
 
   .wrapper{
@@ -553,7 +553,7 @@ ul li a{
   
   .project{
     margin: 0.5rem;
-    padding: 0.2rem;
+    padding: 0.5rem;
   }
 }
 
@@ -571,8 +571,8 @@ ul li a{
 
   .project{
     border-radius: 0.2rem;
-    margin: 0.5rem;
-    padding: 0.5rem;
+    margin: 0.3rem;
+    padding: 0.3rem;
   }
 
   .image-grid{
