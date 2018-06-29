@@ -381,6 +381,7 @@ body{
 
 .navbar a{
   padding: 1rem;
+  margin: 0 1rem;
   font-size: 1.4rem;
   width: 5rem;
   text-decoration: none;
@@ -400,9 +401,10 @@ body{
 .project{
   border-radius: 0.2rem;
   border: 2px solid var(--light);
-  margin: 1.5rem;
+  margin: 2rem;
   padding: 2rem;
   min-height: 80vh;
+  box-sizing: border-box;
 }
 
 .project input[type=text]{
@@ -513,8 +515,8 @@ ul li a{
   }
 
   .project{
-    margin: 1rem;
-    padding: 1rem;
+    /*margin: 1rem;
+    padding: 1rem;*/
   }
 
   .wrapper{
@@ -552,8 +554,8 @@ ul li a{
   }
   
   .project{
-    margin: 0.5rem;
-    padding: 0.5rem;
+    /*margin: 0.5rem;
+    padding: 0.5rem;*/
   }
 }
 
@@ -570,9 +572,8 @@ ul li a{
   }
 
   .project{
-    border-radius: 0.2rem;
-    margin: 0.3rem;
-    padding: 0.3rem;
+    /*margin: 0.3rem;
+    padding: 0.3rem;*/
   }
 
   .image-grid{
