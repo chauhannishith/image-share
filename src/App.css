@@ -401,7 +401,7 @@ body{
 .project{
   border-radius: 0.2rem;
   border: 2px solid var(--light);
-  margin: 2rem;
+  margin: 1rem;
   padding: 2rem;
   min-height: 80vh;
   box-sizing: border-box;
