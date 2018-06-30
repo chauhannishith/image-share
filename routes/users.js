@@ -590,18 +590,44 @@ router.post('/createsubgroup', verifyToken, (req, res) => {
 				createdby: authData.user._id,
 				timestamp: Date.now()
 			}
-			Project.findOneAndUpdate({_id: req.body.projectId},
-				{$push: {subgroups: group}},
-				(err, project) => {
-					// console.log(project)
-					if(err){
-						console.log(err)
-						res.status(200).send({message: "Failed to create subgroup", success: false})
-					}
-					else{
-						res.status(200).send({message: "Group created", success: true})
-					}
+
+			Project.findOne({_id: req.body.projectId, "subgroups.groupTitle": req.body.title }, (err, project) => {
+				if(err){
+					console.log(err)
+					res.status(200).send({message: "Failed to create subgroup", success: false})
+				}
+			
+				if(!project){
+					Project.findOneAndUpdate({_id: req.body.projectId},
+						{$push: {subgroups: group}},
+						(err, project) => {
+							// console.log(project)
+							if(err){
+								console.log(err)
+								res.status(200).send({message: "Failed to create subgroup", success: false})
+							}
+							else{
+								res.status(200).send({message: "Group created", success: true})
+							}
+					})
+				}
+				else{
+					console.log(err)
+					res.status(200).send({message: "Group already exists", success: false})
+				}
 			})
+			// Project.findOneAndUpdate({_id: req.body.projectId},
+			// 	{$push: {subgroups: group}},
+			// 	(err, project) => {
+			// 		// console.log(project)
+			// 		if(err){
+			// 			console.log(err)
+			// 			res.status(200).send({message: "Failed to create subgroup", success: false})
+			// 		}
+			// 		else{
+			// 			res.status(200).send({message: "Group created", success: true})
+			// 		}
+			// })
 		}
 	});
 		//
@@ -656,7 +682,7 @@ router.post('/project', verifyToken, (req, res) => {
 				else{
 					// console.log("success finding projects")
 					res.status(200).send({
-						message: "Project added successfully",
+						message: "Project fetched successfully",
 						success: true,
 						project: project
 					});
