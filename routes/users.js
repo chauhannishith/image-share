@@ -745,18 +745,18 @@ router.post('/share', verifyToken, (req, res, next) => {
 			}
 			else{
 				var projectID = req.body.projectId;
-				Project.findOne({sharedwith:{"email": email}}, (error, project) => {
+				Project.findOne({_id: projectID, "sharedwith.email": email}, (error, project) => {
 					if(err){
 						console.log("some error");
 						res.status(200).send({message: 'Error occured', success: false, error: err});
 					}
 					if(!project){
-						console.log("user already added")
-						res.status(200).send({
-							message: "User already added",
-							success: false							
-						});
-						return next();						// console.log('finally')
+						console.log("user not added previously")
+						// res.status(200).send({
+						// 	message: "User already added",
+						// 	success: false							
+						// });
+						// return next();						// console.log('finally')
 					}
 					else{
 						// console.log(projects)
