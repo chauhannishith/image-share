@@ -90,7 +90,8 @@ body{
 }
 
 .btn-small{
-  padding: 0.4rem;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
   border-radius: 3px;
   font-size: 1rem;
   cursor: pointer;
@@ -162,11 +163,29 @@ body{
 }
 
 .display-share-form .btn-gshare{
-  margin: 4px 0px 4px 5px;
+  margin: 0.5rem;
   padding: 0.5rem 0.4rem;
   border-radius: 3px;
   font-size: 1rem;
   cursor: pointer;
+  min-width: 80px;
+  background: #FFFFFF;
+}
+
+.display-share-form .btn-gshare :first-child{
+  margin-left: 0;
+}
+
+.display-share-form .btn-gshare :last-child{
+  margin-right: 0;
+}
+
+.display-share-form input {
+  margin: 0.5rem 0;
+  outline: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: none;
 }
 
 .error-msg{
@@ -228,10 +247,9 @@ body{
 
 .form{
   margin: auto;
-  border: 1px solid black;
-  border-radius: 5px;
+  border-radius: 0.2rem;
   padding: 2rem;
-  width: 400px;
+  width: 380px;
   z-index: 0;
   box-shadow: var(--shadow);
   background-color: var(--light);
@@ -248,11 +266,13 @@ body{
 }
 
 .form input{
-  border: .5px solid #c5c5c5;
-  border-radius: 0;
-  font-size: 1.2rem;
-  padding: 5.5px;
+  border: none;
+  border-radius: 0.2rem;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: 10px;
   box-sizing: border-box;
+  outline: none;
 }
 /*
 .form input{
