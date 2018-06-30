@@ -334,12 +334,16 @@ body{
   margin: 1rem;
 }
 
+.list-box p{
+  margin: 0.4rem 0;
+}
+
 .list-box h1{
   font-size: 2rem;
   text-shadow: 1px 1px 1px black;
 }
 
-.list-box ul li, button{
+.list-box button{
   margin: 0.2rem;
 }
 
@@ -426,6 +430,16 @@ body{
   padding: 5px;  
 }
 
+.project-shared-container{
+  margin: 5px;
+  padding: 5px;  
+}
+
+.project-shared-container li{
+  margin: 5px;
+  padding: 0px 5px;  
+}
+
 .project-header{
   display: flex;
   justify-content: space-between;
@@ -478,6 +492,11 @@ body{
   /*padding: 10px;*/
   justify-self: center;
   align-self: center;
+}
+
+.verified{
+  text-align: center;
+  padding: 5rem 0;
 }
 
 .wrapper{

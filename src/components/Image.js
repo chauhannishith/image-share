@@ -12,42 +12,43 @@ class Image extends Component {
 		}
 	}
 
-	addTag(){
+	addTag(e){
 		// console.log(this.refs.tagname.value)
-		// if(this.refs.tagname.value !== '' && this.props.source.filename !== ''){
+		e.preventDefault()
+		if(this.refs.tagname.value !== '' && this.props.source.filename !== ''){
 			addTag(this.refs.tagname.value, this.props.source.filename)
 			.then(response => {
 				if(response.data.success){
 					console.log(response.data.message)
-					// window.location.reload()
+					window.location.reload()
 				}
 				else{
 					console.log(response.data.message)
 				}
 			})
 			.catch(error => console.log(error))
-		// }
-		// else{
-		// 	// alert('Tag name can not be blank')
-		// 	this.refs.tagname.focus();
-		// 	this.refs.tagname.placeholder = 'can not be blank'
-		// }
+		}
+		else{
+			// alert('Tag name can not be blank')
+			this.refs.tagname.focus();
+			this.refs.tagname.placeholder = 'can not be blank'
+		}
 	}
 
-	deleteThisImage() {
+	deleteThisImage(e) {
 		if(this.props.source._id !== '' && this.props.source.filename !== ''){
 			deleteImage(this.props.source._id, this.props.source.filename)
 			.then(response=> {
 				console.log(response.data.message)
 				this.setState({deleted: true})
-				// window.location.reload()
+				window.location.reload()
 			})
 			.catch(error => console.log(error))
 		}
 		else{
 			this.props.history.push('/')
 		}
-		
+		e.preventDefault()
 	}
 
 	handleKey(e) {

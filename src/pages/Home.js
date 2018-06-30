@@ -91,6 +91,7 @@ class Home extends Component{
 			<div className="display-share-form">
 				<form onSubmit={this.createComponent.bind(this)}>
 					<input
+					 className="share-from-text"
 					 type="text"
 					 ref="projectTitle" 
 					 placeholder="Title" />
@@ -129,21 +130,17 @@ class Home extends Component{
 				</li>
 				)
 		})
-		
-		var allTags = null
 
-		if(this.state.tags){
-			allTags  = this.state.tags.map((tag, i) => { 
-				// console.log(tag)
-				return (
-					<li key={i} className="collection-item" >
-						<Link to={{ pathname: '/tag', state: {tagdata: tag} }}>
-							{tag.tagname}
-						</Link>
-					</li>
-					)
-			})
-		}
+		const allTags  = this.state.tags.map((tag, i) => { 
+			// console.log(tag)
+			return (
+				<li key={i} className="collection-item" >
+					<Link to={{ pathname: '/tag', state: {tagdata: tag} }}>
+						{tag.tagname}
+					</Link>
+				</li>
+				)
+		})
 
 		if(this.state.isLoading)
 			return <Loading />
@@ -160,7 +157,7 @@ class Home extends Component{
 						<div className="list-box">
 							<h1>Your tags</h1>
 							<ul>
-								{this.state.tags ? allTags : <li>You have no tags</li>}
+								{allTags.length ? allTags : <p>You have no tags</p>}
 							</ul>
 						</div>
 						<div className="list-box">
@@ -174,7 +171,7 @@ class Home extends Component{
 						<div className="list-box">
 							<h1>Projects shared with you</h1>
 							<ul className="collection">
-								{eachSharedProject.length ? eachSharedProject : <li>You don't have any shared project yet</li>}
+								{eachSharedProject.length ? eachSharedProject : <p>You don't have any shared project yet</p>}
 							</ul>
 						</div>
 					</div>

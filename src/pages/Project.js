@@ -13,7 +13,7 @@ class Project extends Component{
 	constructor(props) {
 		super(props)
 		this.state ={
-			projectData: null,
+			projectData: [],//null,
 			images: [],
 			subgroups: [],
 			displayDrop: false,
@@ -34,6 +34,7 @@ class Project extends Component{
 					console.log(response.data.message)
 					this.setState({shareSuccess: response.data.message}, () => this.setState({shareError: ''}))
 					this.refs.email.value = ''
+					window.location.reload()
 				}
 				else{
 					console.log(response.data.message)
@@ -70,6 +71,7 @@ class Project extends Component{
 					console.log(response.data.message)
 					this.toggleCreateGroup()
 					this.fetchProjectData()//this.props.history.push('/home')
+					this.setState({createGroupError: ''})
 				}
 				else{
 					console.log(response.data.message)
@@ -125,6 +127,7 @@ class Project extends Component{
 				}
 				else{
 					console.log(response.data.message)
+					this.fetchProjectData()
 					this.setState({isLoading: false})
 				}
 			})
@@ -182,6 +185,13 @@ class Project extends Component{
 				</li>
 			)
 		})
+
+		var sharedWith
+		if(this.state.projectData.sharedwith){
+			sharedWith = this.state.projectData.sharedwith.map((user, i) => {
+				return <li key={i} >-{user.email}</li>
+			})
+		}
 
 		return (
 			<div>
@@ -265,6 +275,14 @@ class Project extends Component{
 						</div>
 						<DragnDrop projectid={this.props.location.state.projectId} />
 					</div>
+					{this.state.projectData.sharedwith &&
+						<div className="project-shared-container">
+							<p>You have shared this project with</p>
+							<ul>
+								{sharedWith}
+							</ul>
+						</div>
+					}
 				</div>
 			</div>
 		)
