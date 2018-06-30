@@ -14,24 +14,24 @@ class Image extends Component {
 
 	addTag(){
 		// console.log(this.refs.tagname.value)
-		if(this.refs.tagname.value !== '' && this.props.source.filename !== ''){
+		// if(this.refs.tagname.value !== '' && this.props.source.filename !== ''){
 			addTag(this.refs.tagname.value, this.props.source.filename)
 			.then(response => {
 				if(response.data.success){
 					console.log(response.data.message)
-					window.location.reload()
+					// window.location.reload()
 				}
 				else{
 					console.log(response.data.message)
 				}
 			})
 			.catch(error => console.log(error))
-		}
-		else{
-			// alert('Tag name can not be blank')
-			this.refs.tagname.focus();
-			this.refs.tagname.placeholder = 'can not be blank'
-		}
+		// }
+		// else{
+		// 	// alert('Tag name can not be blank')
+		// 	this.refs.tagname.focus();
+		// 	this.refs.tagname.placeholder = 'can not be blank'
+		// }
 	}
 
 	deleteThisImage() {

@@ -21,7 +21,8 @@ class Project extends Component{
 			displayGroupForm: false,
 			isLoading: true,
 			shareError: '',
-			shareSuccess: ''
+			shareSuccess: '',
+			createGroupError: ''
 		}
 	}
 
@@ -72,6 +73,7 @@ class Project extends Component{
 				}
 				else{
 					console.log(response.data.message)
+					this.setState({createGroupError: response.data.message})
 				}
 			})
 			.catch(error => console.log(error))
@@ -91,7 +93,9 @@ class Project extends Component{
 			}
 			if(response.data.success){
 				this.setState({projectData: response.data.project}, () => {
-					this.setState({subgroups: [...response.data.project.subgroups]})
+					this.setState({subgroups: [...response.data.project.subgroups]}, () => {
+						this.setState({images: [...this.state.images]})
+					})
 				})
 			}
 			else{
@@ -114,7 +118,7 @@ class Project extends Component{
 					// console.log(response.data.files)
 					this.setState({images: [...response.data.files]}, () => {
 						this.setState({subgroups: [...this.props.location.state.groups]},()=> {
-							// this.fetchProjectData()
+							this.fetchProjectData()
 								this.setState({isLoading: false})
 							})
 					})
@@ -142,20 +146,12 @@ class Project extends Component{
 
 	toggleCreateGroup(e) {
 		let temp = !this.state.displayGroupForm
-		// if(temp === true)
-		// 	e.target.value = 'Cancel'// document.getElementById('group').innerText = 'Cancel'
-		// else
-		// 	e.target.value = 'Create Subgroup'// document.getElementById('group').innerText = 'Create'
 		this.setState({displayGroupForm: temp})
 		
 	}
 
 	toggleShareForm(e) {
 		let temp = !this.state.displayShareForm
-		// if(temp === true)
-		// 	e.target.textContent = 'Cancel'// document.getElementById('share').innerText = 'Cancel'
-		// else
-		// 	e.target.textContent = 'Share'// document.getElementById('share').innerText = 'Share'
 		this.setState({displayShareForm: temp}, () => {
 			this.setState({shareError: ''}, () => {
 				this.setState({shareSuccess: ''})
@@ -163,17 +159,6 @@ class Project extends Component{
 		})
 		
 	}
-
-		// const eachImage = this.state.images.map((image, i) => {
-		// 	if(image.metadata.subgroup !== null){
-		// 		return (
-		// 			<Image key={i} source={image} />
-		// 			)
-		// 	}
-		// 	else{
-		// 		return null
-		// 	}
-		// })
 
 	render() {
 
@@ -237,6 +222,14 @@ class Project extends Component{
                     </div>
                    	<hr />
                     <div className="display-group-form">
+                    	<div>
+       					{this.state.createGroupError &&
+							<div className="group-error-msg">
+								{this.state.createGroupError}
+							</div>
+						}
+						</div>
+						<div>
 						{this.state.displayGroupForm &&
 						    <form onSubmit={this.createGroup.bind(this)}>
 						    	<input className="share-from-text" type="text" ref="groupname" placeholder="Group title" required />
@@ -249,6 +242,7 @@ class Project extends Component{
 							</form>
 						}
 
+
 						{!this.state.displayGroupForm &&
 							<input type="button"
 								className="btn-group"
@@ -256,7 +250,7 @@ class Project extends Component{
 								value="Create subgroup"
 							/>
 						}
-
+						</div>
 					</div>
 					<div className="project-container">
 						<ul>
