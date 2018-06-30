@@ -289,6 +289,26 @@ body{
   /*margin: 4px;*/
   width: 100%;
   display: block;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.form p {
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.form p a {
+  text-decoration: underline;
+  color: #FFFFFF;
+}
+
+.form p a:hover {
+  color: #000000;
+}
+
+.form p a:visited {
+  color: #FFFFFF;
 }
 
 .google-btn{
