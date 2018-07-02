@@ -277,9 +277,9 @@ class Project extends Component{
 					</div>
 					{this.state.projectData.sharedwith &&
 						<div className="project-shared-container">
-							<p>You have shared this project with</p>
+							<p>You are sharing this project with</p>
 							<ul>
-								{sharedWith}
+								{sharedWith.length ? sharedWith : <p>none</p>}
 							</ul>
 						</div>
 					}
