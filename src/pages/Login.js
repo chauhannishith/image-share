@@ -56,7 +56,7 @@ class Login extends Component{
 		})
 		this.setState({isLoading: false})
 	}
-//http://localhost:3001
+
 	render() {
 
 		if(this.state.isLoading)

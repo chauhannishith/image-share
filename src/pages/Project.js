@@ -180,8 +180,11 @@ class Project extends Component{
 					<h3>
 						{group.groupTitle}
 					</h3>
-					<Group projectId={this.props.location.state.projectId} groupTitle={group.groupTitle}
-						images={this.state.images} />
+					<Group 
+						projectId={this.props.location.state.projectId} 
+						groupTitle={group.groupTitle}
+						images={this.state.images} 
+					/>
 				</li>
 			)
 		})
@@ -201,7 +204,9 @@ class Project extends Component{
 				</div>
 				<div className="project">
 					<div className="project-header">
-						<h1 className="project-title">{this.props.location.state.projectTitle}</h1>
+						<h1 className="project-title">
+							{this.props.location.state.projectTitle}
+						</h1>
 						<div className="display-share-form">
 							{this.state.shareError && 	
 								<div className="share-error-msg">
@@ -215,17 +220,30 @@ class Project extends Component{
 							}
 							{this.state.displayShareForm && 
 								<form onSubmit={this.addMember.bind(this)}>
-									<input className="share-from-text" type="email" ref="email" placeholder="email" required />
-									<input className="btn-gshare" type="submit" value="Add" />
+									<input 
+										className="share-from-text" 
+										type="email" 
+										ref="email" 
+										placeholder="email" 
+										required 
+									/>
+									<input 
+										className="btn-gshare" 
+										type="submit" 
+										value="Add" 
+									/>
 									<input type="button"
-									 className="btn-gshare" 
-									 onClick={this.toggleShareForm.bind(this)} 
-									 value="Cancel" 
+										className="btn-gshare" 
+										onClick={this.toggleShareForm.bind(this)} 
+										value="Cancel" 
 									/>
 								</form>
 							}
 							{!this.state.displayShareForm &&
-								<a id="share" className="btn-share" onClick={this.toggleShareForm.bind(this)}>Share</a>}
+								<a id="share" className="btn-share" onClick={this.toggleShareForm.bind(this)}>
+									Share
+								</a>
+							}
 							
 						</div>
 			
@@ -242,8 +260,18 @@ class Project extends Component{
 						<div>
 						{this.state.displayGroupForm &&
 						    <form onSubmit={this.createGroup.bind(this)}>
-						    	<input className="share-from-text" type="text" ref="groupname" placeholder="Group title" required />
-								<input className="btn-group" type="submit" value="Create" />
+						    	<input 
+							    	className="share-from-text" 
+							    	type="text" 
+							    	ref="groupname" 
+							    	placeholder="Group title" 
+							    	required 
+						    	/>
+								<input 
+									className="btn-group" 
+									type="submit" 
+									value="Create" 
+								/>
 								<input type="button"
 								    className="btn-group"
 									onClick={this.toggleCreateGroup.bind(this)}

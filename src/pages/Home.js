@@ -91,13 +91,22 @@ class Home extends Component{
 			<div className="display-share-form">
 				<form onSubmit={this.createComponent.bind(this)}>
 					<input
-					 className="share-from-text"
-					 type="text"
-					 ref="projectTitle" 
-					 placeholder="Title" />
+						className="share-from-text"
+						type="text"
+						ref="projectTitle" 
+						placeholder="Title" />
 					<div>
-					<input className="btn-gshare" type="submit" value="Add" />
-					<input type="button" className="btn-gshare" onClick={this.displayForm.bind(this)} value="Cancel" />
+						<input
+							className="btn-gshare"
+							type="submit"
+							value="Add"
+						/>
+						<input 
+							type="button" 
+							className="btn-gshare" 
+							onClick={this.displayForm.bind(this)} 
+							value="Cancel" 
+						/>
 					</div>
 				</form>
 			</div>
@@ -165,7 +174,12 @@ class Home extends Component{
 							<ul className="collection">
 								{eachProject.length ? eachProject : <p>You haven't created any project yet</p>}
 							</ul>
-							{!this.state.createForm && <input type="button" className="btn-small" onClick={this.displayForm.bind(this)} value="Create New Project"/>}
+							{!this.state.createForm && 
+								<input type="button" className="btn-small" 
+									onClick={this.displayForm.bind(this)} 
+									value="Create New Project"
+								/>
+							}
 							{this.state.createForm && this.renderForm()}
 						</div>
 						<div className="list-box">

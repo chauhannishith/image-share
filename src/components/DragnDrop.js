@@ -42,9 +42,9 @@ class DragnDrop extends Component {
 		this.setState({upladStatus: ''}, () => this.setState({uploadError: ''}))
 		let temp = !this.state.displayDrop
 		if(temp === true)
-			e.target.textContent="Hide"//document.getElementById('display').innerText = 'Hide'
+			e.target.textContent="Hide"
 		else
-			e.target.textContent="Upload"// document.getElementById('display').innerText = 'Upload'
+			e.target.textContent="Upload"
 		this.setState({displayDrop: temp})
 	}
 
@@ -75,7 +75,7 @@ class DragnDrop extends Component {
 		})
 		.catch(error => console.log(error))
 	}
-// style={{ border: '1px solid black', width: 600, margin: 'auto', color: 'black', padding: 20 }}
+
 	render() {
 
 		return (
@@ -109,17 +109,17 @@ class DragnDrop extends Component {
 							<h1> OR </h1>
 							<div className="pick-files">
 								<input
-								 className="btn-small" 
-								 type="file" 
-								 onChange={this.fileHandler.bind(this)} 
-								 multiple 
-								 name="files"
+									className="btn-small" 
+									type="file" 
+									onChange={this.fileHandler.bind(this)} 
+									multiple 
+									name="files"
 								/>
 								<button
-								 className="btn-small" 
-								 onClick={this.uploadHandler.bind(this)} 
-								 id="upload" 
-								 disabled={(this.state.bool ? "true" : undefined)}
+									className="btn-small" 
+									onClick={this.uploadHandler.bind(this)} 
+									id="upload" 
+									disabled={(this.state.bool ? "true" : undefined)}
 								>Upload</button>
 							</div>
 						</div>

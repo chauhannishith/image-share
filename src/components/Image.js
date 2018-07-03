@@ -76,7 +76,10 @@ class Image extends Component {
 				<div className="image-card">
 					<div>
 						<a className="delete-btn" onClick={this.deleteThisImage.bind(this)}>x</a>
-						<img src={`${BACKEND}` + '/api/users/images/' + `${this.props.source.filename}`} alt="noimage.jpg" className="thumb center"/>
+						<img src={`${BACKEND}` + '/api/users/images/' + `${this.props.source.filename}`} 
+							alt="noimage.jpg" 
+							className="thumb center"
+						/>
 					</div>
 					<div>
 						{this.props.source.metadata.tags && 
@@ -88,10 +91,19 @@ class Image extends Component {
 					</div>
 					<div className="add-tag">
 						<form>
-						<input className="tag-text-box" type="text" ref="tagname" onKeyPress={this.handleKey.bind(this)}
-							placeholder="Add tag"
-							required/>
-						<button className="add-tag-btn" onClick={this.addTag.bind(this)}>Add tag</button>
+							<input 
+								className="tag-text-box"
+								type="text" 
+								ref="tagname" 
+								onKeyPress={this.handleKey.bind(this)}
+								placeholder="Add tag"
+								required/>
+							<button 
+								className="add-tag-btn" 
+								onClick={this.addTag.bind(this)}
+							>
+								Add tag
+							</button>
 						</form>
 					</div>
 				</div>

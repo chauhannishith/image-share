@@ -71,19 +71,54 @@ class SignUp extends Component {
 					<h1>SignUp to join others</h1>
 					<form onSubmit={this.onSubmit.bind(this)} className="col s12">
 						<div className="row">
-					        <input id="first_name" type="text" ref="fname" placeholder="First Name" className="validate"  required/>
+					        <input 
+						        id="first_name" 
+						        type="text" 
+						        ref="fname" 
+						        placeholder="First Name" 
+						        className="validate"  
+						        required
+					        />
 					    </div>
 					    <div className="row">
-					          <input id="last_name" type="text" ref="lname" placeholder="Last Name" className="validate"  required/>
+					          <input 
+						          id="last_name" 
+						          type="text" 
+						          ref="lname" 
+						          placeholder="Last Name" 
+						          className="validate"  
+						          required
+					          />
 					    </div>
 						<div className="row">
-					          <input id="email" type="email" className="validate" placeholder="Email" ref="email" required/>
+					          <input 
+						          id="email" 
+						          type="email" 
+						          className="validate" 
+						          placeholder="Email" 
+						          ref="email" 
+						          required
+					          />
 					    </div>
 					    <div className="row">
-					          <input id="password" type="password" className="validate" placeholder="Password" ref="password" required/>
+					          <input 
+						          id="password" 
+						          type="password" 
+						          className="validate" 
+						          placeholder="Password" 
+						          ref="password" 
+						          required
+					          />
 				        </div>
 				        <div className="row">
-					          <input id="cpassword" type="password" ref="cpassword" placeholder="Confirm Password" className="validate" required/>
+					          <input 
+						          id="cpassword" 
+						          type="password" 
+						          ref="cpassword" 
+						          placeholder="Confirm Password" 
+						          className="validate" 
+						          required
+					          />
 				        </div>
 				        <div className="row">
 				        	<button className="btn" type="submit" name="action">Submit</button>

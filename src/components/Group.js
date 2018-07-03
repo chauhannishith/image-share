@@ -1,7 +1,6 @@
 import React, { Component} from 'react'
 import DragnDrop from './DragnDrop'
 import Image from './Image'
-// import { BACKEND } from '../utils/config'
 
 class Group extends Component {
 
@@ -25,9 +24,7 @@ class Group extends Component {
 		setTimeout(() => this.setState({groupimages: [...localImages]}), 2000)
 		
 	}
-//				<h4>{this.props.projectId} {this.props.groupTitle}</h4>
-//<img key={i} src={`${BACKEND}` + '/api/users/images/' + `${image.filename}`} alt="noimage.jpg" className="thumb" />
-// <h6>{this.props.groupTitle}</h6>
+
 	render() {
 		const eachGroupImage = this.state.groupimages.map((image, i) => {
 			return <Image key={i} source={image} />
