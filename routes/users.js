@@ -56,7 +56,7 @@ passport.use(new GoogleStrategy({
 var count = 0;
 
 
-//local storage
+//local storage of images
 // const storage = multer.diskStorage({
 // 	destination: './public/uploads',
 // 	filename: function(req, file, cb){	
@@ -202,7 +202,6 @@ router.get('/fetchtags', verifyToken, (req, res, next) => {
 				console.log(err)
 				res.status(200).send({message: 'error occured', success: false, error: err})
 			}
-			// console.log('this is tag')
 			// console.log(usertags)
 			res.status(200).send({message: 'sending tags', success: true, tags: usertags})
 			})
@@ -252,7 +251,7 @@ router.post('/addtag', verifyToken, (req, res, next) => {
 						})
 					}
 					else{
-
+						//user exists, push new filename
 						Tag.findOneAndUpdate({_id: tag._id, "tag.tagname": req.body.tagname },
 							{$push: {"tag.$.images": req.body.filename}},
 							(err, tagg) => {
@@ -282,33 +281,11 @@ router.post('/addtag', verifyToken, (req, res, next) => {
 											// 	res.status(200).send({message: "new tag and image added", success: true})		
 											// }
 										})
-									// res.status(200).send({message: "image added to new tag", success: true})
 								}
-								// else{
-								// 	// console.log(tagg.tag)
-								// 	// console.log('tag with user')
-								// 	res.status(200).send({message: "image added to existing tag", success: true})
-								// }
 						})
-						// console.log(tag)
-						// res.status(200).send({message: "tag found, exists", success: true})
 					}
 			})
 			//update file metadata
-			// gfs.files.findOneAndUpdate(
-		 //      { filename: req.body.filename },
-		 //      { $push: {"metadata.tags": req.body.tagname} },
-		 //      (err, update) => {
-		 //      	if(err){
-		 //      		console.log(err)
-		 //      		res.status(200).send({message: 'error occured', success: false, error: err})
-		 //      	}
-		 //      	else{
-		 //      		// console.log('tag added')
-		 //      		res.status(200).send({message: 'success adding tag to image', success: true})
-		 //      	}
-		 //      } 
-	  //   	)
 	    	//
 	    	gfs.files.findOne({ filename: req.body.filename, "metadata.tags": req.body.tagname }, (err, file) => {
 				// check files
@@ -363,8 +340,6 @@ router.get('/files/:id', verifyToken, (req, res, next) => {
 					})	
 						res.status(200).send({files: files, success: true})
 				}
-				// console.log(files)
-				// return res.json(files);
 			});
 		}
 	})
@@ -616,21 +591,8 @@ router.post('/createsubgroup', verifyToken, (req, res) => {
 					res.status(200).send({message: "Group already exists", success: false})
 				}
 			})
-			// Project.findOneAndUpdate({_id: req.body.projectId},
-			// 	{$push: {subgroups: group}},
-			// 	(err, project) => {
-			// 		// console.log(project)
-			// 		if(err){
-			// 			console.log(err)
-			// 			res.status(200).send({message: "Failed to create subgroup", success: false})
-			// 		}
-			// 		else{
-			// 			res.status(200).send({message: "Group created", success: true})
-			// 		}
-			// })
 		}
 	});
-		//
 });
 
 //fetch projects
@@ -643,7 +605,6 @@ router.post('/projects', verifyToken, (req, res) => {
 		else{
 			// console.log(authData)
 			var userID = authData.user._id;
-			// console.log(req.body)
 			Project.find({createdby: userID}, (err, projects) => {
 				if(err){
 					console.log("some error");
@@ -673,7 +634,6 @@ router.post('/project', verifyToken, (req, res) => {
 		}
 		else{
 			// console.log(authData)
-			// console.log(req.body)
 			Project.findOne({_id: req.body.projectId}, (err, project) => {
 				if(err){
 					console.log("some error");
@@ -702,7 +662,6 @@ router.post('/sharedprojects', verifyToken, (req, res) => {
 			res.status(200).send({redirect:true})
 		}
 		else{
-			// console.log(authData)
 			var userID = authData.user._id;
 			// console.log(userID)
 			Project.find({sharedwith: {$elemMatch: {userId: userID}}}, (err, projects) => {
@@ -743,7 +702,7 @@ router.post('/share', verifyToken, (req, res, next) => {
 				res.status(200).send({message: "You can't share", success: false})
 				return next();
 			}
-			else{
+			else{//find project and check if shared
 				var projectID = req.body.projectId;
 				Project.findOne({_id: projectID, "sharedwith.email": email}, (error, project) => {
 					if(err){
@@ -767,39 +726,62 @@ router.post('/share', verifyToken, (req, res, next) => {
 						});
 						return next();
 					}
-				// })
-				//
-				User.findOne({email: email}, (error, user) => {
-					// console.log(user)
-					if(error){
-						console.log(error)
-						res.status(200).send({message: 'Error occured', success: false, error: err})
-						return next();
-					}
-					if(!user){
-						// console.log("this 1")
-				      ThirdPartyUser.findOne({ "profile.emails.value": email }, function (err, tuser) {
-				  		if(err){
-				  			console.log(err)
-				  			res.status(200).send({message: 'Error occured', success: false, error: err})
-				  			// return next(err);
-				  		}
-				  		if(!tuser){
-				  			res.status(200).send({message: "User does not exist", success: false})
-				  		}
-				  		else{
-				  			// console.log(tuser)
-				  			var tempUser = JSON.parse(JSON.stringify(tuser))
+					//find if user exists
+					User.findOne({email: email}, (error, user) => {
+						// console.log(user)
+						if(error){
+							console.log(error)
+							res.status(200).send({message: 'Error occured', success: false, error: err})
+							return next();
+						}
+						if(!user){
+							// console.log("this 1")
+					      ThirdPartyUser.findOne({ "profile.emails.value": email }, function (err, tuser) {
+					  		if(err){
+					  			console.log(err)
+					  			res.status(200).send({message: 'Error occured', success: false, error: err})
+					  			// return next(err);
+					  		}
+					  		if(!tuser){
+					  			res.status(200).send({message: "User does not exist", success: false})
+					  		}
+					  		else{
+					  			// console.log(tuser)
+					  			var tempUser = JSON.parse(JSON.stringify(tuser))
+								var newuser = {
+									userId: tempUser._id,
+									firstname: tempUser.profile.givenName,
+									lastname: tempUser.profile.name.familyName,
+									email: tempUser.profile.emails[0].value
+								}	
+								//update project
+								Project.findOneAndUpdate({_id: projectID},
+									{$push: {sharedwith: newuser}},
+									(err, project) => {
+										console.log(project)
+										if(err){
+											console.log(err)
+											res.status(200).send({message: "Share with user failed", success: false})
+										}
+										else{
+											res.status(200).send({message: "Shared with user", success: true})
+										}
+								})
+					  		}
+					      });
+							// res.status(200).send({message: "user does not exist", success: false})
+						}
+						else{
 							var newuser = {
-								userId: tempUser._id,
-								firstname: tempUser.profile.givenName,
-								lastname: tempUser.profile.name.familyName,
-								email: tempUser.profile.emails[0].value
+								userId: user._id,
+								firstname: user.firstname,
+								lastname: user.lastname,
+								email: user.email
 							}	
-							Project.findOneAndUpdate({_id: projectID},
+							Project.findOneAndUpdate({_id: req.body.projectId},
 								{$push: {sharedwith: newuser}},
 								(err, project) => {
-									console.log(project)
+									// console.log(project)
 									if(err){
 										console.log(err)
 										res.status(200).send({message: "Share with user failed", success: false})
@@ -808,31 +790,8 @@ router.post('/share', verifyToken, (req, res, next) => {
 										res.status(200).send({message: "Shared with user", success: true})
 									}
 							})
-				  		}
-				      });
-						// res.status(200).send({message: "user does not exist", success: false})
-					}
-					else{
-						var newuser = {
-							userId: user._id,
-							firstname: user.firstname,
-							lastname: user.lastname,
-							email: user.email
-						}	
-						Project.findOneAndUpdate({_id: req.body.projectId},
-							{$push: {sharedwith: newuser}},
-							(err, project) => {
-								// console.log(project)
-								if(err){
-									console.log(err)
-									res.status(200).send({message: "Share with user failed", success: false})
-								}
-								else{
-									res.status(200).send({message: "Shared with user", success: true})
-								}
-						})
-					}
-				})
+						}
+					})
 				})//
 			}
 		}
